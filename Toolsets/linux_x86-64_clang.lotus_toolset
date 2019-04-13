@@ -30,13 +30,20 @@
 
 	"cxx_flags":
 	[
-		"-std=c++14",
+		"-std=c++17",
 		"-fno-rtti",
 		"-fexceptions",
 		"-ffunction-sections",
 		"-fdata-sections",
 		"-Weverything",
-		"-Werror"
+		"-Werror",
+		"-Wno-c++98-compat",
+		"-Wno-shadow-field-in-constructor",
+		"-Wno-padded",
+		"-Wno-gnu-anonymous-struct",
+		"-Wno-nested-anon-types",
+		"-Wno-shadow-uncaptured-local",
+		"-Wno-shadow-field"
 	],
 	"cxx_flags_debug":["-ggdb3"],
 	"cxx_flags_release":["-O3", "-ffast-math"],
