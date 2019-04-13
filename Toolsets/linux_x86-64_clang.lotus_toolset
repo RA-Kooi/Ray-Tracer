@@ -23,7 +23,8 @@
 		"-ffunction-sections",
 		"-fdata-sections",
 		"-Weverything",
-		"-Werror"
+		"-Werror",
+		"-Wno-unknown-warning-option"
 	],
 	"cc_flags_debug":["-ggdb3"],
 	"cc_flags_release":["-O3", "-ffast-math"],
@@ -43,7 +44,8 @@
 		"-Wno-gnu-anonymous-struct",
 		"-Wno-nested-anon-types",
 		"-Wno-shadow-uncaptured-local",
-		"-Wno-shadow-field"
+		"-Wno-shadow-field",
+		"-Wno-unknown-warning-option"
 	],
 	"cxx_flags_debug":["-ggdb3"],
 	"cxx_flags_release":["-O3", "-ffast-math"],
