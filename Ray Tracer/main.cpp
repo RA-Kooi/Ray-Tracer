@@ -2,7 +2,9 @@
 #include <chrono>
 #include <cstdint>
 #include <cstdio>
-#define __STDC_WANT_LIB_EXT1__
+#ifdef __STDC_LIB_EXT1__
+#define __STDC_WANT_LIB_EXT1__ 1
+#endif
 #include <ctime>
 #include <iomanip>
 #include <memory>
@@ -224,7 +226,12 @@ std::pair<bool, std::string> WriteImage(LibRay::Image const &normalizedImage)
 
 	std::time_t now = clock::to_time_t(clock::now());
 	std::tm buf;
+
+#ifdef __STDC_LIB_EXT1__
 	localtime_s(&buf, &now);
+#else
+	localtime_r(&now, &buf);
+#endif
 
 	std::stringstream stream;
 	stream << "Rendered-" << std::put_time(&buf, "%Y-%m-%d-%H-%M-%S") << ".tga";
