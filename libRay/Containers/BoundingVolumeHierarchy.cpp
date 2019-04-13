@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cmath>
+#include <cstring>
 #include <numeric>
 
 #include "../Math/MathUtils.hpp"
@@ -276,7 +277,10 @@ namespace BVHDetails
 BVHNode::BVHNode(BoundingBox &&boundingBox)
 : BoundingBox(std::move(boundingBox))
 , isLeaf(false)
+, child1()
+, child2()
 {
+	memset(&child1, 0, sizeof(decltype(child1)));
 }
 
 BVHNode::~BVHNode() noexcept

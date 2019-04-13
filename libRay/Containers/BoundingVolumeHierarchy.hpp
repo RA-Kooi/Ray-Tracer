@@ -29,7 +29,7 @@ constexpr std::size_t const leafSize = 2;
 using ShapeVec = std::vector<Observer<Shapes::Shape const>>;
 using IndexType = ShapeVec::size_type;
 
-class BVHLeaf
+class BVHLeaf final
 {
 public:
 	BVHLeaf(ShapeVec &&leafs);
