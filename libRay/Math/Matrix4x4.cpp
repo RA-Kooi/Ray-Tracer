@@ -7,10 +7,6 @@
 #include <cmath>
 #include <string>
 
-#include <Windows.h>
-#undef far
-#undef near
-
 namespace LibRay::Math
 {
 Matrix4x4::Matrix4x4()
@@ -383,8 +379,6 @@ void Matrix4x4::Print() const
 		+ "],\n""]\n";
 
 	std::puts(output.c_str());
-
-	OutputDebugStringA(output.c_str());
 }
 
 Matrix4x4 Matrix4x4::Identity()

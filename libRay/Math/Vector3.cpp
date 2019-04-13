@@ -6,8 +6,6 @@
 #include <cstdio>
 #include <string>
 
-#include <Windows.h>
-
 namespace LibRay::Math
 {
 Vector3::Vector3()
@@ -178,8 +176,6 @@ void Vector3::Print() const
 		+ "]\n";
 
 	std::puts(output.c_str());
-
-	OutputDebugStringA(output.c_str());
 }
 
 Vector3 operator+(Vector3 const &lhs, Vector3 const &rhs)
