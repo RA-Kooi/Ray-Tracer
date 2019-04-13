@@ -129,7 +129,8 @@
 				"-Wno-missing-prototypes",
 				"-Wno-missing-variable-declarations",
 				"-Wno-padded",
-				"-Wno-implicit-int-conversion"
+				"-Wno-implicit-int-conversion",
+				"-Wno-conversion"
 			]
 		}
 	}
