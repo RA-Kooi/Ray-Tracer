@@ -11,9 +11,11 @@
 #include <sstream>
 #include <utility>
 
+#ifdef ENABLE_GLFW
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #undef APIENTRY
+#endif // ENABLE_GLFW
 
 #include <stb/stb_image_write.h>
 
@@ -37,6 +39,7 @@ LibRay::Image NormalizeImage(LibRay::Image const &image);
 
 std::pair<bool, std::string> WriteImage(LibRay::Image const &normalizedImage);
 
+#ifdef ENABLE_GLFW
 void KeyCallback(
 	Observer<GLFWwindow> window,
 	int key,
@@ -50,19 +53,18 @@ void MouseCallback(
 	int action,
 	int mods) noexcept;
 
+void ShowDebugWindow(
+	LibRay::Camera const &camera,
+	LibRay::RayTracer const &rayTracer,
+	LibRay::Image const &normalizedImage);
+#endif // ENABLE_GLFW
+
 int main(int, char*[])
 {
 	using namespace LibRay;
 	using namespace LibRay::Math;
 
 	DisableTGARLE();
-
-	if(!glfwInit())
-		return EXIT_FAILURE;
-
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
-	glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API);
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 	Camera camera(
 		Transform(Vector3(0, 15, 30), Vector3(-Math::PI * 0.125f)),
@@ -89,23 +91,6 @@ int main(int, char*[])
 	RayTracerConfiguration config(4);
 	RayTracer rayTracer(*scene, std::move(config));
 
-	Observer<GLFWwindow> window = glfwCreateWindow(
-		int(camera.ScreenSize().x),
-		int(camera.ScreenSize().y),
-		"Ray tracer",
-		nullptr,
-		nullptr);
-
-	glfwSetWindowUserPointer(window, &rayTracer);
-
-	glfwSetKeyCallback(window, KeyCallback);
-	glfwSetMouseButtonCallback(window, MouseCallback);
-	glfwMakeContextCurrent(window);
-
-	glClearColor(0, 0, 0, 1);
-	glClear(GL_COLOR_BUFFER_BIT);
-	glfwSwapBuffers(window);
-
 	Image output(0, 0);
 
 	try
@@ -120,57 +105,13 @@ int main(int, char*[])
 
 	Image const normalizedOutput = NormalizeImage(output);
 
-	GLuint texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexImage2D(
-		GL_TEXTURE_2D,
-		0,
-		GL_RGB,
-		GLsizei(output.sizeX),
-		GLsizei(output.sizeY),
-		0,
-		GL_RGB,
-		GL_FLOAT,
-		output.pixels.data());
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glEnable(GL_TEXTURE_2D);
-
-	while(!glfwWindowShouldClose(window))
-	{
-		glClear(GL_COLOR_BUFFER_BIT);
-		glLoadIdentity();
-
-		glBegin(GL_QUADS);
-
-		glTexCoord2f(0.0f, 0.0f);
-		glVertex3f(-1.0f, 1.0f, 0.0f);
-
-		glTexCoord2f(1.0f, 0.0f);
-		glVertex3f( 1.0f, 1.0f, 0.0f);
-
-		glTexCoord2f(1.0f, 1.0f);
-		glVertex3f( 1.0f,-1.0f, 0.0f);
-
-		glTexCoord2f(0.0f, 1.0f);
-		glVertex3f(-1.0f,-1.0f, 0.0f);
-		glEnd();
-
-		glfwSwapBuffers(window);
-
-		glfwWaitEvents();
-	}
-
-	glfwTerminate();
-
-	glDeleteTextures(1, &texture);
-
 	auto const result = WriteImage(normalizedOutput);
 	if(!result.first)
 		return EXIT_FAILURE;
+
+#ifdef ENABLE_GLFW
+	ShowDebugWindow(camera, rayTracer, normalizedOutput);
+#endif // ENABLE_GLFW
 
 	//system(result.second.c_str());
 
@@ -251,6 +192,7 @@ std::pair<bool, std::string> WriteImage(LibRay::Image const &normalizedImage)
 	return {true, output};
 }
 
+#ifdef ENABLE_GLFW
 void KeyCallback(
 	Observer<GLFWwindow> window,
 	int key,
@@ -300,3 +242,84 @@ void MouseCallback(
 		std::fprintf(stderr, "Caught exception: %s\n", e.what());
 	}
 }
+
+void ShowDebugWindow(
+	LibRay::Camera const &camera,
+	LibRay::RayTracer const &rayTracer,
+	LibRay::Image const &normalizedImage)
+{
+	using namespace LibRay;
+
+	if(!glfwInit())
+		throw std::runtime_error("Unable to initialize GLFW");
+
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+	glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API);
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
+	Observer<GLFWwindow> window = glfwCreateWindow(
+		int(camera.ScreenSize().x),
+		int(camera.ScreenSize().y),
+		"Ray tracer",
+		nullptr,
+		nullptr);
+
+	glfwSetWindowUserPointer(window, const_cast<Observer<RayTracer>>(&rayTracer));
+
+	glfwSetKeyCallback(window, KeyCallback);
+	glfwSetMouseButtonCallback(window, MouseCallback);
+	glfwMakeContextCurrent(window);
+
+	glClearColor(0, 0, 0, 1);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glfwSwapBuffers(window);
+
+	GLuint texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexImage2D(
+		GL_TEXTURE_2D,
+		0,
+		GL_RGB,
+		GLsizei(normalizedImage.sizeX),
+		GLsizei(normalizedImage.sizeY),
+		0,
+		GL_RGB,
+		GL_FLOAT,
+		normalizedImage.pixels.data());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glEnable(GL_TEXTURE_2D);
+
+	while(!glfwWindowShouldClose(window))
+	{
+		glClear(GL_COLOR_BUFFER_BIT);
+		glLoadIdentity();
+
+		glBegin(GL_QUADS);
+
+		glTexCoord2f(0.0f, 0.0f);
+		glVertex3f(-1.0f, 1.0f, 0.0f);
+
+		glTexCoord2f(1.0f, 0.0f);
+		glVertex3f( 1.0f, 1.0f, 0.0f);
+
+		glTexCoord2f(1.0f, 1.0f);
+		glVertex3f( 1.0f,-1.0f, 0.0f);
+
+		glTexCoord2f(0.0f, 1.0f);
+		glVertex3f(-1.0f,-1.0f, 0.0f);
+		glEnd();
+
+		glfwSwapBuffers(window);
+
+		glfwWaitEvents();
+	}
+
+	glfwTerminate();
+
+	glDeleteTextures(1, &texture);
+}
+#endif // ENABLE_GLFW
