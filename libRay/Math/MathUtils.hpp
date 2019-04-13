@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <float.h>
 #include <tuple>
 
 namespace LibRay::Math

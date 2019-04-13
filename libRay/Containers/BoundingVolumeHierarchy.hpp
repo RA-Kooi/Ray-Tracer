@@ -2,6 +2,7 @@
 #define b3ae2d60_920d_38d8_4cdb_bf8f6ed2db14
 
 #include <array>
+#include <memory>
 #include <optional>
 #include <type_traits>
 #include <utility>
