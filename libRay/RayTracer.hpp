@@ -73,7 +73,11 @@ private:
 
 static_assert(std::is_copy_constructible_v<RayTracer>);
 static_assert(!std::is_copy_assignable_v<RayTracer>);
+#ifdef _MSC_VER
 static_assert(!std::is_trivially_copyable_v<RayTracer>);
+#else
+static_assert(std::is_trivially_copyable_v<RayTracer>);
+#endif
 
 static_assert(std::is_move_constructible_v<RayTracer>);
 static_assert(!std::is_move_assignable_v<RayTracer>);
