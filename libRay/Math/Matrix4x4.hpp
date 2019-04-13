@@ -9,8 +9,6 @@ namespace LibRay::Math
 class LIBRAY_API Matrix4x4
 {
 public:
-#pragma warning(push)
-#pragma warning(disable : 4201)
 	union
 	{
 		struct
@@ -24,7 +22,6 @@ public:
 		float m[16];
 		float m2[4][4];
 	};
-#pragma warning(pop)
 
 public:
 	Matrix4x4();

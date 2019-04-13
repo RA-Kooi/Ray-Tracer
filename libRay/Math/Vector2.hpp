@@ -10,9 +10,8 @@ namespace LibRay::Math
 class LIBRAY_API Vector2
 {
 public:
-#pragma warning(push)
-#pragma warning(disable : 4201)
-	union {
+	union
+	{
 		struct
 		{
 			float x;
@@ -21,7 +20,6 @@ public:
 
 		float v[2];
 	};
-#pragma warning(pop)
 
 public:
 	Vector2();

@@ -10,8 +10,6 @@ namespace LibRay::Math
 class LIBRAY_API Vector3
 {
 public:
-#pragma warning(push)
-#pragma warning(disable : 4201)
 	union
 	{
 		struct
@@ -23,7 +21,6 @@ public:
 
 		float v[3];
 	};
-#pragma warning(pop)
 
 public:
 	Vector3();
