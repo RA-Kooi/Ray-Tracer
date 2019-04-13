@@ -1,3 +1,6 @@
 [submodule "3rdparty/glfw-master"]
 	path = 3rdparty/glfw-master
 	url = https://github.com/glfw/glfw.git
+[submodule "LotusWaf"]
+	path = LotusWaf
+	url = https://hg.waifu-technologies.moe/Waifu/LotusWaf
