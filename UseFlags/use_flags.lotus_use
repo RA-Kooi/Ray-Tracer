@@ -1,0 +1,147 @@
+{
+	"glm":
+	{
+		"type":"headers",
+
+		"common":
+		{
+			"optional":true,
+
+			"code":"glm_test.cpp"
+		}
+	},
+	"pthread":
+	{
+		"type":"lib",
+
+		"common":
+		{
+			"shlib_link":["pthread"],
+
+			"optional":false,
+
+			"code":"pthread_test.cpp"
+		}
+	},
+	"dl":
+	{
+		"type":"flags",
+
+		"common":
+		{
+			"ld_flags":["-ldl"]
+		}
+	},
+	"X11":
+	{
+		"type":"lib",
+
+		"common":
+		{
+			"shlib_link":["X11"],
+
+			"optional":false,
+
+			"code":"skeleton.cpp"
+		}
+	},
+	"OpenGL":
+	{
+		"type":"lib",
+
+		"common":
+		{
+			"shared":true,
+
+			"shlib_link":["GL"],
+
+			"optional":true,
+
+			"code":"opengl_test.cpp"
+		}
+	},
+	"glfw-3":
+	{
+		"type":"lib",
+
+		"common":
+		{
+			"shared":true,
+
+			"defines":
+			{
+				"base":["GLFW_INCLUDE_NONE", "ENABLE_GLFW"]
+			},
+
+			"shlib_link":["glfw"],
+
+			"use":["pthread", "dl", "X11", "OpenGL"],
+
+			"optional":true,
+
+			"code":"glfw_test.cpp"
+		}
+	},
+	"EASTLBuildFlags":
+	{
+		"type":"flags",
+
+		"common":
+		{
+			"cxx_flags":
+			[
+				"-Wno-pedantic",
+				"-Wno-unknown-pragmas",
+				"-Wno-error"
+			]
+		}
+	},
+	"EAStdCBuildFlags":
+	{
+		"type":"flags",
+
+		"common":
+		{
+			"cxx_flags":
+			[
+				"-Wno-pedantic"
+			]
+		}
+	},
+	"EASTLFlags":
+	{
+		"type":"flags",
+
+		"common":
+		{
+			"includes":
+			[
+				"./ThirdParty/EASTL/include",
+				"./ThirdParty/EASTL/test/packages/EABase/include/Common"
+			]
+		}
+	},
+	"STBFlags":
+	{
+		"type":"flags",
+
+		"common":
+		{
+			"cc_flags":
+			[
+				"-Wno-unused-parameter",
+				"-Wno-disabled-macro-expansion",
+				"-Wno-sign-conversion",
+				"-Wno-comma",
+				"-Wno-double-promotion",
+				"-Wno-cast-align",
+				"-Wno-cast-qual",
+				"-Wno-extra-semi-stmt",
+				"-Wno-missing-prototypes",
+				"-Wno-missing-variable-declarations",
+				"-Wno-padded",
+				"-Wno-implicit-int-conversion"
+			]
+		}
+	}
+}

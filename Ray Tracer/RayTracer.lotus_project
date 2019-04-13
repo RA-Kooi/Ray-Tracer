@@ -1,0 +1,34 @@
+{
+	"type":"exe",
+	"unity_build":false,
+	"target":"../RayTracer",
+	"name":"RayTracer",
+	"version":"1.0.0",
+
+	"defines":
+	{
+		"base":[],
+
+		"stlib":[],
+
+		"shlib":[],
+
+		"exe":[]
+	},
+
+	"includes":[""],
+	"export_includes":[],
+
+	"rpath":["$ORIGIN"],
+
+	"use":
+	[
+		"libRay",
+		"stb"
+	],
+
+	"sources":
+	[
+		"main.cpp"
+	]
+}

@@ -1,0 +1,50 @@
+{
+	"type":"shlib",
+	"unity_build":false,
+	"target":"../Ray",
+	"name":"libRay",
+	"version":"1.0.0",
+
+	"defines":
+	{
+		"shlib":["LIBRAY_EXPORTS"]
+	},
+
+	"includes":[],
+	"export_includes":[".."],
+
+	"rpath":["$ORIGIN"],
+
+	"use":[],
+
+	"sources":
+	[
+		"Containers/BoundingBox.cpp",
+		"Containers/BoundingVolumeHierarchy.cpp",
+		"Math/Matrix4x4.cpp",
+		"Math/Ray.cpp",
+		"Math/Vector2.cpp",
+		"Math/Vector3.cpp",
+		"Shaders/BlinnPhong.cpp",
+		"Shaders/ColorOnly.cpp",
+		"Shaders/Lambertian.cpp",
+		"Shaders/Material.cpp",
+		"Shaders/MaterialStore.cpp",
+		"Shaders/ShaderStore.cpp",
+		"Shapes/Box.cpp",
+		"Shapes/Color.cpp",
+		"Shapes/Disc.cpp",
+		"Shapes/Plane.cpp",
+		"Shapes/Rectangle.cpp",
+		"Shapes/Shape.cpp",
+		"Shapes/Sphere.cpp",
+		"Camera.cpp",
+		"Image.cpp",
+		"Intersection.cpp",
+		"Light.cpp",
+		"RayTracer.cpp",
+		"Scene.cpp",
+		"Transform.cpp",
+		"Utilites.cpp"
+	]
+}

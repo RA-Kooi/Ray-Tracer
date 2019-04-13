@@ -1,0 +1,15 @@
+{
+	"target_platforms":
+	[
+		"linux_x64"
+	],
+	"toolsets":
+	{
+		"linux_x64":["linux_x86-64_clang"]
+	},
+	"configurations":
+	[
+		"debug",
+		"release"
+	]
+}

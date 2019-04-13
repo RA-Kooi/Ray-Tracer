@@ -1,0 +1,16 @@
+{
+	"type":"stlib",
+	"unity_build":true,
+	"target":"stb",
+	"name":"stb",
+	"version":"1.0.0",
+
+	"includes":[],
+	"export_includes":[".."],
+
+	"use":["STBFlags"],
+
+	"rpath":["$ORIGIN"],
+
+	"sources":["stb_image.c", "stb_image_writer.c"]
+}
