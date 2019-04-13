@@ -20,6 +20,7 @@
 	"cc_flags":
 	[
 		"-std=c11",
+		"-march=native",
 		"-ffunction-sections",
 		"-fdata-sections",
 		"-Weverything",
@@ -32,6 +33,7 @@
 	"cxx_flags":
 	[
 		"-std=c++17",
+		"-march=native",
 		"-fno-rtti",
 		"-fexceptions",
 		"-ffunction-sections",
