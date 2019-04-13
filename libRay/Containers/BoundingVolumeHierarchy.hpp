@@ -50,9 +50,7 @@ static_assert(std::is_move_assignable_v<BVHLeaf>);
 class LIBRAY_API BVHNode final: public BoundingBox
 {
 public:
-	BVHNode(
-		BVH const &master,
-		BoundingBox &&boundingBox);
+	BVHNode(BoundingBox &&boundingBox);
 
 	~BVHNode() noexcept;
 
@@ -64,8 +62,6 @@ public:
 	void SetChild2(std::unique_ptr<BVHNode> node);
 
 private:
-	Observer<BVH const> master;
-
 	bool isLeaf;
 
 	union Node

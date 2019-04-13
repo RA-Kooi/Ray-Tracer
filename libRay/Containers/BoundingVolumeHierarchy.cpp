@@ -201,7 +201,7 @@ void BVH::MakeNodes(ShapeVec &&objects)
 	if(!objects.size())
 		return;
 
-	rootNode = std::make_unique<BVHNode>(*this, CalculateBoundingBox(objects));
+	rootNode = std::make_unique<BVHNode>(CalculateBoundingBox(objects));
 
 	if(objects.size() <= leafSize)
 	{
@@ -218,7 +218,6 @@ void BVH::MakeNodes(ShapeVec &&objects)
 		if(objects.size() <= leafSize)
 		{
 			auto child = std::make_unique<BVHNode>(
-				*this,
 				CalculateBoundingBox(objects));
 
 			child->SetLeaf(std::make_unique<BVHLeaf>(std::move(objects)));
@@ -231,9 +230,7 @@ void BVH::MakeNodes(ShapeVec &&objects)
 			return;
 		}
 
-		auto child = std::make_unique<BVHNode>(
-			*this,
-			CalculateBoundingBox(objects));
+		auto child = std::make_unique<BVHNode>(CalculateBoundingBox(objects));
 
 		std::array<ShapeVec, 2> split = SplitObjects(std::move(objects));
 
@@ -248,7 +245,6 @@ void BVH::MakeNodes(ShapeVec &&objects)
 				: split[0];
 
 			auto leaf = std::make_unique<BVHNode>(
-				*this,
 				CalculateBoundingBox(selectedSplit));
 
 			leaf->SetLeaf(std::make_unique<BVHLeaf>(std::move(selectedSplit)));
@@ -277,11 +273,8 @@ void BVH::MakeNodes(ShapeVec &&objects)
 
 namespace BVHDetails
 {
-BVHNode::BVHNode(
-	BVH const &master,
-	BoundingBox &&boundingBox)
+BVHNode::BVHNode(BoundingBox &&boundingBox)
 : BoundingBox(std::move(boundingBox))
-, master(&master)
 , isLeaf(false)
 {
 }
