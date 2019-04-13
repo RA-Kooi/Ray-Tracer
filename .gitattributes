@@ -2,3 +2,5 @@
 *.lotus_use linguist-language=Json
 *.lotus_project linguist-language=Json
 *.lotus_toolset linguist-language=Json
+
+* text=lf
