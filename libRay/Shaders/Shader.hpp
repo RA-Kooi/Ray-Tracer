@@ -25,7 +25,7 @@ class Light;
 class Shader
 {
 public:
-	virtual ~Shader() noexcept = default;
+	virtual ~Shader() noexcept;
 
 	virtual Shapes::Color Run(
 		Intersection const &intersection,

@@ -28,6 +28,7 @@
 		"Shaders/BlinnPhong.cpp",
 		"Shaders/ColorOnly.cpp",
 		"Shaders/Lambertian.cpp",
+		"Shaders/Shader.cpp",
 		"Shaders/Material.cpp",
 		"Shaders/MaterialStore.cpp",
 		"Shaders/ShaderStore.cpp",
