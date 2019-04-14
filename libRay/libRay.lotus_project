@@ -21,10 +21,7 @@
 	[
 		"Containers/BoundingBox.cpp",
 		"Containers/BoundingVolumeHierarchy.cpp",
-		"Math/Matrix4x4.cpp",
 		"Math/Ray.cpp",
-		"Math/Vector2.cpp",
-		"Math/Vector3.cpp",
 		"Shaders/BlinnPhong.cpp",
 		"Shaders/ColorOnly.cpp",
 		"Shaders/Lambertian.cpp",
