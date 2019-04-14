@@ -1,7 +1,7 @@
 #ifndef f4ffcf96_123c_4559_9031_f794398a0fe5
 #define f4ffcf96_123c_4559_9031_f794398a0fe5
 
-#include <optional>
+#include <boost/optional.hpp>
 #include <type_traits>
 
 #include "../Shaders/MaterialStore.hpp"
@@ -42,7 +42,7 @@ public:
 
 	virtual bool IsBoundable() const;
 
-	virtual std::optional<Intersection> Intersects(
+	virtual boost::optional<Intersection> Intersects(
 		Math::Ray const &ray) const = 0;
 
 	virtual Containers::BoundingBox CalculateBoundingBox() const = 0;

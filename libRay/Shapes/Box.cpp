@@ -13,7 +13,7 @@ namespace LibRay::Shapes
 {
 using namespace LibRay::Math;
 
-std::optional<Intersection> Box::Intersects(Math::Ray const &ray) const
+boost::optional<Intersection> Box::Intersects(Ray const &ray) const
 {
 	Matrix4x4 const worlToModel = transform.InverseMatrix();
 	Ray const modelRay(
@@ -33,7 +33,7 @@ std::optional<Intersection> Box::Intersects(Math::Ray const &ray) const
 	float const far = max.minCoeff();
 
 	if(far < near)
-		return std::nullopt;
+		return boost::none;
 
 	float distanceToIntersection = near;
 
@@ -42,7 +42,7 @@ std::optional<Intersection> Box::Intersects(Math::Ray const &ray) const
 		distanceToIntersection = far;
 
 		if(distanceToIntersection < 0)
-			return std::nullopt;
+			return boost::none;
 	}
 
 	Vector3 const pointOnBox = modelRay.Origin()

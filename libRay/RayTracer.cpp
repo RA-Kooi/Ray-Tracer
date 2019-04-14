@@ -1,7 +1,7 @@
 #include "RayTracer.hpp"
 
 #include <algorithm>
-#include <optional>
+#include <boost/optional.hpp>
 
 #include "Math/Matrix.hpp"
 #include "Math/Ray.hpp"
@@ -107,7 +107,7 @@ Color RayTracer::TraceRay(
 {
 	std::pair<Shapes::Color const &, float> ambientLight = scene.AmbientLight();
 
-	std::optional<Intersection> intersection = ShootRay(ray);
+	boost::optional<Intersection> intersection = ShootRay(ray);
 
 	if(!intersection)
 	{
@@ -299,11 +299,11 @@ Ray RayTracer::MakeMouseRay(int x, int y) const
 	return ray;
 }
 
-std::optional<Intersection> RayTracer::ShootRay(Ray const &ray) const
+boost::optional<Intersection> RayTracer::ShootRay(Ray const &ray) const
 {
 	Containers::BVH const &bvh = scene.BoundingVolumeHierarchy();
 
-	std::optional<Intersection> closestIntersection = bvh.Traverse(ray);
+	boost::optional<Intersection> closestIntersection = bvh.Traverse(ray);
 	float closestDistance = FLT_MAX;
 	if(closestIntersection)
 	{
@@ -314,7 +314,7 @@ std::optional<Intersection> RayTracer::ShootRay(Ray const &ray) const
 
 	for(auto const &shape: scene.UnboundableShapes())
 	{
-		std::optional<Intersection> const intersection = shape->Intersects(ray);
+		boost::optional<Intersection> const intersection = shape->Intersects(ray);
 		if(intersection)
 		{
 			Vector3 const intersectionToOrigin =
@@ -359,7 +359,7 @@ std::vector<Observer<Light const>> RayTracer::LightsAtIntersection(
 		float const lightDistance =
 			(light.Position() - biasedOrigin).squaredNorm();
 
-		std::optional<Intersection> lightIntersection = ShootRay(lightRay);
+		boost::optional<Intersection> lightIntersection = ShootRay(lightRay);
 
 		if(!lightIntersection)
 			unobstructedLights.push_back(&light);

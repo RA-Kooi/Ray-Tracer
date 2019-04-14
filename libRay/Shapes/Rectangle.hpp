@@ -2,7 +2,7 @@
 #define e9b78d4d_f3d8_3424_ba11_26f7f71e0bfc
 
 #include <memory>
-#include <optional>
+#include <boost/optional.hpp>
 #include <type_traits>
 
 #include "../Math/Vector.hpp"
@@ -39,7 +39,7 @@ public:
 
 	virtual ~Rectangle() noexcept override = default;
 
-	std::optional<Intersection> Intersects(Math::Ray const &ray) const override;
+	boost::optional<Intersection> Intersects(Math::Ray const &ray) const override;
 
 	Containers::BoundingBox CalculateBoundingBox() const override;
 

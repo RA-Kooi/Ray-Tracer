@@ -1,7 +1,7 @@
 #ifndef a0b9169e_9c51_d49d_6fc7_c2b2fb5f32da
 #define a0b9169e_9c51_d49d_6fc7_c2b2fb5f32da
 
-#include <optional>
+#include <boost/optional.hpp>
 #include <type_traits>
 
 #include "../Shaders/MaterialStore.hpp"
@@ -29,7 +29,7 @@ class LIBRAY_API Box final: public Shape
 public:
 	using Shape::Shape;
 
-	std::optional<Intersection> Intersects(Math::Ray const &ray) const override;
+	boost::optional<Intersection> Intersects(Math::Ray const &ray) const override;
 
 	Containers::BoundingBox CalculateBoundingBox() const override;
 };

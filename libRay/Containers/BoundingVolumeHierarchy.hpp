@@ -3,7 +3,7 @@
 
 #include <array>
 #include <memory>
-#include <optional>
+#include <boost/optional.hpp>
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -34,7 +34,7 @@ class BVHLeaf final
 public:
 	BVHLeaf(ShapeVec &&leafs);
 
-	std::optional<Intersection> Traverse(Math::Ray const &ray) const;
+	boost::optional<Intersection> Traverse(Math::Ray const &ray) const;
 
 private:
 	ShapeVec leafs;
@@ -54,7 +54,7 @@ public:
 
 	~BVHNode() noexcept;
 
-	std::optional<Intersection> Traverse(Math::Ray const &ray) const;
+	boost::optional<Intersection> Traverse(Math::Ray const &ray) const;
 
 	void SetLeaf(std::unique_ptr<BVHLeaf> leaf);
 
@@ -93,7 +93,7 @@ class LIBRAY_API BVH final
 public:
 	explicit BVH(BVHDetails::ShapeVec &&objects);
 
-	std::optional<Intersection> Traverse(Math::Ray const &ray) const;
+	boost::optional<Intersection> Traverse(Math::Ray const &ray) const;
 
 private:
 	BoundingBox CalculateBoundingBox(BVHDetails::ShapeVec const &objects) const;

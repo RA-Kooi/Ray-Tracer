@@ -24,15 +24,15 @@ BVH::BVH(ShapeVec &&objects)
 	MakeNodes(std::move(objects));
 }
 
-std::optional<Intersection> BVH::Traverse(Ray const &ray) const
+boost::optional<Intersection> BVH::Traverse(Ray const &ray) const
 {
 	if(!rootNode)
-		return std::nullopt;
+		return boost::none;
 
 	if(rootNode->Intersects(ray) >= 0.f)
 		return rootNode->Traverse(ray);
 
-	return std::nullopt;
+	return boost::none;
 }
 
 BoundingBox BVH::CalculateBoundingBox(ShapeVec const &objects) const
@@ -291,7 +291,7 @@ BVHNode::~BVHNode() noexcept
 		child1.node.reset();
 }
 
-std::optional<Intersection> BVHNode::Traverse(Ray const &ray) const
+boost::optional<Intersection> BVHNode::Traverse(Ray const &ray) const
 {
 	if(isLeaf)
 	{
@@ -314,7 +314,7 @@ std::optional<Intersection> BVHNode::Traverse(Ray const &ray) const
 		float const boundingBoxDistance2 = child2->Intersects(ray);
 
 		if(boundingBoxDistance1 < 0.f && boundingBoxDistance2 < 0.f)
-			return std::nullopt;
+			return boost::none;
 
 		if(boundingBoxDistance1 < 0.f)
 			return child2->Traverse(ray);
@@ -324,7 +324,7 @@ std::optional<Intersection> BVHNode::Traverse(Ray const &ray) const
 
 		if(boundingBoxDistance1 < boundingBoxDistance2)
 		{
-			std::optional<Intersection> const intersection =
+			boost::optional<Intersection> const intersection =
 				child1.node->Traverse(ray);
 
 			float distance = 0.f;
@@ -339,7 +339,7 @@ std::optional<Intersection> BVHNode::Traverse(Ray const &ray) const
 					return intersection;
 			}
 
-			std::optional<Intersection> const intersection2 =
+			boost::optional<Intersection> const intersection2 =
 				child2->Traverse(ray);
 			if(intersection && intersection2)
 			{
@@ -359,7 +359,7 @@ std::optional<Intersection> BVHNode::Traverse(Ray const &ray) const
 				return intersection2;
 		}
 
-		std::optional<Intersection> const intersection =
+		boost::optional<Intersection> const intersection =
 			child2->Traverse(ray);
 
 		float distance = 0.f;
@@ -374,7 +374,7 @@ std::optional<Intersection> BVHNode::Traverse(Ray const &ray) const
 				return intersection;
 		}
 
-		std::optional<Intersection> const intersection2 =
+		boost::optional<Intersection> const intersection2 =
 			child1.node->Traverse(ray);
 		if(intersection && intersection2)
 		{
@@ -406,7 +406,7 @@ std::optional<Intersection> BVHNode::Traverse(Ray const &ray) const
 			return child2->Traverse(ray);
 	}
 
-	return std::nullopt;
+	return boost::none;
 }
 
 void BVHNode::SetLeaf(std::unique_ptr<BVHLeaf> leaf)
@@ -434,14 +434,14 @@ BVHLeaf::BVHLeaf(ShapeVec &&leafs)
 {
 }
 
-std::optional<Intersection> BVHLeaf::Traverse(Ray const &ray) const
+boost::optional<Intersection> BVHLeaf::Traverse(Ray const &ray) const
 {
-	std::optional<Intersection> closestIntersection;
+	boost::optional<Intersection> closestIntersection;
 	float closestDistance = 0;
 
 	for(ShapeVec::value_type const &leaf: leafs)
 	{
-		std::optional<Intersection> intersection = leaf->Intersects(ray);
+		boost::optional<Intersection> intersection = leaf->Intersects(ray);
 
 		if(!intersection)
 			continue;

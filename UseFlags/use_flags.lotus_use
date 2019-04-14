@@ -146,5 +146,18 @@
 				"-Wno-conversion"
 			]
 		}
+	},
+	"Boost-Optional":
+	{
+		"type":"headers",
+
+		"common":
+		{
+			"includes":["/usr/include/boost"],
+
+			"optional":false,
+
+			"code":"boost_optional_test.cpp"
+		}
 	}
 }

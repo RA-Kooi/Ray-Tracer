@@ -22,7 +22,7 @@ Disc::Disc(
 {
 }
 
-std::optional<Intersection> Disc::Intersects(Ray const &ray) const
+boost::optional<Intersection> Disc::Intersects(Ray const &ray) const
 {
 	Matrix4x4 const worlToModel = transform.InverseMatrix();
 
@@ -55,7 +55,7 @@ std::optional<Intersection> Disc::Intersects(Ray const &ray) const
 		}
 	}
 
-	return std::nullopt;
+	return boost::none;
 }
 
 Containers::BoundingBox Disc::CalculateBoundingBox() const

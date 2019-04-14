@@ -15,7 +15,7 @@
 
 	"rpath":["$ORIGIN"],
 
-	"use":["Eigen3"],
+	"use":["Eigen3", "Boost-Optional"],
 
 	"sources":
 	[

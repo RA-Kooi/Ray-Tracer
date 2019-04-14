@@ -1,7 +1,7 @@
 #ifndef b00f71ed_c38b_4932_8e9f_d6fdb6700f2a
 #define b00f71ed_c38b_4932_8e9f_d6fdb6700f2a
 
-#include <optional>
+#include <boost/optional.hpp>
 #include <type_traits>
 
 #include "../Shaders/MaterialStore.hpp"
@@ -37,7 +37,7 @@ public:
 
 	virtual ~Sphere() noexcept override = default;
 
-	std::optional<Intersection> Intersects(Math::Ray const &ray) const override;
+	boost::optional<Intersection> Intersects(Math::Ray const &ray) const override;
 
 	Containers::BoundingBox CalculateBoundingBox() const override;
 

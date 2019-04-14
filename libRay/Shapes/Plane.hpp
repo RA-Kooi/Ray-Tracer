@@ -1,7 +1,7 @@
 #ifndef e4b156b9_390a_71bc_51c8_27e7ece591c3
 #define e4b156b9_390a_71bc_51c8_27e7ece591c3
 
-#include <optional>
+#include <boost/optional.hpp>
 #include <type_traits>
 
 #include "../API.hpp"
@@ -30,7 +30,7 @@ public:
 
 	virtual ~Plane() noexcept override = default;
 
-	std::optional<Intersection> Intersects(Math::Ray const &ray) const override;
+	boost::optional<Intersection> Intersects(Math::Ray const &ray) const override;
 
 	bool IsBoundable() const override;
 	Containers::BoundingBox CalculateBoundingBox() const override;

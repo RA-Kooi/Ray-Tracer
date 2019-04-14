@@ -23,7 +23,7 @@ Rectangle::	Rectangle(
 {
 }
 
-std::optional<Intersection> Rectangle::Intersects(Ray const &ray) const
+boost::optional<Intersection> Rectangle::Intersects(Ray const &ray) const
 {
 	Matrix4x4 const worlToModel = transform.InverseMatrix();
 
@@ -59,7 +59,7 @@ std::optional<Intersection> Rectangle::Intersects(Ray const &ray) const
 		}
 	}
 
-	return std::nullopt;
+	return boost::none;
 }
 
 Containers::BoundingBox Rectangle::CalculateBoundingBox() const

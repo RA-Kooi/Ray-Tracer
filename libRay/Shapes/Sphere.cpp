@@ -24,7 +24,7 @@ Sphere::Sphere(
 {
 }
 
-std::optional<Intersection> Sphere::Intersects(Ray const &ray) const
+boost::optional<Intersection> Sphere::Intersects(Ray const &ray) const
 {
 	// Implicit sphere surface = (point - center)² - radius² = 0
 	// Need to find point
@@ -59,7 +59,7 @@ std::optional<Intersection> Sphere::Intersects(Ray const &ray) const
 	float solution2 = std::get<2>(solutions);
 
 	if(solutionCount == 0)
-		return std::nullopt;
+		return boost::none;
 
 	if(solutionCount == 1)
 	{
@@ -85,7 +85,7 @@ std::optional<Intersection> Sphere::Intersects(Ray const &ray) const
 
 		// Both points are behind the ray origin.
 		if(solution1 < 0)
-			return std::nullopt;
+			return boost::none;
 	}
 
 	Vector3 const positionOnSphere = modelRay.Origin()

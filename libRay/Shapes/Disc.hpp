@@ -1,7 +1,7 @@
 #ifndef a07ce4c6_4023_939e_c4e9_36960fba34c1
 #define a07ce4c6_4023_939e_c4e9_36960fba34c1
 
-#include <optional>
+#include <boost/optional.hpp>
 #include <type_traits>
 
 #include "../Shaders/MaterialStore.hpp"
@@ -37,7 +37,7 @@ public:
 
 	virtual ~Disc() noexcept override = default;
 
-	std::optional<Intersection> Intersects(Math::Ray const &ray) const override;
+	boost::optional<Intersection> Intersects(Math::Ray const &ray) const override;
 
 	Containers::BoundingBox CalculateBoundingBox() const override;
 

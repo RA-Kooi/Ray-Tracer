@@ -2,7 +2,7 @@
 #define ef875083_56da_287e_58f0_a7a130757a7d
 
 #include <limits>
-#include <optional>
+#include <boost/optional.hpp>
 #include <type_traits>
 #include <vector>
 
@@ -56,7 +56,7 @@ public:
 	Math::Ray MakeMouseRay(int x, int y) const;
 
 private:
-	std::optional<Intersection> ShootRay(Math::Ray const &ray) const;
+	boost::optional<Intersection> ShootRay(Math::Ray const &ray) const;
 
 	std::vector<Observer<Light const>> LightsAtIntersection(
 		Intersection const &intersection) const;

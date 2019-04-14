@@ -11,7 +11,7 @@ using namespace LibRay::Math;
 
 namespace LibRay::Shapes
 {
-std::optional<Intersection> Plane::Intersects(Ray const &ray) const
+boost::optional<Intersection> Plane::Intersects(Ray const &ray) const
 {
 	Matrix4x4 const worlToModel = transform.InverseMatrix();
 
@@ -42,7 +42,7 @@ std::optional<Intersection> Plane::Intersects(Ray const &ray) const
 		return Intersection(*this, translatedNormal, pointOnPlane);
 	}
 
-	return std::nullopt;
+	return boost::none;
 }
 
 bool Plane::IsBoundable() const
