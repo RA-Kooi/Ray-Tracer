@@ -9,6 +9,7 @@ def FlagsForFile( filename, **kwargs ):
 			'-x', 'c++',
 			'-std=c++17',
 			'-DVIM_WORKAROUND',
+			'-DENABLE_GLFW',
 			'-isystem' + DirectoryOfThisScript() + '3rdparty',
 			'-isystem' + DirectoryOfThisScript(),
 			'-Weverything',
