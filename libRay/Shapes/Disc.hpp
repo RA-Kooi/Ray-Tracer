@@ -4,7 +4,6 @@
 #include <optional>
 #include <type_traits>
 
-#include "../Math/Vector3.hpp"
 #include "../Shaders/MaterialStore.hpp"
 #include "../API.hpp"
 #include "../Transform.hpp"

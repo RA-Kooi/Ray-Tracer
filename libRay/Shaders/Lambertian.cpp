@@ -32,13 +32,13 @@ Color LambertianShader::Run(
 			(light->Position() - intersectionPos);
 
 		float const intersectionToLightDistance =
-			intersectionToLight.Magnitude();
+			intersectionToLight.norm();
 
 		Vector3 const intersectionToLightDirection =
 			intersectionToLight / intersectionToLightDistance;
 
 		float const costheta =
-			intersection.surfaceNormal.Dot(intersectionToLightDirection);
+			intersection.surfaceNormal.dot(intersectionToLightDirection);
 
 		float const r2 =
 			intersectionToLightDistance * intersectionToLightDistance;

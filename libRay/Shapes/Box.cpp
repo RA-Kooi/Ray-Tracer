@@ -4,15 +4,14 @@
 
 #include "../Containers/BoundingBox.hpp"
 #include "../Math/MathUtils.hpp"
+#include "../Math/Vector.hpp"
 #include "../Math/Ray.hpp"
-#include "../Math/Vector2.hpp"
 #include "../Intersection.hpp"
 #include "../Transform.hpp"
 
-namespace LibRay
+namespace LibRay::Shapes
 {
-using namespace Math;
-using namespace Shapes;
+using namespace LibRay::Math;
 
 std::optional<Intersection> Box::Intersects(Math::Ray const &ray) const
 {
@@ -24,14 +23,14 @@ std::optional<Intersection> Box::Intersects(Math::Ray const &ray) const
 	Vector3 const halfBoundaries(0.5f, 0.5f, 0.5f);
 
 	Vector3 const inverseDir = 1.f / modelRay.Direction();
-	Vector3 const hit1 = (-halfBoundaries - modelRay.Origin()) * inverseDir;
-	Vector3 const hit2 = (halfBoundaries - modelRay.Origin()) * inverseDir;
+	Vector3 const hit1 = (-halfBoundaries - modelRay.Origin()).cwiseProduct(inverseDir);
+	Vector3 const hit2 = (halfBoundaries - modelRay.Origin()).cwiseProduct(inverseDir);
 
-	Vector3 const min = hit1.Min(hit2);
-	Vector3 const max = hit1.Max(hit2);
+	Vector3 const min = hit1.cwiseMin(hit2);
+	Vector3 const max = hit1.cwiseMax(hit2);
 
-	float const near = min.MaxComponent();
-	float const far = max.MinComponent();
+	float const near = min.maxCoeff();
+	float const far = max.minCoeff();
 
 	if(far < near)
 		return std::nullopt;
@@ -52,24 +51,24 @@ std::optional<Intersection> Box::Intersects(Math::Ray const &ray) const
 
 	auto const calculateNormal = [](Vector3 const &point) -> Vector3
 	{
-		Vector3 const pointAbs = point.Abs();
-		Vector3 normal;
+		Vector3 const pointAbs = point.cwiseAbs();
+		Vector3 normal = Vector3::Zero();
 
-		if(pointAbs.x >= pointAbs.y && pointAbs.x >= pointAbs.z)
-			normal.x = float(Sign(point.x));
+		if(pointAbs.x() >= pointAbs.y() && pointAbs.x() >= pointAbs.z())
+			normal.x() = float(Sign(point.x()));
 
-		if(pointAbs.y >= pointAbs.x && pointAbs.y >= pointAbs.z)
-			normal.y = float(Sign(point.y));
+		if(pointAbs.y() >= pointAbs.x() && pointAbs.y() >= pointAbs.z())
+			normal.y() = float(Sign(point.y()));
 
-		if(pointAbs.z >= pointAbs.x && pointAbs.z >= pointAbs.y)
-			normal.z = float(Sign(point.z));
+		if(pointAbs.z() >= pointAbs.x() && pointAbs.z() >= pointAbs.y())
+			normal.z() = float(Sign(point.z()));
 
-		if(normal.x > 0 && normal.y > 0)
-			normal.y = 0;
-		if(normal.x > 0 && normal.z > 0)
-			normal.z = 0;
-		if(normal.y > 0 && normal.z > 0)
-			normal.z = 0;
+		if(normal.x() > 0 && normal.y() > 0)
+			normal.y() = 0;
+		if(normal.x() > 0 && normal.z() > 0)
+			normal.z() = 0;
+		if(normal.y() > 0 && normal.z() > 0)
+			normal.z() = 0;
 
 		return normal;
 	};
@@ -113,31 +112,31 @@ Containers::BoundingBox Box::CalculateBoundingBox() const
 		Transform::TransformDirection(transform.Matrix(), backTopRight);
 
 	Vector3 const min = worldFrontBottomLeft
-		.Min(worldFrontBottomRight)
-		.Min(worldFrontTopLeft)
-		.Min(worldFrontTopRight)
-		.Min(worldBackBottomLeft)
-		.Min(worldBackBottomRight)
-		.Min(worldBackTopLeft)
-		.Min(worldBackTopRight);
+		.cwiseMin(worldFrontBottomRight)
+		.cwiseMin(worldFrontTopLeft)
+		.cwiseMin(worldFrontTopRight)
+		.cwiseMin(worldBackBottomLeft)
+		.cwiseMin(worldBackBottomRight)
+		.cwiseMin(worldBackTopLeft)
+		.cwiseMin(worldBackTopRight);
 
 	Vector3 const max = worldFrontBottomLeft
-		.Max(worldFrontBottomRight)
-		.Max(worldFrontTopLeft)
-		.Max(worldFrontTopRight)
-		.Max(worldBackBottomLeft)
-		.Max(worldBackBottomRight)
-		.Max(worldBackTopLeft)
-		.Max(worldBackTopRight);
+		.cwiseMax(worldFrontBottomRight)
+		.cwiseMax(worldFrontTopLeft)
+		.cwiseMax(worldFrontTopRight)
+		.cwiseMax(worldBackBottomLeft)
+		.cwiseMax(worldBackBottomRight)
+		.cwiseMax(worldBackTopLeft)
+		.cwiseMax(worldBackTopRight);
 
-	Vector3 bounds = (max - min).Abs();
-	if(bounds.x < FLT_EPSILON)
-		bounds.x = FLT_EPSILON;
-	if(bounds.y < FLT_EPSILON)
-		bounds.y = FLT_EPSILON;
-	if(bounds.z < FLT_EPSILON)
-		bounds.z = FLT_EPSILON;
+	Vector3 bounds = (max - min).cwiseAbs();
+	if(bounds.x() < FLT_EPSILON)
+		bounds.x() = FLT_EPSILON;
+	if(bounds.y() < FLT_EPSILON)
+		bounds.y() = FLT_EPSILON;
+	if(bounds.z() < FLT_EPSILON)
+		bounds.z() = FLT_EPSILON;
 
 	return Containers::BoundingBox(bounds, transform.Position());
 }
-} // namespace LibRay
+} // namespace LibRay::Shapes

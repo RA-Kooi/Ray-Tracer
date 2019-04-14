@@ -4,6 +4,7 @@
 #include <type_traits>
 #include <vector>
 
+#include "../Math/Vector.hpp"
 #include "../Utilites.hpp"
 #include "Shader.hpp"
 
@@ -12,7 +13,6 @@ namespace LibRay
 namespace Math
 {
 class Ray;
-class Vector3;
 } // namespace Math
 
 namespace Shapes

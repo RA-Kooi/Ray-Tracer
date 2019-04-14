@@ -7,7 +7,7 @@
 #include <numeric>
 
 #include "../Math/MathUtils.hpp"
-#include "../Math/Vector2.hpp"
+#include "../Math/Vector.hpp"
 #include "../Intersection.hpp"
 #include "BoundingBox.hpp"
 
@@ -46,12 +46,12 @@ BoundingBox BVH::CalculateBoundingBox(ShapeVec const &objects) const
 
 		Vector3 const halfBoundaries = boundingBox.Dimensions() * 0.5f;
 
-		min = min.Min(boundingBox.Position() - halfBoundaries);
-		max = max.Max(boundingBox.Position() + halfBoundaries);
+		min = min.cwiseMin(boundingBox.Position() - halfBoundaries);
+		max = max.cwiseMax(boundingBox.Position() + halfBoundaries);
 	}
 
 	Vector3 const position = (max + min) * 0.5f;
-	Vector3 const dimensions = (max - min).Abs();
+	Vector3 const dimensions = (max - min).cwiseAbs();
 
 	return BoundingBox(dimensions, position);
 }
@@ -69,11 +69,11 @@ BoundingBox BVH::CalculateBoundingBox(
 	Vector3 const rightA = a.Position() + halfA;
 	Vector3 const rightB = b.Position() + halfB;
 
-	Vector3 const min = leftA.Min(rightA).Min(leftB).Min(rightB);
-	Vector3 const max = leftA.Max(rightA).Max(leftB).Max(rightB);
+	Vector3 const min = leftA.cwiseMin(rightA).cwiseMin(leftB).cwiseMin(rightB);
+	Vector3 const max = leftA.cwiseMax(rightA).cwiseMax(leftB).cwiseMax(rightB);
 
 	Vector3 const position = (max + min) * 0.5f;
-	Vector3 const dimensions = (max - min).Abs();
+	Vector3 const dimensions = (max - min).cwiseAbs();
 
 	return BoundingBox(dimensions, position);
 }
@@ -98,19 +98,19 @@ std::array<ShapeVec, 2> BVH::SplitObjects(ShapeVec &&objects) const
 				Vector3 const &positionB = b->Transform().Position();
 
 				if(x)
-					return positionA.x < positionB.x;
+					return positionA.x() < positionB.x();
 				else if(y)
-					return positionA.y < positionB.y;
+					return positionA.y() < positionB.y();
 
-				return positionA.z < positionB.z;
+				return positionA.z() < positionB.z();
 			});
 
 		Vector3 const &frontPos = sorted.front()->Transform().Position();
 		Vector3 const &backPos = sorted.back()->Transform().Position();
 
-		float const midX = frontPos.x + backPos.x;
-		float const midY = frontPos.y + backPos.y;
-		float const midZ = frontPos.z + backPos.z;
+		float const midX = frontPos.x() + backPos.x();
+		float const midY = frontPos.y() + backPos.y();
+		float const midZ = frontPos.z() + backPos.z();
 
 		float const mid = (x ? midX : y ? midY : midZ) * 0.5f;
 
@@ -123,11 +123,11 @@ std::array<ShapeVec, 2> BVH::SplitObjects(ShapeVec &&objects) const
 				Vector3 const position = b->Transform().Position();
 
 				if(x)
-					return position.x > midPoint;
+					return position.x() > midPoint;
 				else if(y)
-					return position.y > midPoint;
+					return position.y() > midPoint;
 
-				return position.z > midPoint;
+				return position.z() > midPoint;
 			});
 
 		std::size_t midPoint =
@@ -332,8 +332,8 @@ std::optional<Intersection> BVHNode::Traverse(Ray const &ray) const
 			if(intersection)
 			{
 				Vector3 const intersectionToOrigin =
-					(intersection->worldPosition - ray.Origin());
-				distance = intersectionToOrigin.SquareMagnitude();
+					intersection->worldPosition - ray.Origin();
+				distance = intersectionToOrigin.squaredNorm();
 
 				if(distance < (boundingBoxDistance2 * boundingBoxDistance2))
 					return intersection;
@@ -344,8 +344,8 @@ std::optional<Intersection> BVHNode::Traverse(Ray const &ray) const
 			if(intersection && intersection2)
 			{
 				Vector3 const intersectionToOrigin =
-					(intersection2->worldPosition - ray.Origin());
-				float const distance2 = intersectionToOrigin.SquareMagnitude();
+					intersection2->worldPosition - ray.Origin();
+				float const distance2 = intersectionToOrigin.squaredNorm();
 
 				if(distance < distance2)
 					return intersection;
@@ -367,8 +367,8 @@ std::optional<Intersection> BVHNode::Traverse(Ray const &ray) const
 		if(intersection)
 		{
 			Vector3 const intersectionToOrigin =
-				(intersection->worldPosition - ray.Origin());
-			distance = intersectionToOrigin.SquareMagnitude();
+				intersection->worldPosition - ray.Origin();
+			distance = intersectionToOrigin.squaredNorm();
 
 			if(distance < (boundingBoxDistance1 * boundingBoxDistance1))
 				return intersection;
@@ -379,8 +379,8 @@ std::optional<Intersection> BVHNode::Traverse(Ray const &ray) const
 		if(intersection && intersection2)
 		{
 			Vector3 const intersectionToOrigin =
-				(intersection2->worldPosition - ray.Origin());
-			float const distance2 = intersectionToOrigin.SquareMagnitude();
+				intersection2->worldPosition - ray.Origin();
+			float const distance2 = intersectionToOrigin.squaredNorm();
 
 			if(distance < distance2)
 				return intersection;
@@ -447,8 +447,8 @@ std::optional<Intersection> BVHLeaf::Traverse(Ray const &ray) const
 			continue;
 
 		Vector3 const intersectionToOrigin =
-			(intersection->worldPosition - ray.Origin());
-		float const distance = intersectionToOrigin.SquareMagnitude();
+			intersection->worldPosition - ray.Origin();
+		float const distance = intersectionToOrigin.squaredNorm();
 
 		if(closestIntersection)
 		{

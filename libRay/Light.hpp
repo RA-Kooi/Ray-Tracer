@@ -3,7 +3,7 @@
 
 #include <type_traits>
 
-#include "Math/Vector3.hpp"
+#include "Math/Vector.hpp"
 #include "Shapes/Color.hpp"
 #include "API.hpp"
 
@@ -29,7 +29,7 @@ private:
 
 static_assert(std::is_copy_constructible_v<Light>);
 static_assert(std::is_copy_assignable_v<Light>);
-static_assert(std::is_trivially_copyable_v<Light>);
+static_assert(!std::is_trivially_copyable_v<Light>);
 
 static_assert(std::is_move_constructible_v<Light>);
 static_assert(std::is_move_assignable_v<Light>);

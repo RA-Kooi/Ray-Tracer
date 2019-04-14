@@ -20,9 +20,9 @@
 #include <stb/stb_image_write.h>
 
 #include <libRay/Math/MathUtils.hpp>
+#include <libRay/Math/Quaternion.hpp>
 #include <libRay/Math/Ray.hpp>
-#include <libRay/Math/Vector2.cpp>
-#include <libRay/Math/Vector3.cpp>
+#include <libRay/Math/Vector.hpp>
 #include <libRay/RayTracer.hpp>
 #include <libRay/Scene.hpp>
 #include <libRay/Shapes/Shape.hpp>
@@ -67,7 +67,9 @@ int main(int, char*[])
 	DisableTGARLE();
 
 	Camera camera(
-		Transform(Vector3(0, 15, 30), Vector3(-Math::PI * 0.125f)),
+		Transform(
+			Vector3(0, 15, 30),
+			Eigen::AngleAxis<float>(-Math::PI * 0.125f, Vector3(1, 0, 0))),
 		Vector2(640.f, 480.f),
 		Math::Radians(90.f),
 		1.f,
@@ -258,8 +260,8 @@ void ShowDebugWindow(
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 	Observer<GLFWwindow> window = glfwCreateWindow(
-		int(camera.ScreenSize().x),
-		int(camera.ScreenSize().y),
+		int(camera.ScreenSize().x()),
+		int(camera.ScreenSize().y()),
 		"Ray tracer",
 		nullptr,
 		nullptr);

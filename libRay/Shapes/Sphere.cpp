@@ -48,9 +48,9 @@ std::optional<Intersection> Sphere::Intersects(Ray const &ray) const
 
 	Vector3 const centerToOrigin = modelRay.Origin();
 
-	float const a = modelRay.Direction().SquareMagnitude();
-	float const b = (modelRay.Direction() * 2.f).Dot(centerToOrigin);
-	float const c = centerToOrigin.SquareMagnitude() - radius * radius;
+	float const a = modelRay.Direction().squaredNorm();
+	float const b = (modelRay.Direction() * 2.f).dot(centerToOrigin);
+	float const c = centerToOrigin.squaredNorm() - radius * radius;
 
 	std::tuple<int, float, float> solutions = Math::SolveQuadratic(a, b, c);
 
@@ -102,13 +102,13 @@ Containers::BoundingBox Sphere::CalculateBoundingBox() const
 {
 	Vector3 const radiusVec(radius, radius, radius);
 
-	Vector3 bounds = radiusVec * 2 * transform.Scale();
-	if(bounds.x < FLT_EPSILON)
-		bounds.x = FLT_EPSILON;
-	if(bounds.y < FLT_EPSILON)
-		bounds.y = FLT_EPSILON;
-	if(bounds.z < FLT_EPSILON)
-		bounds.z = FLT_EPSILON;
+	Vector3 bounds = (radiusVec * 2).cwiseProduct(transform.Scale());
+	if(bounds.x() < FLT_EPSILON)
+		bounds.x() = FLT_EPSILON;
+	if(bounds.y() < FLT_EPSILON)
+		bounds.y() = FLT_EPSILON;
+	if(bounds.z() < FLT_EPSILON)
+		bounds.z() = FLT_EPSILON;
 
 	return Containers::BoundingBox(bounds, transform.Position());
 }

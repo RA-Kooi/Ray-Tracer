@@ -3,17 +3,12 @@
 
 #include <type_traits>
 
-#include "Math/Vector2.hpp"
+#include "Math/Vector.hpp"
 #include "API.hpp"
 #include "Transform.hpp"
 
 namespace LibRay
 {
-namespace Math
-{
-class Vector3;
-} // namespace Math
-
 class LIBRAY_API Camera final
 {
 public:
@@ -62,7 +57,7 @@ private:
 
 static_assert(std::is_copy_constructible_v<Camera>);
 static_assert(std::is_copy_assignable_v<Camera>);
-static_assert(std::is_trivially_copyable_v<Camera>);
+static_assert(!std::is_trivially_copyable_v<Camera>);
 
 static_assert(std::is_move_constructible_v<Camera>);
 static_assert(std::is_move_assignable_v<Camera>);

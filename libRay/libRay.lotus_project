@@ -15,7 +15,7 @@
 
 	"rpath":["$ORIGIN"],
 
-	"use":[],
+	"use":["Eigen3"],
 
 	"sources":
 	[

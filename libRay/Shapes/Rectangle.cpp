@@ -31,13 +31,13 @@ std::optional<Intersection> Rectangle::Intersects(Ray const &ray) const
 		Transform::TransformTranslation(worlToModel, ray.Origin()),
 		Transform::TransformDirection(worlToModel, ray.Direction()));
 
-	Vector3 const normal = Vector3::Forward();
+	Vector3 const normal = Vector3(0, 0, 1);
 	Vector3 const centerToOrigin = modelRay.Origin();
 
-	float const denominator = normal.Dot(modelRay.Direction());
+	float const denominator = normal.dot(modelRay.Direction());
 	if(-denominator > FLT_EPSILON)
 	{
-		float const distanceToCenter = centerToOrigin.Dot(normal)
+		float const distanceToCenter = centerToOrigin.dot(normal)
 			/ -denominator;
 
 		Vector3 const pointOnRect = modelRay.Origin()
@@ -45,12 +45,12 @@ std::optional<Intersection> Rectangle::Intersects(Ray const &ray) const
 			* distanceToCenter;
 
 		// Determine the vertices of the rectangle
-		float const halfWidth = dimensions.x * 0.5f;
-		float const halfHeight = dimensions.y * 0.5f;
+		float const halfWidth = dimensions.x() * 0.5f;
+		float const halfHeight = dimensions.y() * 0.5f;
 
 		// If all the signs are the same, the point is on the rectangle
-		if(pointOnRect.x > -halfWidth && pointOnRect.x < halfWidth
-		   && pointOnRect.y > -halfHeight && pointOnRect.y < halfHeight)
+		if(pointOnRect.x() > -halfWidth && pointOnRect.x() < halfWidth
+		   && pointOnRect.y() > -halfHeight && pointOnRect.y() < halfHeight)
 		{
 			return Intersection(
 				*this,
@@ -64,10 +64,10 @@ std::optional<Intersection> Rectangle::Intersects(Ray const &ray) const
 
 Containers::BoundingBox Rectangle::CalculateBoundingBox() const
 {
-	Vector3 const topLeft(-dimensions.x, dimensions.y);
-	Vector3 const topRight(dimensions.x, dimensions.y);
-	Vector3 const BottomLeft(-dimensions.x, -dimensions.y);
-	Vector3 const BottomRight(dimensions.x, -dimensions.y);
+	Vector3 const topLeft(-dimensions.x(), dimensions.y(), 0);
+	Vector3 const topRight(dimensions.x(), dimensions.y(), 0);
+	Vector3 const BottomLeft(-dimensions.x(), -dimensions.y(), 0);
+	Vector3 const BottomRight(dimensions.x(), -dimensions.y(), 0);
 
 	Vector3 const worldTopLeft =
 		Transform::TransformDirection(transform.Matrix(), topLeft);
@@ -79,22 +79,22 @@ Containers::BoundingBox Rectangle::CalculateBoundingBox() const
 		Transform::TransformDirection(transform.Matrix(), topRight);
 
 	Vector3 const min = worldTopLeft
-		.Min(worldTopRight)
-		.Min(worldBottomLeft)
-		.Min(worldBottomRight);
+		.cwiseMin(worldTopRight)
+		.cwiseMin(worldBottomLeft)
+		.cwiseMin(worldBottomRight);
 
 	Vector3 const max = worldTopLeft
-		.Max(worldTopRight)
-		.Max(worldBottomLeft)
-		.Max(worldBottomRight);
+		.cwiseMax(worldTopRight)
+		.cwiseMax(worldBottomLeft)
+		.cwiseMax(worldBottomRight);
 
-	Vector3 bounds = (max - min).Abs();
-	if(bounds.x < FLT_EPSILON)
-		bounds.x = FLT_EPSILON;
-	if(bounds.y < FLT_EPSILON)
-		bounds.y = FLT_EPSILON;
-	if(bounds.z < FLT_EPSILON)
-		bounds.z = FLT_EPSILON;
+	Vector3 bounds = (max - min).cwiseAbs();
+	if(bounds.x() < FLT_EPSILON)
+		bounds.x() = FLT_EPSILON;
+	if(bounds.y() < FLT_EPSILON)
+		bounds.y() = FLT_EPSILON;
+	if(bounds.z() < FLT_EPSILON)
+		bounds.z() = FLT_EPSILON;
 
 	return Containers::BoundingBox(bounds, transform.Position());
 }

@@ -1,18 +1,42 @@
 #include "Transform.hpp"
 
+#include <Eigen/Geometry>
+
 namespace LibRay
 {
 using namespace Math;
 
+Transform::Transform()
+: position(Vector3::Zero())
+, scale(Vector3::Ones())
+, rotation(Quaternion::Identity())
+, dirty(false)
+{
+	RecalculateMatrix();
+}
+
 Transform::Transform(
 	Vector3 const &position,
-	Vector3 const &rotation,
+	Quaternion const &rotation,
 	Vector3 const &scale)
 : position(position)
-, rotation(rotation)
 , scale(scale)
-, matrix(Matrix4x4::Identity())
+, rotation(rotation)
+, dirty(false)
 {
+	RecalculateMatrix();
+}
+
+Transform::Transform(
+	Vector3 const &position,
+	Eigen::AngleAxis<float> const &rotation,
+	Vector3 const &scale)
+: position(position)
+, scale(scale)
+, rotation(rotation)
+, dirty(false)
+{
+	RecalculateMatrix();
 }
 
 void Transform::Translate(Vector3 const &translation)
@@ -34,21 +58,21 @@ Vector3 const &Transform::Position() const
 	return position;
 }
 
-void Transform::AddRotation(Math::Vector3 const &eulerAngles)
+void Transform::AddRotation(Math::Quaternion const &extraRotation)
 {
 	dirty = true;
 
-	rotation += eulerAngles;
+	rotation *= extraRotation;
 }
 
-void Transform::Rotate(Math::Vector3 const &eulerAngles)
+void Transform::Rotate(Math::Quaternion const &newRotation)
 {
 	dirty = true;
 
-	rotation = eulerAngles;
+	rotation = newRotation;
 }
 
-Vector3 const &Transform::Rotation() const
+Quaternion const &Transform::Rotation() const
 {
 	return rotation;
 }
@@ -74,17 +98,11 @@ Vector3 const &Transform::Scale() const
 
 Matrix4x4 const &Transform::Matrix() const
 {
-	if(dirty)
-		RecalculateMatrix();
-
 	return matrix;
 }
 
 Matrix4x4 const &Transform::InverseMatrix() const
 {
-	if(dirty)
-		RecalculateMatrix();
-
 	return inverseMatrix;
 }
 
@@ -92,68 +110,38 @@ Vector3 Transform::TransformDirection(
 	Matrix4x4 const &matrix,
 	Vector3 const &direction)
 {
-	Vector3 translatedDirection;
-
-	translatedDirection.x = direction.x * matrix.r00
-		+ direction.y * matrix.r01
-		+ direction.z * matrix.r02;
-
-	translatedDirection.y = direction.x * matrix.r10
-		+ direction.y * matrix.r11
-		+ direction.z * matrix.r12;
-
-	translatedDirection.z = direction.x * matrix.r20
-		+ direction.y * matrix.r21
-		+ direction.z * matrix.r22;
-
-	return translatedDirection;
+	return matrix.topLeftCorner<3, 3>() * direction;
 }
 
 Vector3 Transform::TransformTranslation(
 	Matrix4x4 const &matrix,
 	Vector3 const &translation)
 {
-	Vector3 translatedPosition;
+	Vector4 const transformed = matrix
+		* Vector4(translation.x(), translation.y(), translation.z(), 1);
 
-	translatedPosition.x = translation.x * matrix.r00
-		+ translation.y * matrix.r01
-		+ translation.z * matrix.r02
-		+ matrix.r03;
-
-	translatedPosition.y = translation.x * matrix.r10
-		+ translation.y * matrix.r11
-		+ translation.z * matrix.r12
-		+ matrix.r13;
-
-	translatedPosition.z = translation.x * matrix.r20
-		+ translation.y * matrix.r21
-		+ translation.z * matrix.r22
-		+ matrix.r23;
-
-	float const w = translation.x * matrix.r30
-		+ translation.y * matrix.r31
-		+ translation.z * matrix.r32
-		+ matrix.r33;
-
-	translatedPosition /= w;
-
-	return translatedPosition;
+	return transformed.block<3, 1>(0, 0);
 }
 
-void Transform::RecalculateMatrix() const
+void Transform::RecalculateMatrix()
 {
-	Matrix4x4 rotationMatrix = Matrix4x4::Identity()
-		.RotateZ(rotation.z)
-		.RotateY(rotation.y)
-		.RotateX(rotation.x);
+	Matrix4x4 scaleMatrix = Matrix4x4::Identity();
+	scaleMatrix.topLeftCorner<3, 3>() =
+		Eigen::Scaling(scale.x(), scale.y(), scale.z());
 
-	Matrix4x4 scaleMatrix = Matrix4x4::Identity().Scale(scale);
+	Matrix4x4 const rotationMatrix = Eigen::Affine3f(rotation).matrix();
 
-	Matrix4x4 translationMatrix = Matrix4x4::Identity().Translate(position);
+	Matrix4x4 translationMatrix = Matrix4x4::Identity();
+	translationMatrix.col(3).head<3>() = position;
 
-	matrix = translationMatrix * scaleMatrix * rotationMatrix;
-	inverseMatrix = matrix.Inverted();
+	matrix = translationMatrix * rotationMatrix * scaleMatrix;
+	inverseMatrix = matrix.inverse();
 
 	dirty = false;
+}
+
+bool Transform::IsDirty() const
+{
+	return dirty;
 }
 } // namespace LibRay

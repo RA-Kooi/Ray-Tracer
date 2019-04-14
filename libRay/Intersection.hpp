@@ -3,7 +3,7 @@
 
 #include <type_traits>
 
-#include "Math/Vector3.hpp"
+#include "Math/Vector.hpp"
 #include "API.hpp"
 #include "Utilites.hpp"
 
@@ -30,7 +30,7 @@ public:
 
 static_assert(std::is_copy_constructible_v<Intersection>);
 static_assert(std::is_copy_assignable_v<Intersection>);
-static_assert(std::is_trivially_copyable_v<Intersection>);
+static_assert(!std::is_trivially_copyable_v<Intersection>);
 
 static_assert(std::is_move_constructible_v<Intersection>);
 static_assert(std::is_move_assignable_v<Intersection>);

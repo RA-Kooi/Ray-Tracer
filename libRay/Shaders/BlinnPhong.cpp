@@ -4,6 +4,7 @@
 #include <cmath>
 
 #include "../Math/Ray.hpp"
+#include "../Math/Vector.hpp"
 #include "../Shapes/Color.hpp"
 #include "../Shapes/Shape.hpp"
 #include "../Intersection.hpp"
@@ -36,21 +37,19 @@ Color BlinnPhongShader::Run(
 
 	for(Observer<Light const> const &light: lights)
 	{
-		Vector3 const intersectionToLight =
-			(light->Position() - intersectionPos);
+		Vector3 const intersectionToLight = light->Position() - intersectionPos;
 
-		float const intersectionToLightDistance =
-			intersectionToLight.Magnitude();
+		float const intersectionToLightDistance = intersectionToLight.norm();
 
 		Vector3 const intersectionToLightDirection =
 			intersectionToLight / intersectionToLightDistance;
 
-		float const cosTheta = normal.Dot(intersectionToLightDirection);
+		float const cosTheta = normal.dot(intersectionToLightDirection);
 
 		Vector3 const viewLightBisector =
-			(view + intersectionToLightDirection).Normalize();
+			(view + intersectionToLightDirection).normalized();
 
-		float const viewLightDirection = normal.Dot(viewLightBisector);
+		float const viewLightDirection = normal.dot(viewLightBisector);
 
 		float const r2 =
 			intersectionToLightDistance * intersectionToLightDistance;

@@ -3,10 +3,8 @@
 #include <algorithm>
 #include <optional>
 
-#include "Math/Matrix4x4.hpp"
+#include "Math/Matrix.hpp"
 #include "Math/Ray.hpp"
-#include "Math/Vector2.hpp"
-#include "Math/Vector3.hpp"
 #include "Shaders/Material.hpp"
 #include "Shaders/Shader.hpp"
 #include "Shapes/Color.hpp"
@@ -45,7 +43,7 @@ Image RayTracer::Trace() const
 	Vector2 const &screenSize = camera.ScreenSize();
 	Camera::Frustum const frustum = camera.SceneFrustum();
 
-	Image output(std::size_t(screenSize.x), std::size_t(screenSize.y));
+	Image output(std::size_t(screenSize.x()), std::size_t(screenSize.y()));
 
 	float const nearPlaneWidth = frustum.nearPlaneHeight * frustum.aspectRatio;
 	float const halfNearPlaneWidth = 0.5f * nearPlaneWidth;
@@ -53,35 +51,35 @@ Image RayTracer::Trace() const
 
 	Vector3 const cameraPosition = camera.Transform().Position();
 
-	Vector3 const nearPlanePosition = Vector3::Backward()
+	Vector3 const nearPlanePosition = Vector3(0, 0, -1)
 		* frustum.nearPlaneDistance;
 
 	Vector3 const nearPlaneTopLeft = nearPlanePosition
-		- Vector3(halfNearPlaneWidth, -halfNearPlaneHeight);
+		- Vector3(halfNearPlaneWidth, -halfNearPlaneHeight, 0);
 
-	float const stepX = nearPlaneWidth / screenSize.x;
+	float const stepX = nearPlaneWidth / screenSize.x();
 	float const halfStepX = 0.5f * stepX;
-	float const stepY = frustum.nearPlaneHeight / screenSize.y;
+	float const stepY = frustum.nearPlaneHeight / screenSize.y();
 	float const halfStepY = 0.5f * stepY;
 
 	Matrix4x4 const camToWorld = camera.Transform().Matrix();
 
 	Vector3 const worldFar = Transform::TransformTranslation(
 		camToWorld,
-		Vector3::Backward() * frustum.farPlaneDistance);
+		Vector3(0, 0, -1) * frustum.farPlaneDistance);
 
 	float const worldFarDistance =
-		(worldFar - cameraPosition).SquareMagnitude();
+		(worldFar - cameraPosition).squaredNorm();
 
-	for(int y = int(screenSize.y) - 1; y >= 0; --y)
+	for(int y = int(screenSize.y()) - 1; y >= 0; --y)
 	{
-		for(int x = 0; x < int(screenSize.x); ++x)
+		for(int x = 0; x < int(screenSize.x()); ++x)
 		{
-			float const u = nearPlaneTopLeft.x + x * stepX + halfStepX;
-			float const v = nearPlaneTopLeft.y - y * stepY - halfStepY;
+			float const u = nearPlaneTopLeft.x() + x * stepX + halfStepX;
+			float const v = nearPlaneTopLeft.y() - y * stepY - halfStepY;
 
 			Vector3 rayTarget(u, -v, -1);
-			rayTarget.Normalize();
+			rayTarget.normalize();
 
 			Ray const ray(
 				Transform::TransformTranslation(
@@ -131,16 +129,16 @@ Color RayTracer::TraceRay(
 			"\t\tPos: [X: %f, Y: %f, Z: %f],\n"
 			"\t\tNormal: [X: %f, Y: %f, Z: %f]\n"
 			"\t},\n\n",
-			double(intersectionPos.x),
-			double(intersectionPos.y),
-			double(intersectionPos.z),
-			double(intersection->surfaceNormal.x),
-			double(intersection->surfaceNormal.y),
-			double(intersection->surfaceNormal.z));
+			double(intersectionPos.x()),
+			double(intersectionPos.y()),
+			double(intersectionPos.z()),
+			double(intersection->surfaceNormal.x()),
+			double(intersection->surfaceNormal.y()),
+			double(intersection->surfaceNormal.z()));
 	}
 
 	float const intersectionDistance =
-		(ray.Origin() - intersectionPos).SquareMagnitude();
+		(ray.Origin() - intersectionPos).squaredNorm();
 
 	if(intersectionDistance > farPlaneDistance)
 	{
@@ -160,13 +158,13 @@ Color RayTracer::TraceRay(
 			"\t\tPos: [X: %f, Y: %f, Z: %f],\n"
 			"\t\tNormal: [X: %f, Y: %f, Z: %f]\n"
 			"\t},\n\n",
-			double(pos.x), double(pos.y), double(pos.z),
-			double(normal.x), double(normal.y), double(normal.z));
+			double(pos.x()), double(pos.y()), double(pos.z()),
+			double(normal.x()), double(normal.y()), double(normal.z()));
 	}
 
 	Vector3 const &cameraPosition = scene.Camera().Transform().Position();
 	Vector3 const &normal = intersection->surfaceNormal;
-	Vector3 const view = (cameraPosition - intersectionPos).Normalize();
+	Vector3 const view = (cameraPosition - intersectionPos).normalized();
 
 	std::vector<Observer<Light const>> unobstructedLights =
 		LightsAtIntersection(*intersection);
@@ -209,24 +207,24 @@ Color RayTracer::TraceRay(
 				"\t\tOrigin: [x: %f, y: %f, z: %f],\n"
 				"\t\tDirection: [x: %f, y: %f, z: %f]\n"
 				"\t},\n\n",
-				double(ray.Origin().x),
-				double(ray.Origin().y),
-				double(ray.Origin().z),
-				double(ray.Direction().x),
-				double(ray.Direction().y),
-				double(ray.Direction().z));
+				double(ray.Origin().x()),
+				double(ray.Origin().y()),
+				double(ray.Origin().z()),
+				double(ray.Direction().x()),
+				double(ray.Direction().y()),
+				double(ray.Direction().z()));
 
 			std::printf(
 				"\tReflection ray:\n\t{\n"
 				"\t\tOrigin: [x: %f, y: %f, z: %f],\n"
 				"\t\tDirection: [x: %f, y: %f, z: %f]\n"
 				"\t},\n\n",
-				double(reflectedRay.Origin().x),
-				double(reflectedRay.Origin().y),
-				double(reflectedRay.Origin().z),
-				double(reflectedRay.Direction().x),
-				double(reflectedRay.Direction().y),
-				double(reflectedRay.Direction().z));
+				double(reflectedRay.Origin().x()),
+				double(reflectedRay.Origin().y()),
+				double(reflectedRay.Origin().z()),
+				double(reflectedRay.Direction().x()),
+				double(reflectedRay.Direction().y()),
+				double(reflectedRay.Direction().z()));
 		}
 
 		Color const reflectedColor = TraceRay(
@@ -259,7 +257,7 @@ Ray RayTracer::ReflectRay(
 	Vector3 const &normal) const
 {
 	Vector3 const view = -ray.Direction();
-	float const cosTheta = view.Dot(normal);
+	float const cosTheta = view.dot(normal);
 	Vector3 const viewOnNormalProjection = cosTheta * normal;
 	Vector3 const reflected = view + 2 * (viewOnNormalProjection - view);
 
@@ -277,18 +275,18 @@ Ray RayTracer::MakeMouseRay(int x, int y) const
 	float const halfNearPlaneHeight = 0.5f * frustum.nearPlaneHeight;
 
 	Vector3 const cameraPosition = camera.Transform().Position();
-	Vector3 const nearPlanePosition = Vector3::Backward()
+	Vector3 const nearPlanePosition = Vector3(0, 0, -1)
 		* frustum.nearPlaneDistance;
 	Vector3 const nearPlaneTopLeft = nearPlanePosition
-		- Vector3(halfNearPlaneWidth, -halfNearPlaneHeight);
+		- Vector3(halfNearPlaneWidth, -halfNearPlaneHeight, 0);
 
-	float const stepX = nearPlaneWidth / screenSize.x;
+	float const stepX = nearPlaneWidth / screenSize.x();
 	float const halfStepX = 0.5f * stepX;
-	float const stepY = frustum.nearPlaneHeight / screenSize.y;
+	float const stepY = frustum.nearPlaneHeight / screenSize.y();
 	float const halfStepY = 0.5f * stepY;
 
-	float const u = nearPlaneTopLeft.x + x * stepX + halfStepX;
-	float const v = nearPlaneTopLeft.y - y * stepY - halfStepY;
+	float const u = nearPlaneTopLeft.x() + x * stepX + halfStepX;
+	float const v = nearPlaneTopLeft.y() - y * stepY - halfStepY;
 
 	Vector3 const rayTarget(u, v, -1);
 
@@ -311,7 +309,7 @@ std::optional<Intersection> RayTracer::ShootRay(Ray const &ray) const
 	{
 		Vector3 const intersectionToOrigin =
 			(closestIntersection->worldPosition - ray.Origin());
-		closestDistance = intersectionToOrigin.SquareMagnitude();
+		closestDistance = intersectionToOrigin.squaredNorm();
 	}
 
 	for(auto const &shape: scene.UnboundableShapes())
@@ -321,7 +319,7 @@ std::optional<Intersection> RayTracer::ShootRay(Ray const &ray) const
 		{
 			Vector3 const intersectionToOrigin =
 				(intersection->worldPosition - ray.Origin());
-			float const distance = intersectionToOrigin.SquareMagnitude();
+			float const distance = intersectionToOrigin.squaredNorm();
 
 			if(closestIntersection)
 			{
@@ -359,7 +357,7 @@ std::vector<Observer<Light const>> RayTracer::LightsAtIntersection(
 			light.Position() - intersection.worldPosition);
 
 		float const lightDistance =
-			(light.Position() - biasedOrigin).SquareMagnitude();
+			(light.Position() - biasedOrigin).squaredNorm();
 
 		std::optional<Intersection> lightIntersection = ShootRay(lightRay);
 
@@ -371,7 +369,7 @@ std::vector<Observer<Light const>> RayTracer::LightsAtIntersection(
 				(lightIntersection->worldPosition - biasedOrigin);
 
 			float const intersectionDistance =
-				intersectionToOrigin.SquareMagnitude();
+				intersectionToOrigin.squaredNorm();
 
 			if(intersectionDistance > lightDistance)
 				unobstructedLights.push_back(&light);

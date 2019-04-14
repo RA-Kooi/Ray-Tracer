@@ -12,7 +12,6 @@ namespace LibRay
 namespace Math
 {
 class Ray;
-class Vector3;
 } // namespace Math
 
 namespace Shapes

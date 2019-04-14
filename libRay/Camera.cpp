@@ -2,8 +2,6 @@
 
 #include <cmath>
 
-#include "Math/Vector3.hpp"
-
 namespace LibRay
 {
 using namespace Math;
@@ -46,7 +44,7 @@ Camera::Frustum Camera::SceneFrustum() const
 
 	return Frustum(
 		fovY,
-		screenSize.x / screenSize.y,
+		screenSize.x() / screenSize.y(),
 		nearPlaneHeight,
 		nearPlane,
 		farPlaneHeight,
