@@ -1,4 +1,17 @@
 {
+	"Eigen3":
+	{
+		"type":"headers",
+
+		"common":
+		{
+			"includes":["/usr/include/eigen3"],
+
+			"optional":false,
+
+			"code":"eigen_test.cpp"
+		}
+	},
 	"pthread":
 	{
 		"type":"lib",

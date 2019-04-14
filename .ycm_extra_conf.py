@@ -10,6 +10,7 @@ def FlagsForFile( filename, **kwargs ):
 			'-std=c++17',
 			'-DVIM_WORKAROUND',
 			'-DENABLE_GLFW',
+			'-isystem/usr/include/eigen3',
 			'-isystem' + DirectoryOfThisScript() + '3rdparty',
 			'-isystem' + DirectoryOfThisScript(),
 			'-Weverything',
