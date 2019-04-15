@@ -3,17 +3,12 @@
 
 #include <type_traits>
 
-#include "Math/Vector2.hpp"
+#include "Math/Vector.hpp"
 #include "API.hpp"
 #include "Transform.hpp"
 
 namespace LibRay
 {
-namespace Math
-{
-class Vector3;
-} // namespace Math
-
 class LIBRAY_API Camera final
 {
 public:

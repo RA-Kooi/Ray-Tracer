@@ -2,8 +2,7 @@
 
 #include <cassert>
 
-#include "Math/Vector2.hpp"
-#include "Math/Vector3.hpp"
+#include "Math/Vector.hpp"
 #include "Shaders/BlinnPhong.hpp"
 #include "Shaders/Material.hpp"
 #include "Shapes/Box.hpp"
@@ -79,7 +78,7 @@ Scene::Scene(
 				auto box = std::make_unique<Box>(
 					Transform(
 						Vector3(float(x), 0, float(z)),
-						Vector3::Zero(),
+						Vector3(0),
 						Vector3(10, 20, 10)),
 					materialStore,
 					mildlyShinyMaterial,

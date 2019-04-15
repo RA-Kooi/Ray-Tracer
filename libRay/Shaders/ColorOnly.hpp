@@ -4,7 +4,7 @@
 #include <type_traits>
 #include <vector>
 
-#include "../Utilites.hpp"
+#include "../Math/Vector.hpp"
 #include "Shader.hpp"
 
 namespace LibRay
@@ -12,7 +12,6 @@ namespace LibRay
 namespace Math
 {
 class Ray;
-class Vector3;
 } // namespace Math
 
 namespace Shapes
@@ -35,7 +34,6 @@ public:
 		std::vector<Observer<Light const>> const &lights,
 		Shapes::Color const &ambientLight,
 		float ambientIntensity) const override;
-
 };
 
 static_assert(std::is_copy_constructible_v<ColorOnlyShader>);

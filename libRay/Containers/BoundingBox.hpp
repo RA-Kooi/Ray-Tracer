@@ -3,12 +3,16 @@
 
 #include <type_traits>
 
-#include "../Math/Ray.hpp"
-#include "../Math/Vector3.hpp"
+#include "../Math/Vector.hpp"
 #include "../API.hpp"
 
 namespace LibRay
 {
+namespace Math
+{
+class Ray;
+} // namespace Math
+
 namespace Containers
 {
 class LIBRAY_API BoundingBox

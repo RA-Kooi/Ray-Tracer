@@ -3,14 +3,14 @@
 
 #include <type_traits>
 
-#include "Vector3.hpp"
+#include "Vector.hpp"
 
 namespace LibRay::Math
 {
 class Ray final
 {
 public:
-	Ray(Vector3 origin, Vector3 direction);
+	Ray(Vector3 const &origin, Vector3 const &direction);
 
 	Vector3 const &Origin() const;
 	Vector3 const &Direction() const;

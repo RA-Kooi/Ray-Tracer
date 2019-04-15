@@ -1,5 +1,7 @@
 #include "Transform.hpp"
 
+#include "Math/Quaternion.hpp"
+
 namespace LibRay
 {
 using namespace Math;
@@ -11,7 +13,7 @@ Transform::Transform(
 : position(position)
 , rotation(rotation)
 , scale(scale)
-, matrix(Matrix4x4::Identity())
+, matrix(Matrix4x4(1))
 {
 }
 
@@ -92,67 +94,30 @@ Vector3 Transform::TransformDirection(
 	Matrix4x4 const &matrix,
 	Vector3 const &direction)
 {
-	Vector3 translatedDirection;
-
-	translatedDirection.x = direction.x * matrix.r00
-		+ direction.y * matrix.r01
-		+ direction.z * matrix.r02;
-
-	translatedDirection.y = direction.x * matrix.r10
-		+ direction.y * matrix.r11
-		+ direction.z * matrix.r12;
-
-	translatedDirection.z = direction.x * matrix.r20
-		+ direction.y * matrix.r21
-		+ direction.z * matrix.r22;
-
-	return translatedDirection;
+	return Matrix3x3(matrix) * direction;
 }
 
 Vector3 Transform::TransformTranslation(
 	Matrix4x4 const &matrix,
 	Vector3 const &translation)
 {
-	Vector3 translatedPosition;
-
-	translatedPosition.x = translation.x * matrix.r00
-		+ translation.y * matrix.r01
-		+ translation.z * matrix.r02
-		+ matrix.r03;
-
-	translatedPosition.y = translation.x * matrix.r10
-		+ translation.y * matrix.r11
-		+ translation.z * matrix.r12
-		+ matrix.r13;
-
-	translatedPosition.z = translation.x * matrix.r20
-		+ translation.y * matrix.r21
-		+ translation.z * matrix.r22
-		+ matrix.r23;
-
-	float const w = translation.x * matrix.r30
-		+ translation.y * matrix.r31
-		+ translation.z * matrix.r32
-		+ matrix.r33;
-
-	translatedPosition /= w;
-
-	return translatedPosition;
+	Vector4 const transformedTranslation = (matrix * Vector4(translation, 1));
+	return Vector3(
+		transformedTranslation.x,
+		transformedTranslation.y,
+		transformedTranslation.z);
 }
 
 void Transform::RecalculateMatrix() const
 {
-	Matrix4x4 rotationMatrix = Matrix4x4::Identity()
-		.RotateZ(rotation.z)
-		.RotateY(rotation.y)
-		.RotateX(rotation.x);
+	Matrix4x4 const rotationMatrix = Matrix3x3(Quaternion(rotation));
 
-	Matrix4x4 scaleMatrix = Matrix4x4::Identity().Scale(scale);
+	Matrix4x4 const scaleMatrix = glm::scale(Matrix4x4(1), scale);
 
-	Matrix4x4 translationMatrix = Matrix4x4::Identity().Translate(position);
+	Matrix4x4 const translationMatrix = glm::translate(Matrix4x4(1), position);
 
-	matrix = translationMatrix * scaleMatrix * rotationMatrix;
-	inverseMatrix = matrix.Inverted();
+	matrix = translationMatrix * rotationMatrix * scaleMatrix;
+	inverseMatrix = glm::inverse(matrix);
 
 	dirty = false;
 }

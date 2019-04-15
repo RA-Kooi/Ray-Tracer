@@ -3,7 +3,9 @@
 #include <float.h>
 
 #include "../Containers/BoundingBox.hpp"
+#include "../Math/Matrix.hpp"
 #include "../Math/Ray.hpp"
+#include "../Math/Vector.hpp"
 #include "../Intersection.hpp"
 #include "../Transform.hpp"
 
@@ -18,14 +20,14 @@ std::optional<Intersection> Plane::Intersects(Ray const &ray) const
 		Transform::TransformTranslation(worlToModel, ray.Origin()),
 		Transform::TransformDirection(worlToModel, ray.Direction()));
 
-	Vector3 const normal = Vector3::Up();
+	Vector3 const normal = Vector3(0, 1, 0);
 
 	Vector3 const centerToOrigin = modelRay.Origin();
-	float const denominator = normal.Dot(modelRay.Direction());
+	float const denominator = glm::dot(normal, modelRay.Direction());
 
 	if(-denominator > FLT_EPSILON)
 	{
-		float const distanceToIntersection = centerToOrigin.Dot(normal)
+		float const distanceToIntersection = glm::dot(centerToOrigin, normal)
 			/ -denominator;
 
 		Vector3 const pointOnPlane = Transform::TransformTranslation(
@@ -51,6 +53,6 @@ bool Plane::IsBoundable() const
 
 Containers::BoundingBox Plane::CalculateBoundingBox() const
 {
-	return Containers::BoundingBox(Vector3::Zero(), Vector3::Zero());
+	return Containers::BoundingBox(Vector3(0), Vector3(0));
 }
 } // namespace LibRay::Shapes

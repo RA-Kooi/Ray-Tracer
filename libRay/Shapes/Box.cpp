@@ -4,8 +4,9 @@
 
 #include "../Containers/BoundingBox.hpp"
 #include "../Math/MathUtils.hpp"
+#include "../Math/Matrix.hpp"
 #include "../Math/Ray.hpp"
-#include "../Math/Vector2.hpp"
+#include "../Math/Vector.hpp"
 #include "../Intersection.hpp"
 #include "../Transform.hpp"
 
@@ -27,11 +28,11 @@ std::optional<Intersection> Box::Intersects(Math::Ray const &ray) const
 	Vector3 const hit1 = (-halfBoundaries - modelRay.Origin()) * inverseDir;
 	Vector3 const hit2 = (halfBoundaries - modelRay.Origin()) * inverseDir;
 
-	Vector3 const min = hit1.Min(hit2);
-	Vector3 const max = hit1.Max(hit2);
+	Vector3 const min = glm::min(hit1, hit2);
+	Vector3 const max = glm::max(hit1, hit2);
 
-	float const near = min.MaxComponent();
-	float const far = max.MinComponent();
+	float const near = glm::compMax(min);
+	float const far = glm::compMin(max);
 
 	if(far < near)
 		return std::nullopt;
@@ -52,8 +53,8 @@ std::optional<Intersection> Box::Intersects(Math::Ray const &ray) const
 
 	auto const calculateNormal = [](Vector3 const &point) -> Vector3
 	{
-		Vector3 const pointAbs = point.Abs();
-		Vector3 normal;
+		Vector3 const pointAbs = glm::abs(point);
+		Vector3 normal(0);
 
 		if(pointAbs.x >= pointAbs.y && pointAbs.x >= pointAbs.z)
 			normal.x = float(Sign(point.x));
@@ -112,25 +113,25 @@ Containers::BoundingBox Box::CalculateBoundingBox() const
 	Vector3 const worldBackTopRight =
 		Transform::TransformDirection(transform.Matrix(), backTopRight);
 
-	Vector3 const min = worldFrontBottomLeft
-		.Min(worldFrontBottomRight)
-		.Min(worldFrontTopLeft)
-		.Min(worldFrontTopRight)
-		.Min(worldBackBottomLeft)
-		.Min(worldBackBottomRight)
-		.Min(worldBackTopLeft)
-		.Min(worldBackTopRight);
+	Vector3 const min =
+		glm::min(worldFrontBottomLeft,
+		glm::min(worldFrontBottomRight,
+		glm::min(worldFrontTopLeft,
+		glm::min(worldFrontTopRight,
+		glm::min(worldBackBottomLeft,
+		glm::min(worldBackBottomRight,
+		glm::min(worldBackTopLeft, worldBackTopRight)))))));
 
-	Vector3 const max = worldFrontBottomLeft
-		.Max(worldFrontBottomRight)
-		.Max(worldFrontTopLeft)
-		.Max(worldFrontTopRight)
-		.Max(worldBackBottomLeft)
-		.Max(worldBackBottomRight)
-		.Max(worldBackTopLeft)
-		.Max(worldBackTopRight);
+	Vector3 const max =
+		glm::max(worldFrontBottomLeft,
+		glm::max(worldFrontBottomRight,
+		glm::max(worldFrontTopLeft,
+		glm::max(worldFrontTopRight,
+		glm::max(worldBackBottomLeft,
+		glm::max(worldBackBottomRight,
+		glm::max(worldBackTopLeft, worldBackTopRight)))))));
 
-	Vector3 bounds = (max - min).Abs();
+	Vector3 bounds = glm::abs(max - min);
 	if(bounds.x < FLT_EPSILON)
 		bounds.x = FLT_EPSILON;
 	if(bounds.y < FLT_EPSILON)

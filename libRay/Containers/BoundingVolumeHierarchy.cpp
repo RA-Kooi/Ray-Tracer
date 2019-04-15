@@ -7,7 +7,7 @@
 #include <numeric>
 
 #include "../Math/MathUtils.hpp"
-#include "../Math/Vector2.hpp"
+#include "../Math/Vector.hpp"
 #include "../Intersection.hpp"
 #include "BoundingBox.hpp"
 
@@ -46,12 +46,12 @@ BoundingBox BVH::CalculateBoundingBox(ShapeVec const &objects) const
 
 		Vector3 const halfBoundaries = boundingBox.Dimensions() * 0.5f;
 
-		min = min.Min(boundingBox.Position() - halfBoundaries);
-		max = max.Max(boundingBox.Position() + halfBoundaries);
+		min = glm::min(min, boundingBox.Position() - halfBoundaries);
+		max = glm::max(max, boundingBox.Position() + halfBoundaries);
 	}
 
 	Vector3 const position = (max + min) * 0.5f;
-	Vector3 const dimensions = (max - min).Abs();
+	Vector3 const dimensions = glm::abs(max - min);
 
 	return BoundingBox(dimensions, position);
 }
@@ -69,11 +69,11 @@ BoundingBox BVH::CalculateBoundingBox(
 	Vector3 const rightA = a.Position() + halfA;
 	Vector3 const rightB = b.Position() + halfB;
 
-	Vector3 const min = leftA.Min(rightA).Min(leftB).Min(rightB);
-	Vector3 const max = leftA.Max(rightA).Max(leftB).Max(rightB);
+	Vector3 const min = glm::min(leftA, glm::min(rightA, glm::min(leftB, rightB)));
+	Vector3 const max = glm::max(leftA, glm::max(rightA, glm::max(leftB, rightB)));
 
 	Vector3 const position = (max + min) * 0.5f;
-	Vector3 const dimensions = (max - min).Abs();
+	Vector3 const dimensions = glm::abs(max - min);
 
 	return BoundingBox(dimensions, position);
 }
@@ -333,7 +333,7 @@ std::optional<Intersection> BVHNode::Traverse(Ray const &ray) const
 			{
 				Vector3 const intersectionToOrigin =
 					(intersection->worldPosition - ray.Origin());
-				distance = intersectionToOrigin.SquareMagnitude();
+				distance = glm::length2(intersectionToOrigin);
 
 				if(distance < (boundingBoxDistance2 * boundingBoxDistance2))
 					return intersection;
@@ -345,7 +345,7 @@ std::optional<Intersection> BVHNode::Traverse(Ray const &ray) const
 			{
 				Vector3 const intersectionToOrigin =
 					(intersection2->worldPosition - ray.Origin());
-				float const distance2 = intersectionToOrigin.SquareMagnitude();
+				float const distance2 = glm::length2(intersectionToOrigin);
 
 				if(distance < distance2)
 					return intersection;
@@ -368,7 +368,7 @@ std::optional<Intersection> BVHNode::Traverse(Ray const &ray) const
 		{
 			Vector3 const intersectionToOrigin =
 				(intersection->worldPosition - ray.Origin());
-			distance = intersectionToOrigin.SquareMagnitude();
+			distance = glm::length2(intersectionToOrigin);
 
 			if(distance < (boundingBoxDistance1 * boundingBoxDistance1))
 				return intersection;
@@ -380,7 +380,7 @@ std::optional<Intersection> BVHNode::Traverse(Ray const &ray) const
 		{
 			Vector3 const intersectionToOrigin =
 				(intersection2->worldPosition - ray.Origin());
-			float const distance2 = intersectionToOrigin.SquareMagnitude();
+			float const distance2 = glm::length2(intersectionToOrigin);
 
 			if(distance < distance2)
 				return intersection;
@@ -448,7 +448,7 @@ std::optional<Intersection> BVHLeaf::Traverse(Ray const &ray) const
 
 		Vector3 const intersectionToOrigin =
 			(intersection->worldPosition - ray.Origin());
-		float const distance = intersectionToOrigin.SquareMagnitude();
+		float const distance = glm::length2(intersectionToOrigin);
 
 		if(closestIntersection)
 		{

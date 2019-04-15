@@ -3,7 +3,7 @@
 
 #include <type_traits>
 
-#include "Math/Vector3.hpp"
+#include "Math/Vector.hpp"
 #include "Shapes/Color.hpp"
 #include "API.hpp"
 

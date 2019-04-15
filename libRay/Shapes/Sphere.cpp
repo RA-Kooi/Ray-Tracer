@@ -6,7 +6,9 @@
 
 #include "../Containers/BoundingBox.hpp"
 #include "../Math/MathUtils.hpp"
+#include "../Math/Matrix.hpp"
 #include "../Math/Ray.hpp"
+#include "../Math/Vector.hpp"
 #include "../Intersection.hpp"
 
 using namespace LibRay::Math;
@@ -48,9 +50,9 @@ std::optional<Intersection> Sphere::Intersects(Ray const &ray) const
 
 	Vector3 const centerToOrigin = modelRay.Origin();
 
-	float const a = modelRay.Direction().SquareMagnitude();
-	float const b = (modelRay.Direction() * 2.f).Dot(centerToOrigin);
-	float const c = centerToOrigin.SquareMagnitude() - radius * radius;
+	float const a = glm::length2(modelRay.Direction());
+	float const b = glm::dot((modelRay.Direction() * 2.f), centerToOrigin);
+	float const c = glm::length2(centerToOrigin) - radius * radius;
 
 	std::tuple<int, float, float> solutions = Math::SolveQuadratic(a, b, c);
 
@@ -102,7 +104,7 @@ Containers::BoundingBox Sphere::CalculateBoundingBox() const
 {
 	Vector3 const radiusVec(radius, radius, radius);
 
-	Vector3 bounds = radiusVec * 2 * transform.Scale();
+	Vector3 bounds = radiusVec * 2.f * transform.Scale();
 	if(bounds.x < FLT_EPSILON)
 		bounds.x = FLT_EPSILON;
 	if(bounds.y < FLT_EPSILON)

@@ -36,24 +36,22 @@ Color BlinnPhongShader::Run(
 
 	for(Observer<Light const> const &light: lights)
 	{
-		Vector3 const intersectionToLight =
-			(light->Position() - intersectionPos);
+		Vector3 const intersectionToLight = light->Position() - intersectionPos;
 
 		float const intersectionToLightDistance =
-			intersectionToLight.Magnitude();
+			glm::length(intersectionToLight);
 
 		Vector3 const intersectionToLightDirection =
 			intersectionToLight / intersectionToLightDistance;
 
-		float const cosTheta = normal.Dot(intersectionToLightDirection);
+		float const cosTheta = glm::dot(normal, intersectionToLightDirection);
 
 		Vector3 const viewLightBisector =
-			(view + intersectionToLightDirection).Normalize();
+			glm::normalize(view + intersectionToLightDirection);
 
-		float const viewLightDirection = normal.Dot(viewLightBisector);
+		float const viewLightDirection = glm::dot(normal, viewLightBisector);
 
-		float const r2 =
-			intersectionToLightDistance * intersectionToLightDistance;
+		float const r2 = intersectionToLightDistance * intersectionToLightDistance;
 		float const I = light->Intensity() / r2;
 		Color const lambertianPart = diffuse
 			* light->Color()

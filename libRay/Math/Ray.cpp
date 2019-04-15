@@ -2,9 +2,9 @@
 
 namespace LibRay::Math
 {
-Ray::Ray(Vector3 origin, Vector3 direction)
+Ray::Ray(Vector3 const &origin, Vector3 const &direction)
 : origin(origin)
-, direction(direction.Normalize())
+, direction(glm::normalize(direction))
 {
 }
 

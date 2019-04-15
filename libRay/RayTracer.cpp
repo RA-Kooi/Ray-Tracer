@@ -3,10 +3,8 @@
 #include <algorithm>
 #include <optional>
 
-#include "Math/Matrix4x4.hpp"
+#include "Math/Matrix.hpp"
 #include "Math/Ray.hpp"
-#include "Math/Vector2.hpp"
-#include "Math/Vector3.hpp"
 #include "Shaders/Material.hpp"
 #include "Shaders/Shader.hpp"
 #include "Shapes/Color.hpp"
@@ -53,11 +51,11 @@ Image RayTracer::Trace() const
 
 	Vector3 const cameraPosition = camera.Transform().Position();
 
-	Vector3 const nearPlanePosition = Vector3::Backward()
+	Vector3 const nearPlanePosition = Vector3(0, 0, -1)
 		* frustum.nearPlaneDistance;
 
 	Vector3 const nearPlaneTopLeft = nearPlanePosition
-		- Vector3(halfNearPlaneWidth, -halfNearPlaneHeight);
+		- Vector3(halfNearPlaneWidth, -halfNearPlaneHeight, 0);
 
 	float const stepX = nearPlaneWidth / screenSize.x;
 	float const halfStepX = 0.5f * stepX;
@@ -68,10 +66,9 @@ Image RayTracer::Trace() const
 
 	Vector3 const worldFar = Transform::TransformTranslation(
 		camToWorld,
-		Vector3::Backward() * frustum.farPlaneDistance);
+		Vector3(0, 0, -1) * frustum.farPlaneDistance);
 
-	float const worldFarDistance =
-		(worldFar - cameraPosition).SquareMagnitude();
+	float const worldFarDistance = glm::length2(worldFar - cameraPosition);
 
 	for(int y = int(screenSize.y) - 1; y >= 0; --y)
 	{
@@ -81,7 +78,7 @@ Image RayTracer::Trace() const
 			float const v = nearPlaneTopLeft.y - y * stepY - halfStepY;
 
 			Vector3 rayTarget(u, -v, -1);
-			rayTarget.Normalize();
+			rayTarget = glm::normalize(rayTarget);
 
 			Ray const ray(
 				Transform::TransformTranslation(
@@ -140,7 +137,7 @@ Color RayTracer::TraceRay(
 	}
 
 	float const intersectionDistance =
-		(ray.Origin() - intersectionPos).SquareMagnitude();
+		glm::length2(ray.Origin() - intersectionPos);
 
 	if(intersectionDistance > farPlaneDistance)
 	{
@@ -166,7 +163,7 @@ Color RayTracer::TraceRay(
 
 	Vector3 const &cameraPosition = scene.Camera().Transform().Position();
 	Vector3 const &normal = intersection->surfaceNormal;
-	Vector3 const view = (cameraPosition - intersectionPos).Normalize();
+	Vector3 const view = glm::normalize(cameraPosition - intersectionPos);
 
 	std::vector<Observer<Light const>> unobstructedLights =
 		LightsAtIntersection(*intersection);
@@ -259,9 +256,9 @@ Ray RayTracer::ReflectRay(
 	Vector3 const &normal) const
 {
 	Vector3 const view = -ray.Direction();
-	float const cosTheta = view.Dot(normal);
+	float const cosTheta = glm::dot(view, normal);
 	Vector3 const viewOnNormalProjection = cosTheta * normal;
-	Vector3 const reflected = view + 2 * (viewOnNormalProjection - view);
+	Vector3 const reflected = view + 2.f * (viewOnNormalProjection - view);
 
 	return Ray(origin + normal * bias, reflected);
 }
@@ -277,10 +274,10 @@ Ray RayTracer::MakeMouseRay(int x, int y) const
 	float const halfNearPlaneHeight = 0.5f * frustum.nearPlaneHeight;
 
 	Vector3 const cameraPosition = camera.Transform().Position();
-	Vector3 const nearPlanePosition = Vector3::Backward()
+	Vector3 const nearPlanePosition = Vector3(0, 0, -1)
 		* frustum.nearPlaneDistance;
 	Vector3 const nearPlaneTopLeft = nearPlanePosition
-		- Vector3(halfNearPlaneWidth, -halfNearPlaneHeight);
+		- Vector3(halfNearPlaneWidth, -halfNearPlaneHeight, 0);
 
 	float const stepX = nearPlaneWidth / screenSize.x;
 	float const halfStepX = 0.5f * stepX;
@@ -311,7 +308,7 @@ std::optional<Intersection> RayTracer::ShootRay(Ray const &ray) const
 	{
 		Vector3 const intersectionToOrigin =
 			(closestIntersection->worldPosition - ray.Origin());
-		closestDistance = intersectionToOrigin.SquareMagnitude();
+		closestDistance = glm::length2(intersectionToOrigin);
 	}
 
 	for(auto const &shape: scene.UnboundableShapes())
@@ -321,7 +318,7 @@ std::optional<Intersection> RayTracer::ShootRay(Ray const &ray) const
 		{
 			Vector3 const intersectionToOrigin =
 				(intersection->worldPosition - ray.Origin());
-			float const distance = intersectionToOrigin.SquareMagnitude();
+			float const distance = glm::length2(intersectionToOrigin);
 
 			if(closestIntersection)
 			{
@@ -359,7 +356,7 @@ std::vector<Observer<Light const>> RayTracer::LightsAtIntersection(
 			light.Position() - intersection.worldPosition);
 
 		float const lightDistance =
-			(light.Position() - biasedOrigin).SquareMagnitude();
+			glm::length2(light.Position() - biasedOrigin);
 
 		std::optional<Intersection> lightIntersection = ShootRay(lightRay);
 
@@ -368,10 +365,9 @@ std::vector<Observer<Light const>> RayTracer::LightsAtIntersection(
 		else
 		{
 			Vector3 const intersectionToOrigin =
-				(lightIntersection->worldPosition - biasedOrigin);
+				lightIntersection->worldPosition - biasedOrigin;
 
-			float const intersectionDistance =
-				intersectionToOrigin.SquareMagnitude();
+			float const intersectionDistance = glm::length2(intersectionToOrigin);
 
 			if(intersectionDistance > lightDistance)
 				unobstructedLights.push_back(&light);

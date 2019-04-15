@@ -3,8 +3,8 @@
 
 #include <type_traits>
 
-#include "Math/Matrix4x4.hpp"
-#include "Math/Vector3.hpp"
+#include "Math/Matrix.hpp"
+#include "Math/Vector.hpp"
 #include "API.hpp"
 
 namespace LibRay
@@ -14,7 +14,7 @@ class LIBRAY_API Transform final
 public:
 	explicit Transform(
 		Math::Vector3 const &position,
-		Math::Vector3 const &rotation = Math::Vector3::Zero(),
+		Math::Vector3 const &rotation = Math::Vector3(0),
 		Math::Vector3 const &scale = Math::Vector3(1, 1, 1));
 
 	void Translate(Math::Vector3 const &translation);

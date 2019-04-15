@@ -10,7 +10,7 @@ Intersection::Intersection(
 	Vector3 const &surfaceNormal,
 	Vector3 const &worldPosition)
 : shape(&shape)
-, surfaceNormal(surfaceNormal.Normalized())
+, surfaceNormal(glm::normalize(surfaceNormal))
 , worldPosition(worldPosition)
 {
 }

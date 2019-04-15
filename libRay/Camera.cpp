@@ -2,8 +2,6 @@
 
 #include <cmath>
 
-#include "Math/Vector3.hpp"
-
 namespace LibRay
 {
 using namespace Math;

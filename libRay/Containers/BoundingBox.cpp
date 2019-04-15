@@ -1,5 +1,7 @@
 #include "BoundingBox.hpp"
 
+#include "../Math/Ray.hpp"
+
 namespace LibRay::Containers
 {
 using namespace LibRay::Math;
@@ -19,18 +21,18 @@ float BoundingBox::Intersects(Ray const &ray) const
 	Vector3 const left = (position - halfBoundaries);
 	Vector3 const right = (position + halfBoundaries);
 
-	Vector3 const minPoint = left.Min(right);
-	Vector3 const maxPoint = left.Max(right);
+	Vector3 const minPoint = glm::min(left, right);
+	Vector3 const maxPoint = glm::max(left, right);
 
 	Vector3 const inverseDir = 1.f / ray.Direction();
 	Vector3 const hit1 = (minPoint - ray.Origin()) * inverseDir;
 	Vector3 const hit2 = (maxPoint - ray.Origin()) * inverseDir;
 
-	Vector3 const min = hit1.Min(hit2);
-	Vector3 const max = hit1.Max(hit2);
+	Vector3 const min = glm::min(hit1, hit2);
+	Vector3 const max = glm::max(hit1, hit2);
 
-	float const near = min.MaxComponent();
-	float const far = max.MinComponent();
+	float const near = glm::compMax(min);
+	float const far = glm::compMin(max);
 
 	if(far < near)
 		return -1.f;

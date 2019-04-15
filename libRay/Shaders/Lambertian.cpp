@@ -28,20 +28,17 @@ Color LambertianShader::Run(
 
 	for(Observer<Light const> const &light: lights)
 	{
-		Vector3 const intersectionToLight =
-			(light->Position() - intersectionPos);
+		Vector3 const intersectionToLight = light->Position() - intersectionPos;
 
-		float const intersectionToLightDistance =
-			intersectionToLight.Magnitude();
+		float const intersectionToLightDistance = glm::length(intersectionToLight);
 
 		Vector3 const intersectionToLightDirection =
 			intersectionToLight / intersectionToLightDistance;
 
 		float const costheta =
-			intersection.surfaceNormal.Dot(intersectionToLightDirection);
+			glm::dot(intersection.surfaceNormal, intersectionToLightDirection);
 
-		float const r2 =
-			intersectionToLightDistance * intersectionToLightDistance;
+		float const r2 = intersectionToLightDistance * intersectionToLightDistance;
 		float const I = light->Intensity() / r2;
 		result += std::max(costheta, 0.f)
 			* light->Color()

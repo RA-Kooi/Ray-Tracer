@@ -21,11 +21,10 @@ class Ray;
 } // namespace Math
 
 class Intersection;
-class Transform;
 
 namespace Shapes
 {
-class LIBRAY_API Box: public Shape
+class LIBRAY_API Box final: public Shape
 {
 public:
 	using Shape::Shape;
