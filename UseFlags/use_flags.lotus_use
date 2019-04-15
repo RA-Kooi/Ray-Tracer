@@ -1,4 +1,15 @@
 {
+	"glm":
+	{
+		"type":"headers",
+
+		"common":
+		{
+			"optional":true,
+
+			"code":"glm_test.cpp"
+		}
+	},
 	"pthread":
 	{
 		"type":"lib",
