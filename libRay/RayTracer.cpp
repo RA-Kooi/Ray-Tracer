@@ -94,6 +94,7 @@ Image RayTracer::Trace() const
 	watch.Stop();
 
 	std::printf("Took %s to render the scene\n", watch.Value().c_str());
+	std::fflush(stdout);
 
 	return output;
 }

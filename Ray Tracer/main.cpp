@@ -246,6 +246,8 @@ void MouseCallback(
 	{
 		std::fprintf(stderr, "Caught exception: %s\n", e.what());
 	}
+
+	std::fflush(stdout);
 }
 
 void ShowDebugWindow(
