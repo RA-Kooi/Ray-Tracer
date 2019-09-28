@@ -3,8 +3,19 @@
 	{
 		"type":"headers",
 
+		"platforms":
+		[
+			"linux_x64",
+			"win32_x64"
+		],
+
 		"common":
 		{
+			"defines":
+			{
+				"base": ["GLM_ENABLE_EXPERIMENTAL"]
+			},
+
 			"optional":true,
 
 			"code":"glm_test.cpp"
@@ -13,6 +24,12 @@
 	"pthread":
 	{
 		"type":"lib",
+
+		"platforms":
+		[
+			"linux_x64",
+			"win32_x64"
+		],
 
 		"common":
 		{
@@ -27,6 +44,11 @@
 	{
 		"type":"flags",
 
+		"platforms":
+		[
+			"linux_x64"
+		],
+
 		"common":
 		{
 			"ld_flags":["-ldl"]
@@ -35,6 +57,11 @@
 	"X11":
 	{
 		"type":"lib",
+
+		"platforms":
+		[
+			"linux_x64"
+		],
 
 		"common":
 		{
@@ -49,6 +76,12 @@
 	{
 		"type":"lib",
 
+		"platforms":
+		[
+			"linux_x64",
+			"win32_x64"
+		],
+
 		"common":
 		{
 			"shared":true,
@@ -58,11 +91,27 @@
 			"optional":true,
 
 			"code":"opengl_test.cpp"
+		},
+		"windows_x86-64_clang":
+		{
+			"shared":true,
+
+			"shlib_link":["opengl32"],
+
+			"optional":true,
+
+			"code":"opengl_test.cpp"
 		}
 	},
 	"glfw-3":
 	{
 		"type":"lib",
+
+		"platforms":
+		[
+			"linux_x64",
+			"win32_x64"
+		],
 
 		"common":
 		{
@@ -80,11 +129,22 @@
 			"optional":true,
 
 			"code":"glfw_test.cpp"
+		},
+		"windows_x86-64_clang":
+		{
+			"shlib_link":["glfw3"],
+			"code":"glfw_test.cpp"
 		}
 	},
 	"EASTLBuildFlags":
 	{
 		"type":"flags",
+
+		"platforms":
+		[
+			"linux_x64",
+			"win32_x64"
+		],
 
 		"common":
 		{
@@ -100,6 +160,12 @@
 	{
 		"type":"flags",
 
+		"platforms":
+		[
+			"linux_x64",
+			"win32_x64"
+		],
+
 		"common":
 		{
 			"cxx_flags":
@@ -111,6 +177,12 @@
 	"EASTLFlags":
 	{
 		"type":"flags",
+
+		"platforms":
+		[
+			"linux_x64",
+			"win32_x64"
+		],
 
 		"common":
 		{
@@ -124,6 +196,12 @@
 	"STBFlags":
 	{
 		"type":"flags",
+
+		"platforms":
+		[
+			"linux_x64",
+			"win32_x64"
+		],
 
 		"common":
 		{
