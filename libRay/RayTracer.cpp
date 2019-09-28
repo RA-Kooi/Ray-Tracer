@@ -105,8 +105,6 @@ Color RayTracer::TraceRay(
 	bool debug,
 	float farPlaneDistance) const
 {
-	std::pair<Shapes::Color const &, float> ambientLight = scene.AmbientLight();
-
 	std::optional<Intersection> intersection = ShootRay(ray);
 
 	if(!intersection)
@@ -148,10 +146,11 @@ Color RayTracer::TraceRay(
 		return Color::Black();
 	}
 
+	Vector3 const &normal = intersection->surfaceNormal;
+
 	if(debug)
 	{
 		Vector3 const pos = intersection->worldPosition;
-		Vector3 const normal = intersection->surfaceNormal;
 
 		std::printf(
 			"\tPicked intersection:\n\t{\n"
@@ -162,91 +161,95 @@ Color RayTracer::TraceRay(
 			double(normal.x), double(normal.y), double(normal.z));
 	}
 
-	Vector3 const &cameraPosition = scene.Camera().Transform().Position();
-	Vector3 const &normal = intersection->surfaceNormal;
-	Vector3 const view = glm::normalize(cameraPosition - intersectionPos);
-
-	std::vector<Observer<Light const>> unobstructedLights =
-		LightsAtIntersection(*intersection);
-
-	if(debug)
-		std::printf("\tLight count: %zu,\n", unobstructedLights.size());
-
 	Material const &material = intersection->shape->Material();
-	Shader const &shader = material.Shader();
-	Color pixelColor = shader.Run(
-		*intersection,
-		view,
-		ray,
-		unobstructedLights,
-		ambientLight.first,
-		ambientLight.second);
-
-	if(debug)
-	{
-		std::printf(
-			"\tPixel color: [r: %f, g: %f, b: %f]\n",
-			double(pixelColor.r),
-			double(pixelColor.g),
-			double(pixelColor.b));
-	}
 
 	float const reflectiveness = material.Reflectiveness();
 	if(reflectiveness > 0.f
 	   && reflectionBounceCount < configuration.maxReflectionBounces)
 	{
-		if(debug)
-			std::puts("\n\tReflecting...");
-
-		Ray const reflectedRay = ReflectRay(ray, intersectionPos, normal);
-
-		if(debug)
-		{
-			std::printf(
-				"\tRay:\n\t{\n"
-				"\t\tOrigin: [x: %f, y: %f, z: %f],\n"
-				"\t\tDirection: [x: %f, y: %f, z: %f]\n"
-				"\t},\n\n",
-				double(ray.Origin().x),
-				double(ray.Origin().y),
-				double(ray.Origin().z),
-				double(ray.Direction().x),
-				double(ray.Direction().y),
-				double(ray.Direction().z));
-
-			std::printf(
-				"\tReflection ray:\n\t{\n"
-				"\t\tOrigin: [x: %f, y: %f, z: %f],\n"
-				"\t\tDirection: [x: %f, y: %f, z: %f]\n"
-				"\t},\n\n",
-				double(reflectedRay.Origin().x),
-				double(reflectedRay.Origin().y),
-				double(reflectedRay.Origin().z),
-				double(reflectedRay.Direction().x),
-				double(reflectedRay.Direction().y),
-				double(reflectedRay.Direction().z));
-		}
-
-		Color const reflectedColor = TraceRay(
-			reflectedRay,
-			++reflectionBounceCount,
-			debug);
-
-		pixelColor *= (1.f - reflectiveness);
-		pixelColor += reflectedColor * reflectiveness;
-
-		if(debug)
-		{
-			std::printf(
-				"\tFinal pixel color: [r: %f, g: %f, b: %f]\n",
-				double(pixelColor.r),
-				double(pixelColor.g),
-				double(pixelColor.b));
-		}
+		return DoReflection(*intersection, ray, reflectionBounceCount, debug, farPlaneDistance);
 	}
 
+	Color pixelColor = Shade(ray, *intersection, debug);
+
 	if(debug)
+	{
+		std::printf(
+			"\tFinal pixel color: %s\n",
+			pixelColor.ToString().c_str());
+
 		std::puts("}\n");
+	}
+
+	return pixelColor;
+}
+
+Color RayTracer::DoReflection(
+	Intersection const &intersection,
+	Ray const &ray,
+	std::uint8_t reflectionBounceCount,
+	bool debug,
+	float farPlaneDistance) const
+{
+	if(debug)
+		std::puts("\n\tReflecting... (no refraction)");
+
+	Vector3 const &intersectionPos = intersection.worldPosition;
+	Vector3 const &normal = intersection.surfaceNormal;
+
+	Ray const reflectedRay = ReflectRay(ray, intersectionPos, normal);
+
+	if(debug)
+	{
+		std::printf("\tRay:\n\t{\n\t\t%s\n\t},\n\n", ray.ToString().c_str());
+
+		std::printf(
+			"\tReflection ray:\n\t{\n\t\t%s\n\t},\n\n",
+			reflectedRay.ToString().c_str());
+	}
+
+	++reflectionBounceCount;
+	Color const reflectedColor =
+		TraceRay(reflectedRay, reflectionBounceCount, debug, farPlaneDistance);
+	--reflectionBounceCount;
+
+	Material const &material = intersection.shape->Material();
+	float const reflectiveness = material.Reflectiveness();
+
+	Color pixelColor = Shade(ray, intersection, debug);
+	pixelColor *= (1.f - reflectiveness);
+	pixelColor += reflectedColor * reflectiveness;
+
+	return pixelColor;
+}
+
+Color RayTracer::Shade(
+	Ray const &ray,
+	Intersection const &intersection,
+	bool debug) const
+{
+	Vector3 const &cameraPosition = scene.Camera().Transform().Position();
+	Vector3 const &intersectionPos = intersection.worldPosition;
+	Vector3 const view = glm::normalize(cameraPosition - intersectionPos);
+
+	std::vector<Observer<Light const>> unobstructedLights =
+		LightsAtIntersection(intersection);
+
+	if(debug)
+		std::printf("\tLight count: %zu,\n", unobstructedLights.size());
+
+	Material const &material = intersection.shape->Material();
+	Shader const &shader = material.Shader();
+
+	std::pair<Shapes::Color const &, float> ambientLight = scene.AmbientLight();
+
+	Color pixelColor = shader.Run(
+			intersection,
+			view,
+			ray,
+			unobstructedLights,
+			ambientLight.first,
+			ambientLight.second);
 
 	return pixelColor;
 }

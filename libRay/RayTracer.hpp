@@ -61,6 +61,18 @@ private:
 	std::vector<Observer<Light const>> LightsAtIntersection(
 		Intersection const &intersection) const;
 
+	Shapes::Color DoReflection(
+		Intersection const &intersection,
+		Math::Ray const &ray,
+		RayState &state,
+		bool debug,
+		float farPlaneDistance) const;
+
+	Shapes::Color Shade(
+		Math::Ray const &ray,
+		Intersection const &intersection,
+		bool debug) const;
+
 	Math::Ray ReflectRay(
 		Math::Ray const &ray,
 		Math::Vector3 const &origin,
