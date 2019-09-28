@@ -8,11 +8,15 @@ namespace LibRay
 {
 using namespace Shapes;
 
-Material::Material(class Shader const &shader, float reflectiveness)
+Material::Material(
+	class Shader const &shader,
+	float reflectiveness,
+	float refractiveIndex)
 : shader(shader)
 , floatProperties()
 , colorProperties()
 , reflectiveness(Math::Clamp(reflectiveness, 0.f, 1.f))
+, refractiveIndex(refractiveIndex)
 {
 }
 
@@ -46,6 +50,16 @@ void Material::Reflectiveness(float newReflectiveness)
 float Material::Reflectiveness() const
 {
 	return reflectiveness;
+}
+
+void Material::RefractiveIndex(float newRefractiveIndex)
+{
+	refractiveIndex = newRefractiveIndex;
+}
+
+float Material::RefractiveIndex() const
+{
+	return refractiveIndex;
 }
 
 void Material::UpdateColorProperty(std::string const &name, Color const &color)

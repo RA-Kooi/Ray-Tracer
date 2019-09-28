@@ -15,7 +15,11 @@ class Shader;
 class LIBRAY_API Material final
 {
 public:
-	Material(Shader const &shader, float reflectiveness = 0.f);
+	Material(
+		Shader const &shader,
+		float reflectiveness = 0.f,
+		float refractiveIndex = 0.f);
+
 	Material(Material const &) = default;
 	Material(Material &&) = default;
 
@@ -27,6 +31,9 @@ public:
 
 	void Reflectiveness(float newReflectiveness);
 	float Reflectiveness() const;
+
+	void RefractiveIndex(float newRefractiveIndex);
+	float RefractiveIndex() const;
 
 	void UpdateColorProperty(
 		std::string const &name,
@@ -41,6 +48,7 @@ private:
 	std::map<std::string, Shapes::Color> colorProperties;
 
 	float reflectiveness;
+	float refractiveIndex;
 };
 
 static_assert(std::is_copy_constructible_v<Material>);
