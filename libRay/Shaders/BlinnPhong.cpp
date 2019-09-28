@@ -58,11 +58,10 @@ Color BlinnPhongShader::Run(
 			* I
 			* std::max(0.f, cosTheta);
 
-		Color const specular = baseSpecular * light->Color() * I;
+		Color const specular = baseSpecular * light->Color();
 		Color const blinnPhongPart = specular
 			* I
-			* std::pow(
-				std::max(0.f, viewLightDirection), phongExponent);
+			* std::pow(std::max(0.f, viewLightDirection), phongExponent);
 
 		result += lambertianPart + blinnPhongPart;
 	}
