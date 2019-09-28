@@ -29,7 +29,7 @@ float Material::FloatPropertyByName(std::string const &name) const
 	{
 		std::fprintf(
 			stderr,
-			"Warning: Unable to find named property \"%s\".",
+			"Warning: Unable to find named property \"%s\".\n",
 			it->first.c_str());
 
 		return 0.f;
@@ -69,7 +69,7 @@ Color const &Material::ColorPropertyByName(std::string const &name) const
 	{
 		std::fprintf(
 			stderr,
-			"Warning: Unable to find named property \"%s\".",
+			"Warning: Unable to find named property \"%s\".\n",
 			it->first.c_str());
 
 		static Color black = Color::Black();
