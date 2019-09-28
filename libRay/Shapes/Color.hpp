@@ -2,6 +2,7 @@
 #define b42831bc_5aec_4ee2_9bdd_09f0dac7b019
 
 #include <type_traits>
+#include <string>
 
 #include "../API.hpp"
 
@@ -25,6 +26,8 @@ public:
 
 	Color &Clamp();
 	Color Clamped() const;
+
+	std::string ToString() const;
 
 	static Color Red();
 	static Color Green();

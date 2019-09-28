@@ -2,6 +2,7 @@
 #define fa606def_a0a5_4c2c_8152_2fd70f16f4b1
 
 #include <type_traits>
+#include <string>
 
 #include "Vector.hpp"
 
@@ -14,6 +15,8 @@ public:
 
 	Vector3 const &Origin() const;
 	Vector3 const &Direction() const;
+
+	std::string ToString() const;
 
 private:
 	Vector3 origin, direction;

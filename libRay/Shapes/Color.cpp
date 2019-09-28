@@ -72,6 +72,15 @@ Color Color::Clamped() const
 	return copy.Clamp();
 }
 
+std::string Color::ToString() const
+{
+	return "["
+		"r: " + std::to_string(r)
+		+ ", g: " + std::to_string(g)
+		+ ", b: " + std::to_string(b)
+		+ "]";
+}
+
 Color operator+(Color const &a, Color const &b)
 {
 	return Color(a.r + b.r, a.g + b.g, a.b + b.b);
