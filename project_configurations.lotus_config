@@ -1,11 +1,13 @@
 {
 	"target_platforms":
 	[
-		"linux_x64"
+		"linux_x64",
+		"win32_x64"
 	],
 	"toolsets":
 	{
-		"linux_x64":["linux_x86-64_clang"]
+		"linux_x64":["linux_x86-64_clang"],
+		"win32_x64":["windows_x86-64_clang"]
 	},
 	"configurations":
 	[

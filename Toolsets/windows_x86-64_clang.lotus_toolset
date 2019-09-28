@@ -1,0 +1,69 @@
+{
+	"cc":"clang",
+	"cc_path":"clang.exe",
+
+	"cxx":"clang++",
+	"cxx_path":"clang++.exe",
+
+	"ar_path":"llvm-ar.exe",
+
+	"system_include_flags":["-isystem"],
+	"system_includes":[],
+
+	"defines":
+	{
+		"base":["UNICODE", "_UNICODE"],
+		"debug":["DEBUG", "_DEBUG", "EA_DEBUG"],
+		"release":["NDEBUG"]
+	},
+
+	"cc_flags":
+	[
+		"-std=c11",
+		"-march=native",
+		"-ffunction-sections",
+		"-fdata-sections",
+		"-Weverything",
+		"-Werror",
+		"-Wno-unknown-warning-option",
+		"-Wno-reserved-id-macro"
+	],
+	"cc_flags_debug":["-ggdb3"],
+	"cc_flags_release":["-O3", "-ffast-math"],
+
+	"cxx_flags":
+	[
+		"-std=c++17",
+		"-march=native",
+		"-fno-rtti",
+		"-fexceptions",
+		"-ffunction-sections",
+		"-fdata-sections",
+		"-Weverything",
+		"-Werror",
+		"-Wno-c++98-compat",
+		"-Wno-shadow-field-in-constructor",
+		"-Wno-padded",
+		"-Wno-gnu-anonymous-struct",
+		"-Wno-nested-anon-types",
+		"-Wno-shadow-uncaptured-local",
+		"-Wno-shadow-field",
+		"-Wno-unknown-warning-option",
+		"-Wno-used-but-marked-unused",
+		"-Wno-reserved-id-macro"
+	],
+	"cxx_flags_debug":["-ggdb3"],
+	"cxx_flags_release":["-O3", "-ffast-math"],
+
+	"stlib_flags":["rcs"],
+	"stlib_path":[],
+
+	"ld_flags":["-municode"],
+	"ld_flags_debug":["-g"],
+	"ld_flags_release":["-Wl,-s", "-Wl,-gc-sections"],
+
+	"shlib_flags":["-shared"],
+	"shlib_path":[],
+
+	"exe_flags":["-mconsole"]
+}
