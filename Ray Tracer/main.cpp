@@ -58,7 +58,13 @@ void ShowDebugWindow(
 	LibRay::Image const &normalizedImage);
 #endif // ENABLE_GLFW
 
-int main(int, char*[])
+#if defined(_WIN32) && defined(UNICODE)
+extern "C" int wmain();
+
+extern "C" int wmain()
+#else
+int main()
+#endif
 {
 	using namespace LibRay;
 	using namespace LibRay::Math;
@@ -167,7 +173,7 @@ std::pair<bool, std::string> WriteImage(LibRay::Image const &normalizedImage)
 	std::time_t now = clock::to_time_t(clock::now());
 	std::tm buf;
 
-#ifdef __STDC_LIB_EXT1__
+#if defined(__STDC_LIB_EXT1__) || defined(__MINGW64__)
 	localtime_s(&buf, &now);
 #else
 	localtime_r(&now, &buf);
