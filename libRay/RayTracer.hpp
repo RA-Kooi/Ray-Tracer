@@ -50,6 +50,7 @@ public:
 		RayState() = default;
 
 	public:
+		std::vector<float> refractionStack;
 		std::uint8_t bounceCount = 0;
 	};
 
@@ -79,6 +80,13 @@ private:
 		Intersection const &intersection) const;
 
 	Shapes::Color DoReflection(
+		Intersection const &intersection,
+		Math::Ray const &ray,
+		RayState &state,
+		bool debug,
+		float farPlaneDistance) const;
+
+	Shapes::Color DoRefraction(
 		Intersection const &intersection,
 		Math::Ray const &ray,
 		RayState &state,

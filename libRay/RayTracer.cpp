@@ -163,8 +163,16 @@ Color RayTracer::TraceRay(
 
 	Material const &material = intersection->shape->Material();
 
+	float const indexOfRefraction = material.RefractiveIndex();
+	if(indexOfRefraction > 0.f
+	   && state.bounceCount < configuration.maxReflectionBounces)
+	{
+		return DoRefraction(*intersection, ray, state, debug, farPlaneDistance);
+	}
+
 	float const reflectiveness = material.Reflectiveness();
 	if(reflectiveness > 0.f
+	   && indexOfRefraction <= 0.f
 	   && state.bounceCount < configuration.maxReflectionBounces)
 	{
 		return DoReflection(*intersection, ray, state, debug, farPlaneDistance);
@@ -225,6 +233,146 @@ Color RayTracer::DoReflection(
 	Color pixelColor = Shade(ray, intersection, debug);
 	pixelColor *= (1.f - reflectiveness);
 	pixelColor += reflectedColor * reflectiveness;
+
+	return pixelColor;
+}
+
+Color RayTracer::DoRefraction(
+	Intersection const &intersection,
+	Ray const &ray,
+	RayState &state,
+	bool debug,
+	float farPlaneDistance) const
+{
+	if(debug)
+	{
+		std::puts("\n\tRefracting...");
+
+		std::printf("\tRay:\n\t{\n\t\t%s\n\t},\n\n", ray.ToString().c_str());
+	}
+
+	Vector3 const &intersectionPos = intersection.worldPosition;
+	Vector3 const &normal = intersection.surfaceNormal;
+
+	Material const &material = intersection.shape->Material();
+	float indexOfRefraction = material.RefractiveIndex();
+
+	float lastIndex;
+	if(state.refractionStack.empty())
+		lastIndex = 1.0f;
+	else
+		lastIndex = state.refractionStack.back();
+
+	Vector3 const &incidence = ray.Direction();
+	float cosTheta = glm::dot(incidence, normal);
+	bool exiting = false;
+
+	Vector3 N = normal;
+	if(cosTheta < 0)
+	{
+		cosTheta = -cosTheta;
+	}
+	else
+	{
+		N = -N;
+		std::swap(lastIndex, indexOfRefraction);
+		exiting = true;
+	}
+
+	float const fresnel = FresnelFactor(cosTheta, lastIndex, indexOfRefraction);
+	Color refractedColor = Color::Black();
+
+	if(debug)
+		std::printf("\tFresnel: %f\n", double(fresnel));
+
+	if(fresnel < 1.0f)
+	{
+		float const refractionRatio = lastIndex / indexOfRefraction;
+
+		Vector3 const refractedDir =
+			Refract(ray.Direction(), N, refractionRatio);
+
+		Ray const refractedRay =
+			Ray(intersectionPos - N * bias, refractedDir);
+
+		if(debug)
+		{
+			std::printf(
+				"\tRefraction ray:\n\t{\n\t\t%s\n\t},\n\n",
+				refractedRay.ToString().c_str());
+		}
+
+		if(!exiting)
+		{
+			state.refractionStack.push_back(indexOfRefraction);
+
+			if(debug)
+				std::puts("\tEntering...");
+		}
+		else
+		{
+			state.refractionStack.pop_back();
+			if(debug)
+				std::puts("\tLeaving...");
+		}
+
+		size_t oldSize = state.refractionStack.size();
+
+		++state.bounceCount;
+		refractedColor = TraceRay(refractedRay, state, debug, farPlaneDistance);
+		--state.bounceCount;
+
+		// while?
+		if(state.refractionStack.size() == oldSize && oldSize != 0)
+			state.refractionStack.pop_back();
+
+		if(debug)
+		{
+			std::printf(
+				"\tRefracted color: %s\n",
+				refractedColor.ToString().c_str());
+		}
+	}
+
+	if(debug)
+		std::puts("\n\tReflecting... (refraction)");
+
+	Ray const reflectedRay = ReflectRay(ray, intersectionPos, normal);
+
+	if(debug)
+	{
+		std::printf(
+			"\tReflection ray:\n\t{\n\t\t%s\n\t},\n\n",
+			reflectedRay.ToString().c_str());
+	}
+
+	++state.bounceCount;
+	Color const reflectedColor =
+		TraceRay(reflectedRay, state, debug, farPlaneDistance);
+	--state.bounceCount;
+
+	if(debug)
+	{
+		std::printf(
+			"\tReflected color: [r: %f, g: %f, b: %f]\n",
+			double(reflectedColor.r),
+			double(reflectedColor.g),
+			double(reflectedColor.b));
+	}
+
+	Color pixelColor = reflectedColor * fresnel
+		+ refractedColor * (1.f - fresnel);
+
+	if(debug)
+	{
+		std::printf(
+			"\tFinal pixel color: [r: %f, g: %f, b: %f]\n",
+			double(pixelColor.r),
+			double(pixelColor.g),
+			double(pixelColor.b));
+
+		std::puts("}\n");
+	}
 
 	return pixelColor;
 }
@@ -427,6 +575,11 @@ std::vector<Observer<Light const>> RayTracer::LightsAtIntersection(
 
 			if(intersectionDistance > lightDistance)
 				unobstructedLights.push_back(&light);
+			else
+			{
+				if(lightIntersection->shape->Material().RefractiveIndex() > 0.f)
+					unobstructedLights.push_back(&light);
+			}
 		}
 	}
 
