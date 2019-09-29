@@ -197,7 +197,13 @@ Color RayTracer::DoReflection(
 	Vector3 const &intersectionPos = intersection.worldPosition;
 	Vector3 const &normal = intersection.surfaceNormal;
 
-	Ray const reflectedRay = ReflectRay(ray, intersectionPos, normal);
+	Vector3 N = normal;
+
+	float const cosTheta = glm::dot(normal, ray.Direction());
+	if(cosTheta > 0.f)
+		N = -N;
+
+	Ray const reflectedRay = ReflectRay(ray, intersectionPos, N);
 
 	if(debug)
 	{
