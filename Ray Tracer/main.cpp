@@ -72,11 +72,11 @@ int main()
 	DisableTGARLE();
 
 	Camera camera(
-		Transform(Vector3(0, 15, 30), Vector3(-Math::PI * 0.125f, 0, 0)),
+		Transform(Vector3(0, 0, 30)),
 		Vector2(640.f, 480.f),
 		Math::Radians(90.f),
 		1.f,
-		200.f);
+		500.f);
 
 	std::unique_ptr<Scene> scene;
 	try
