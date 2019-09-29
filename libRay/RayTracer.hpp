@@ -100,6 +100,8 @@ private:
 		Math::Vector3 const &normal,
 		float refractionRatio) const;
 
+	float FresnelFactor(float cosTheta, float iorA, float iorB) const;
+
 private:
 	Scene const &scene;
 	RayTracerConfiguration configuration;

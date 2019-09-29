@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <optional>
 
+#include "Math/MathUtils.hpp"
 #include "Math/Matrix.hpp"
 #include "Math/Ray.hpp"
 #include "Shaders/Material.hpp"
@@ -287,6 +288,35 @@ Vector3 RayTracer::Refract(
 			- (refractionRatio * cosTheta + std::sqrt(criticalAngle)) * normal;
 	else
 		return Vector3(0);
+}
+
+float RayTracer::FresnelFactor(
+	float cosTheta,
+	float iorA,
+	float iorB) const
+{
+	float cosThetaI = Math::Clamp(cosTheta, -1.f, 1.f);
+
+	float const sini = iorA / iorB
+		* std::sqrt(std::max(0.f, 1.0f - cosThetaI * cosThetaI));
+
+	if(sini >= 1.0f)
+		return 1.0f;
+
+	float const cost = std::sqrt(std::max(0.f, 1.0f - sini * sini));
+
+	cosThetaI = std::fabs(cosThetaI);
+
+	float const ACost = iorA * cost;
+	float const BCost = iorB * cost;
+
+	float const ATheta = iorA * cosThetaI;
+	float const BTheta = iorB * cosThetaI;
+
+	float const parallel = (BTheta - ACost) / (BTheta + ACost);
+	float const perpendicular = (ATheta - BCost) / (ATheta + BCost);
+
+	return (parallel * parallel + perpendicular * perpendicular) / 2;
 }
 
 Ray RayTracer::MakeMouseRay(int x, int y) const
