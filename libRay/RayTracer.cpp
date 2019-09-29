@@ -81,9 +81,7 @@ Image RayTracer::Trace() const
 			rayTarget = glm::normalize(rayTarget);
 
 			Ray const ray(
-				Transform::TransformTranslation(
-					camToWorld,
-					cameraPosition + rayTarget * frustum.nearPlaneDistance),
+				cameraPosition + rayTarget * frustum.nearPlaneDistance,
 				Transform::TransformDirection(camToWorld, rayTarget));
 
 			RayState state;
@@ -303,7 +301,7 @@ Ray RayTracer::MakeMouseRay(int x, int y) const
 	Matrix4x4 const camToWorld = camera.Transform().Matrix();
 
 	Ray const ray(
-		Transform::TransformTranslation(camToWorld, cameraPosition),
+		cameraPosition,
 		Transform::TransformDirection(camToWorld, rayTarget));
 
 	return ray;
