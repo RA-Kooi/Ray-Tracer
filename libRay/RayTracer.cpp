@@ -135,7 +135,7 @@ Color RayTracer::TraceRay(
 	}
 
 	float const intersectionDistance =
-		glm::length2(ray.Origin() - intersectionPos);
+		glm::length2(scene.Camera().Transform().Position() - intersectionPos);
 
 	if(intersectionDistance > farPlaneDistance)
 	{
