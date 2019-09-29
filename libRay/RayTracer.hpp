@@ -95,6 +95,11 @@ private:
 		Math::Vector3 const &origin,
 		Math::Vector3 const &normal) const;
 
+	Math::Vector3 Refract(
+		Math::Vector3 const &incidence,
+		Math::Vector3 const &normal,
+		float refractionRatio) const;
+
 private:
 	Scene const &scene;
 	RayTracerConfiguration configuration;

@@ -272,6 +272,23 @@ Ray RayTracer::ReflectRay(
 	return Ray(origin + normal * bias, reflected);
 }
 
+Vector3 RayTracer::Refract(
+	Vector3 const &incidence,
+	Vector3 const &normal,
+	float refractionRatio) const
+{
+	float const cosTheta = glm::dot(incidence, normal);
+
+	float const criticalAngle = 1.0f - refractionRatio * refractionRatio
+		* (1.0f - cosTheta * cosTheta);
+
+	if(criticalAngle >= 0)
+		return refractionRatio * incidence
+			- (refractionRatio * cosTheta + std::sqrt(criticalAngle)) * normal;
+	else
+		return Vector3(0);
+}
+
 Ray RayTracer::MakeMouseRay(int x, int y) const
 {
 	Camera const &camera = scene.Camera();
