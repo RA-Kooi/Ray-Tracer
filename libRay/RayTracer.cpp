@@ -86,8 +86,9 @@ Image RayTracer::Trace() const
 					cameraPosition + rayTarget * frustum.nearPlaneDistance),
 				Transform::TransformDirection(camToWorld, rayTarget));
 
+			RayState state;
 			output.pixels.push_back(
-				TraceRay(ray, 0, false, worldFarDistance));
+				TraceRay(ray, state, false, worldFarDistance));
 		}
 	}
 
@@ -101,7 +102,7 @@ Image RayTracer::Trace() const
 
 Color RayTracer::TraceRay(
 	Ray const &ray,
-	std::uint8_t reflectionBounceCount,
+	RayState &state,
 	bool debug,
 	float farPlaneDistance) const
 {
@@ -165,9 +166,9 @@ Color RayTracer::TraceRay(
 
 	float const reflectiveness = material.Reflectiveness();
 	if(reflectiveness > 0.f
-	   && reflectionBounceCount < configuration.maxReflectionBounces)
+	   && state.bounceCount < configuration.maxReflectionBounces)
 	{
-		return DoReflection(*intersection, ray, reflectionBounceCount, debug, farPlaneDistance);
+		return DoReflection(*intersection, ray, state, debug, farPlaneDistance);
 	}
 
 	Color pixelColor = Shade(ray, *intersection, debug);
@@ -187,7 +188,7 @@ Color RayTracer::TraceRay(
 Color RayTracer::DoReflection(
 	Intersection const &intersection,
 	Ray const &ray,
-	std::uint8_t reflectionBounceCount,
+	RayState &state,
 	bool debug,
 	float farPlaneDistance) const
 {
@@ -214,10 +215,10 @@ Color RayTracer::DoReflection(
 			reflectedRay.ToString().c_str());
 	}
 
-	++reflectionBounceCount;
+	++state.bounceCount;
 	Color const reflectedColor =
-		TraceRay(reflectedRay, reflectionBounceCount, debug, farPlaneDistance);
-	--reflectionBounceCount;
+		TraceRay(reflectedRay, state, debug, farPlaneDistance);
+	--state.bounceCount;
 
 	Material const &material = intersection.shape->Material();
 	float const reflectiveness = material.Reflectiveness();

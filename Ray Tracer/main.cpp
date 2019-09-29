@@ -240,7 +240,8 @@ void MouseCallback(
 
 	try
 	{
-		rayTracer.TraceRay(mouseRay, 0, true);
+		RayTracer::RayState state;
+		rayTracer.TraceRay(mouseRay, state, true);
 	}
 	catch(std::exception const &e)
 	{

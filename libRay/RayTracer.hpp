@@ -44,12 +44,29 @@ static_assert(std::is_move_assignable_v<RayTracerConfiguration>);
 class LIBRAY_API RayTracer final
 {
 public:
+	class RayState
+	{
+	public:
+		RayState() = default;
+
+	public:
+		std::uint8_t bounceCount = 0;
+	};
+
+	static_assert(std::is_copy_constructible_v<RayState>);
+	static_assert(std::is_copy_assignable_v<RayState>);
+	static_assert(!std::is_trivially_copyable_v<RayState>);
+
+	static_assert(std::is_move_constructible_v<RayState>);
+	static_assert(std::is_move_assignable_v<RayState>);
+
+public:
 	RayTracer(Scene const &scene, RayTracerConfiguration &&config);
 
 	Image Trace() const;
 	Shapes::Color TraceRay(
 		Math::Ray const &ray,
-		std::uint8_t reflectionBounceCount = 0,
+		RayState &state,
 		bool debug = false,
 		float farPlaneDistance = std::numeric_limits<float>::max()) const;
 
