@@ -10,6 +10,7 @@
 #include "Shaders/Shader.hpp"
 #include "Shapes/Color.hpp"
 #include "Shapes/Shape.hpp"
+#include "Threading/TaskProcessor.hpp"
 #include "Image.hpp"
 #include "Intersection.hpp"
 #include "Light.hpp"
@@ -47,6 +48,79 @@ Image RayTracer::Trace() const
 	Camera::Frustum const frustum = camera.SceneFrustum();
 
 	Image output(std::size_t(screenSize.x), std::size_t(screenSize.y));
+	output.pixels.resize(std::size_t(screenSize.x * screenSize.y), Color::Black());
+
+	Matrix4x4 const camToWorld = camera.Transform().Matrix();
+
+	Vector3 const worldFar = Transform::TransformTranslation(
+		camToWorld,
+		Vector3(0, 0, -1) * frustum.farPlaneDistance);
+
+	Vector3 const cameraPosition = camera.Transform().Position();
+
+	float const worldFarDistance = glm::length2(worldFar - cameraPosition);
+
+	Threading::TaskProcessor scheduler(configuration.threadCount);
+
+	std::lldiv_t const xSplit = std::lldiv(ssize_t(screenSize.x), 64);
+
+	std::lldiv_t const ySplit = std::lldiv(ssize_t(screenSize.y), 64);
+
+	std::size_t const xCount = size_t(xSplit.quot);
+	std::size_t const xOffWidth = size_t(64 + xSplit.rem);
+
+	std::size_t const yCount = size_t(ySplit.quot);
+	std::size_t const yOffWidth = size_t(64 + ySplit.rem);
+
+	for(size_t i = 0; i < yCount; ++i)
+	{
+		for(size_t j = 0; j < xCount; ++j)
+		{
+			scheduler.AddTask(
+				[
+					this,
+					&output,
+					worldFarDistance,
+					xCount,
+					yCount,
+					i,
+					j,
+					xOffWidth,
+					yOffWidth
+				]()
+				{
+					RayTracer::TraceChunk(
+						output,
+						i < yCount - 1 ? 64 : yOffWidth,
+						j < xCount - 1 ? 64 : xOffWidth,
+						64 * j,
+						64 * i,
+						worldFarDistance);
+				});
+		}
+	}
+
+	scheduler.Run();
+
+	watch.Stop();
+
+	std::printf("Took %s to render the scene\n", watch.Value().c_str());
+	std::fflush(stdout);
+
+	return output;
+}
+
+void RayTracer::TraceChunk(
+	Image &output,
+	std::size_t chunkLength,
+	std::size_t chunkWidth,
+	std::size_t chunkStartX,
+	std::size_t chunkStartY,
+	float worldFarDistance) const
+{
+	Camera const &camera = scene.Camera();
+	Vector2st const &screenSize = camera.ScreenSize();
+	Camera::Frustum const frustum = camera.SceneFrustum();
 
 	float const nearPlaneWidth = frustum.nearPlaneHeight * frustum.aspectRatio;
 	float const halfNearPlaneWidth = 0.5f * nearPlaneWidth;
@@ -67,15 +141,9 @@ Image RayTracer::Trace() const
 
 	Matrix4x4 const camToWorld = camera.Transform().Matrix();
 
-	Vector3 const worldFar = Transform::TransformTranslation(
-		camToWorld,
-		Vector3(0, 0, -1) * frustum.farPlaneDistance);
-
-	float const worldFarDistance = glm::length2(worldFar - cameraPosition);
-
-	for(std::size_t y = 0; y < screensize.y; ++y)
+	for(std::size_t y = chunkStartY; y < chunkStartY + chunkLength; ++y)
 	{
-		for(std::size_t x = 0; x < screensize.x; ++x)
+		for(std::size_t x = chunkStartX; x < chunkStartX + chunkWidth; ++x)
 		{
 			float const u = nearPlaneTopLeft.x + x * stepX + halfStepX;
 			float const v = nearPlaneTopLeft.y - y * stepY - halfStepY;
@@ -89,16 +157,9 @@ Image RayTracer::Trace() const
 
 			RayState state;
 			Color pixel = TraceRay(ray, state, false, worldFarDistance);
-			output.pixels.push_back(pixel);
+			output.pixels[y * screenSize.x + x] = pixel;
 		}
 	}
-
-	watch.Stop();
-
-	std::printf("Took %s to render the scene\n", watch.Value().c_str());
-	std::fflush(stdout);
-
-	return output;
 }
 
 Color RayTracer::TraceRay(

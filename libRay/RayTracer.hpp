@@ -77,6 +77,14 @@ public:
 	Math::Ray MakeMouseRay(int x, int y) const;
 
 private:
+	void TraceChunk(
+		Image &output,
+		std::size_t chunkLength,
+		std::size_t chunkWidth,
+		std::size_t chunkStartX,
+		std::size_t chunkStartY,
+		float worldFarDistance) const;
+
 	std::optional<Intersection> ShootRay(Math::Ray const &ray) const;
 
 	std::vector<Observer<Light const>> LightsAtIntersection(
