@@ -9,6 +9,7 @@
 #include <iomanip>
 #include <memory>
 #include <sstream>
+#include <thread>
 #include <utility>
 
 #ifdef ENABLE_GLFW
@@ -93,7 +94,10 @@ int main()
 		return EXIT_FAILURE;
 	}
 
-	RayTracerConfiguration config(4);
+	RayTracerConfiguration config(
+		4,
+		std::uint8_t(std::thread::hardware_concurrency()));
+
 	RayTracer rayTracer(*scene, std::move(config));
 
 	Image output(0, 0);

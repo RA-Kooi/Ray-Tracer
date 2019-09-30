@@ -29,9 +29,12 @@ class Scene;
 
 struct LIBRAY_API RayTracerConfiguration final
 {
-	RayTracerConfiguration(std::uint8_t maxReflectionBounces);
+	RayTracerConfiguration(
+		std::uint8_t maxReflectionBounces,
+		std::uint8_t threadCount);
 
 	std::uint8_t maxReflectionBounces;
+	std::uint8_t threadCount;
 };
 
 static_assert(std::is_copy_constructible_v<RayTracerConfiguration>);

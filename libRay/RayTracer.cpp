@@ -24,8 +24,10 @@ using namespace Math;
 constexpr float const bias = 0.005f;
 
 RayTracerConfiguration::RayTracerConfiguration(
-	std::uint8_t maxReflectionBounces)
+	std::uint8_t maxReflectionBounces,
+	std::uint8_t threadCount)
 : maxReflectionBounces(maxReflectionBounces)
+, threadCount(threadCount)
 {
 }
 
