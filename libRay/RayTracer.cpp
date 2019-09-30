@@ -71,14 +71,14 @@ Image RayTracer::Trace() const
 
 	float const worldFarDistance = glm::length2(worldFar - cameraPosition);
 
-	for(std::size_t y = screensize.y - 1; y >= 0; --y)
+	for(std::size_t y = 0; y < screensize.y; ++y)
 	{
 		for(std::size_t x = 0; x < screensize.x; ++x)
 		{
 			float const u = nearPlaneTopLeft.x + x * stepX + halfStepX;
 			float const v = nearPlaneTopLeft.y - y * stepY - halfStepY;
 
-			Vector3 rayTarget(u, -v, -1);
+			Vector3 rayTarget(u, v, -1);
 			rayTarget = glm::normalize(rayTarget);
 
 			Ray const ray(
@@ -86,8 +86,8 @@ Image RayTracer::Trace() const
 				Transform::TransformDirection(camToWorld, rayTarget));
 
 			RayState state;
-			output.pixels.push_back(
-				TraceRay(ray, state, false, worldFarDistance));
+			Color pixel = TraceRay(ray, state, false, worldFarDistance);
+			output.pixels.push_back(pixel);
 		}
 	}
 
