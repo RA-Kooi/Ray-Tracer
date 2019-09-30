@@ -155,6 +155,9 @@ Scene::Scene(
 	std::vector<Observer<Shape const>> shapesForBVH;
 	shapesForBVH.reserve(shapes.size());
 
+	for(std::unique_ptr<Shape> &shape: shapes)
+		shape->Transform().RecalculateMatrix();
+
 	for(std::unique_ptr<Shape> const &shape: shapes)
 	{
 		if(shape->IsBoundable())

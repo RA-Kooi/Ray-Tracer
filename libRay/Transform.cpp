@@ -1,5 +1,7 @@
 #include "Transform.hpp"
 
+#include <cstdio>
+
 #include "Math/Quaternion.hpp"
 
 namespace LibRay
@@ -77,7 +79,7 @@ Vector3 const &Transform::Scale() const
 Matrix4x4 const &Transform::Matrix() const
 {
 	if(dirty)
-		RecalculateMatrix();
+		std::fprintf(stderr, "Warning: Using dirty matrix.\n");
 
 	return matrix;
 }
@@ -85,7 +87,7 @@ Matrix4x4 const &Transform::Matrix() const
 Matrix4x4 const &Transform::InverseMatrix() const
 {
 	if(dirty)
-		RecalculateMatrix();
+		std::fprintf(stderr, "Warning: Using dirty matrix.\n");
 
 	return inverseMatrix;
 }
@@ -108,7 +110,7 @@ Vector3 Transform::TransformTranslation(
 		transformedTranslation.z);
 }
 
-void Transform::RecalculateMatrix() const
+void Transform::RecalculateMatrix()
 {
 	Matrix4x4 const rotationMatrix = Matrix3x3(Quaternion(rotation));
 

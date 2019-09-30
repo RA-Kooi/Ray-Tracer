@@ -31,6 +31,11 @@ Transform const &Shape::Transform() const
 	return transform;
 }
 
+Transform &Shape::Transform()
+{
+	return transform;
+}
+
 bool Shape::IsBoundable() const
 {
 	return true;

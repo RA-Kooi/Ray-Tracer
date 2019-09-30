@@ -32,6 +32,8 @@ public:
 	Math::Matrix4x4 const &Matrix() const;
 	Math::Matrix4x4 const &InverseMatrix() const;
 
+	void RecalculateMatrix();
+
 	static Math::Vector3 TransformDirection(
 		Math::Matrix4x4 const &matrix,
 		Math::Vector3 const &direction);
@@ -41,15 +43,10 @@ public:
 		Math::Vector3 const &translation);
 
 private:
-	// Hack, we want to expose this later for multithreading when we want to
-	// pre-calculate all matrices.
-	void RecalculateMatrix() const;
-
-private:
 	Math::Vector3 position, rotation, scale;
 
-	mutable Math::Matrix4x4 matrix, inverseMatrix;
-	mutable bool dirty = true;
+	Math::Matrix4x4 matrix, inverseMatrix;
+	bool dirty = true;
 };
 
 static_assert(std::is_copy_constructible_v<Transform>);

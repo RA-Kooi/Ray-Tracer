@@ -39,6 +39,7 @@ public:
 	Color const &Color() const;
 	Material const &Material() const;
 	Transform const &Transform() const;
+	class Transform &Transform();
 
 	virtual bool IsBoundable() const;
 

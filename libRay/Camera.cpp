@@ -34,6 +34,7 @@ Camera::Camera(
 , nearPlane(near)
 , farPlane(far)
 {
+	this->transform.RecalculateMatrix();
 }
 
 Camera::Frustum Camera::SceneFrustum() const
