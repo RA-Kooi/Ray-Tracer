@@ -24,7 +24,7 @@ Camera::Frustum::Frustum(
 
 Camera::Camera(
 	class Transform const &transform,
-	Vector2 const &screenSize,
+	Vector2st const &screenSize,
 	float fovY,
 	float near,
 	float far)
@@ -45,14 +45,14 @@ Camera::Frustum Camera::SceneFrustum() const
 
 	return Frustum(
 		fovY,
-		screenSize.x / screenSize.y,
+		float(screenSize.x) / float(screenSize.y),
 		nearPlaneHeight,
 		nearPlane,
 		farPlaneHeight,
 		farPlane);
 }
 
-Vector2 const &Camera::ScreenSize() const
+Vector2st const &Camera::ScreenSize() const
 {
 	return screenSize;
 }

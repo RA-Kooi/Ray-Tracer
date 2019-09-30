@@ -41,7 +41,7 @@ Image RayTracer::Trace() const
 	watch.Start();
 
 	Camera const &camera = scene.Camera();
-	Vector2 const &screenSize = camera.ScreenSize();
+	Vector2st const &screenSize = camera.ScreenSize();
 	Camera::Frustum const frustum = camera.SceneFrustum();
 
 	Image output(std::size_t(screenSize.x), std::size_t(screenSize.y));
@@ -58,9 +58,9 @@ Image RayTracer::Trace() const
 	Vector3 const nearPlaneTopLeft = nearPlanePosition
 		- Vector3(halfNearPlaneWidth, -halfNearPlaneHeight, 0);
 
-	float const stepX = nearPlaneWidth / screenSize.x;
+	float const stepX = nearPlaneWidth / float(screenSize.x);
 	float const halfStepX = 0.5f * stepX;
-	float const stepY = frustum.nearPlaneHeight / screenSize.y;
+	float const stepY = frustum.nearPlaneHeight / float(screenSize.y);
 	float const halfStepY = 0.5f * stepY;
 
 	Matrix4x4 const camToWorld = camera.Transform().Matrix();
@@ -71,9 +71,9 @@ Image RayTracer::Trace() const
 
 	float const worldFarDistance = glm::length2(worldFar - cameraPosition);
 
-	for(int y = int(screenSize.y) - 1; y >= 0; --y)
+	for(std::size_t y = screensize.y - 1; y >= 0; --y)
 	{
-		for(int x = 0; x < int(screenSize.x); ++x)
+		for(std::size_t x = 0; x < screensize.x; ++x)
 		{
 			float const u = nearPlaneTopLeft.x + x * stepX + halfStepX;
 			float const v = nearPlaneTopLeft.y - y * stepY - halfStepY;

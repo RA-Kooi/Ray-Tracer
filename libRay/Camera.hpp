@@ -38,19 +38,19 @@ public:
 public:
 	Camera(
 		Transform const &transform,
-		Math::Vector2 const &screenSize,
+		Math::Vector2st const &screenSize,
 		float fovY,
 		float near,
 		float far);
 
 	Frustum SceneFrustum() const;
-	Math::Vector2 const &ScreenSize() const;
+	Math::Vector2st const &ScreenSize() const;
 
 	Transform const &Transform() const;
 
 private:
 	class Transform transform;
-	Math::Vector2 screenSize;
+	Math::Vector2st screenSize;
 
 	float fovY, nearPlane, farPlane;
 };

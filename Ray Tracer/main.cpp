@@ -73,7 +73,7 @@ int main()
 
 	Camera camera(
 		Transform(Vector3(0, 0, 30)),
-		Vector2(640.f, 480.f),
+		Vector2st(640, 480),
 		Math::Radians(90.f),
 		1.f,
 		500.f);
