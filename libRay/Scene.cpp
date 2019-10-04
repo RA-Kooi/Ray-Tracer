@@ -2,11 +2,11 @@
 
 #include <cassert>
 
+#include "Material/Material.hpp"
 #include "Math/Vector.hpp"
 #include "Math/MathUtils.hpp"
 #include "Shaders/BlinnPhong.hpp"
 #include "Shaders/Lambertian.hpp"
-#include "Shaders/Material.hpp"
 #include "Shapes/Box.hpp"
 #include "Shapes/Plane.hpp"
 #include "Shapes/Sphere.hpp"

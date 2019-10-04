@@ -3,12 +3,12 @@
 #include <algorithm>
 #include <optional>
 
+#include "Material/Color.hpp"
+#include "Material/Material.hpp"
 #include "Math/MathUtils.hpp"
 #include "Math/Matrix.hpp"
 #include "Math/Ray.hpp"
-#include "Shaders/Material.hpp"
 #include "Shaders/Shader.hpp"
-#include "Shapes/Color.hpp"
 #include "Shapes/Shape.hpp"
 #include "Threading/TaskProcessor.hpp"
 #include "Image.hpp"

@@ -2,8 +2,8 @@
 
 #include <algorithm>
 
+#include "../Material/Color.hpp"
 #include "../Math/MathUtils.hpp"
-#include "../Shapes/Color.hpp"
 #include "../Shapes/Shape.hpp"
 #include "../Intersection.hpp"
 #include "../Light.hpp"

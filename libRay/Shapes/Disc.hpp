@@ -5,7 +5,7 @@
 #include <type_traits>
 
 #include "../Math/Vector.hpp"
-#include "../Shaders/MaterialStore.hpp"
+#include "../Material/MaterialStore.hpp"
 #include "../API.hpp"
 #include "../Transform.hpp"
 #include "Shape.hpp"

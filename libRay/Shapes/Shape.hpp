@@ -4,10 +4,10 @@
 #include <optional>
 #include <type_traits>
 
-#include "../Shaders/MaterialStore.hpp"
+#include "../Material/Color.hpp"
+#include "../Material/MaterialStore.hpp"
 #include "../API.hpp"
 #include "../Transform.hpp"
-#include "Color.hpp"
 
 namespace LibRay
 {

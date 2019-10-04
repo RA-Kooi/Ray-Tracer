@@ -5,8 +5,8 @@
 #include <string>
 #include <type_traits>
 
-#include "../Shapes/Color.hpp"
 #include "../API.hpp"
+#include "Color.hpp"
 
 namespace LibRay
 {

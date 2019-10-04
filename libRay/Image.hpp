@@ -5,7 +5,7 @@
 #include <type_traits>
 #include <vector>
 
-#include "Shapes/Color.hpp"
+#include "Material/Color.hpp"
 #include "API.hpp"
 
 namespace LibRay

@@ -3,12 +3,12 @@
 #include <algorithm>
 #include <cmath>
 
+#include "../Material/Color.hpp"
+#include "../Material/Material.hpp"
 #include "../Math/Ray.hpp"
-#include "../Shapes/Color.hpp"
 #include "../Shapes/Shape.hpp"
 #include "../Intersection.hpp"
 #include "../Light.hpp"
-#include "Material.hpp"
 
 namespace LibRay
 {

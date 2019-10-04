@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "Containers/BoundingVolumeHierarchy.hpp"
-#include "Shaders/MaterialStore.hpp"
+#include "Material/MaterialStore.hpp"
 #include "Shaders/ShaderStore.hpp"
 #include "API.hpp"
 #include "Camera.hpp"

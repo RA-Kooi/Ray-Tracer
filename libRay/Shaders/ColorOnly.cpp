@@ -1,6 +1,6 @@
 #include "ColorOnly.hpp"
 
-#include "../Shapes/Color.hpp"
+#include "../Material/Color.hpp"
 #include "../Shapes/Shape.hpp"
 #include "../Intersection.hpp"
 

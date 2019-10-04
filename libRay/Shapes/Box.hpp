@@ -4,7 +4,7 @@
 #include <optional>
 #include <type_traits>
 
-#include "../Shaders/MaterialStore.hpp"
+#include "../Material/MaterialStore.hpp"
 #include "../API.hpp"
 #include "Shape.hpp"
 
