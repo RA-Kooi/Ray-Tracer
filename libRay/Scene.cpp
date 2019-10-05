@@ -14,6 +14,7 @@
 
 namespace LibRay
 {
+using namespace Materials;
 using namespace Math;
 using namespace Shapes;
 
@@ -196,7 +197,7 @@ std::vector<Light> const &Scene::Lights() const
 	return lights;
 }
 
-std::pair<Shapes::Color const &, float> Scene::AmbientLight() const
+std::pair<Materials::Color const &, float> Scene::AmbientLight() const
 {
 	return {ambientLight, ambientIntensity};
 }

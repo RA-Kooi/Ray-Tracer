@@ -1,12 +1,13 @@
 #include "Light.hpp"
 
+using namespace LibRay::Materials;
 using namespace LibRay::Math;
 
 namespace LibRay
 {
 Light::Light(
 	Math::Vector3 const &position,
-	Shapes::Color const &color,
+	class Color const &color,
 	float intensity)
 : position(position)
 , color(color)
@@ -19,7 +20,7 @@ Vector3 const &Light::Position() const
 	return position;
 }
 
-Shapes::Color const &Light::Color() const
+Color const &Light::Color() const
 {
 	return color;
 }

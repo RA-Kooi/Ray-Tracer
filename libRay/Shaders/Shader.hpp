@@ -14,10 +14,10 @@ namespace Math
 class Ray;
 } // namespace Math
 
-namespace Shapes
+namespace Materials
 {
 class Color;
-} // namespace Shapes
+} // namespace Materials
 
 class Intersection;
 class Light;
@@ -27,12 +27,12 @@ class Shader
 public:
 	virtual ~Shader() noexcept;
 
-	virtual Shapes::Color Run(
+	virtual Materials::Color Run(
 		Intersection const &intersection,
 		Math::Vector3 const &view,
 		Math::Ray const &ray,
 		std::vector<Observer<Light const>> const &lights,
-		Shapes::Color const &ambientLight,
+		Materials::Color const &ambientLight,
 		float ambientIntensity) const = 0;
 };
 

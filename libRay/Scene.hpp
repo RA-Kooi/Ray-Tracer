@@ -27,7 +27,7 @@ public:
 	Scene(
 		Camera&& camera,
 		std::uint64_t seed,
-		Shapes::Color const &ambientLight,
+		Materials::Color const &ambientLight,
 		float ambientIntensity);
 
 	Scene(Scene &&other) = default;
@@ -44,7 +44,7 @@ public:
 
 	std::vector<Light> const &Lights() const;
 
-	std::pair<Shapes::Color const &, float> AmbientLight() const;
+	std::pair<Materials::Color const &, float> AmbientLight() const;
 
 private:
 	class Camera camera;
@@ -55,11 +55,11 @@ private:
 
 	std::vector<Light> lights;
 
-	Shapes::Color ambientLight;
+	Materials::Color ambientLight;
 	float ambientIntensity;
 
 	ShaderStore shaderStore;
-	MaterialStore materialStore;
+	Materials::MaterialStore materialStore;
 };
 
 static_assert(!std::is_copy_constructible_v<Scene>);

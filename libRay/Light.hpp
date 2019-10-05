@@ -14,16 +14,16 @@ class LIBRAY_API Light final
 public:
 	Light(
 		Math::Vector3 const &position,
-		Shapes::Color const &color,
+		Materials::Color const &color,
 		float intensity);
 
 	Math::Vector3 const &Position() const;
-	Shapes::Color const &Color() const;
+	Materials::Color const &Color() const;
 	float Intensity() const;
 
 private:
 	Math::Vector3 position;
-	Shapes::Color color;
+	Materials::Color color;
 	float intensity;
 };
 

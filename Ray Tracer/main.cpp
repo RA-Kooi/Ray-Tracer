@@ -85,7 +85,7 @@ int main()
 		scene = std::make_unique<Scene>(
 			std::move(camera),
 			0,
-			Shapes::Color::White(),
+			Materials::Color::White(),
 			0.01f);
 	}
 	catch(std::exception const &e)
@@ -138,7 +138,7 @@ LibRay::Image NormalizeImage(LibRay::Image const &image)
 		normalizedImage.pixels.begin(),
 		normalizedImage.pixels.end(),
 		normalizedImage.pixels.begin(),
-		[](Shapes::Color const &color)
+		[](Materials::Color const &color)
 		{
 			return color.Clamped();
 		});

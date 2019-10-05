@@ -19,8 +19,9 @@
 
 namespace LibRay
 {
-using namespace Shapes;
+using namespace Materials;
 using namespace Math;
+using namespace Shapes;
 
 constexpr float const bias = 0.005f;
 
@@ -458,7 +459,7 @@ Color RayTracer::Shade(
 	Material const &material = intersection.shape->Material();
 	Shader const &shader = material.Shader();
 
-	std::pair<Shapes::Color const &, float> ambientLight = scene.AmbientLight();
+	std::pair<Color const &, float> ambientLight = scene.AmbientLight();
 
 	Color pixelColor = shader.Run(
 			intersection,

@@ -6,10 +6,10 @@
 
 namespace LibRay
 {
+using namespace Materials;
 using namespace Math;
-using namespace Shapes;
 
-Shapes::Color ColorOnlyShader::Run(
+Color ColorOnlyShader::Run(
 	Intersection const &intersection,
 	Vector3 const &,
 	Ray const &,

@@ -31,9 +31,9 @@ public:
 	Sphere(
 		float radius,
 		class Transform const &transform,
-		MaterialStore const &materialStore,
-		MaterialStore::IndexType materialIndex,
-		class Color const &color);
+		Materials::MaterialStore const &materialStore,
+		Materials::MaterialStore::IndexType materialIndex,
+		Materials::Color const &color);
 
 	virtual ~Sphere() noexcept override = default;
 

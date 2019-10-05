@@ -12,6 +12,7 @@
 
 namespace LibRay
 {
+using namespace Materials;
 using namespace Math;
 using namespace Shapes;
 
@@ -20,7 +21,7 @@ Color BlinnPhongShader::Run(
 	Vector3 const &view,
 	Ray const &,
 	std::vector<Observer<Light const>> const &lights,
-	Shapes::Color const &ambientLight,
+	Color const &ambientLight,
 	float const ambientIntensity) const
 {
 	Shape const &shape = *intersection.shape;

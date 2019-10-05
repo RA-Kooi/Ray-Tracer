@@ -7,10 +7,8 @@
 #include "../API.hpp"
 #include "Material.hpp"
 
-namespace LibRay
+namespace LibRay::Materials
 {
-class Material;
-
 class LIBRAY_API MaterialStore final
 {
 public:
@@ -38,6 +36,6 @@ static_assert(!std::is_trivially_copyable_v<MaterialStore>);
 
 static_assert(std::is_move_constructible_v<MaterialStore>);
 static_assert(std::is_move_assignable_v<MaterialStore>);
-} // namespace LibRay
+} // namespace LibRay::Materials
 
 #endif // dc9791e3_8323_b52a_b580_71f02a7d3196

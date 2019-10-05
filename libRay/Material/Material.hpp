@@ -11,7 +11,10 @@
 namespace LibRay
 {
 class Shader;
+}
 
+namespace LibRay::Materials
+{
 class LIBRAY_API Material final
 {
 public:
@@ -37,15 +40,15 @@ public:
 
 	void UpdateColorProperty(
 		std::string const &name,
-		Shapes::Color const &color);
-	Shapes::Color const &ColorPropertyByName(std::string const &name) const;
+		Color const &color);
+	Color const &ColorPropertyByName(std::string const &name) const;
 
 	Shader const &Shader() const;
 
 private:
 	class Shader const &shader;
 	std::map<std::string, float> floatProperties;
-	std::map<std::string, Shapes::Color> colorProperties;
+	std::map<std::string, Color> colorProperties;
 
 	float reflectiveness;
 	float refractiveIndex;
@@ -57,6 +60,6 @@ static_assert(!std::is_trivially_copyable_v<Material>);
 
 static_assert(std::is_move_constructible_v<Material>);
 static_assert(!std::is_move_assignable_v<Material>);
-} // namespace LibRay
+} // namespace LibRay::Materials
 
 #endif // bde73d94_8f91_4914_72b1_67e1df6a9468

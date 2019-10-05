@@ -11,6 +11,7 @@
 #include "../Math/Vector.hpp"
 #include "../Intersection.hpp"
 
+using namespace LibRay::Materials;
 using namespace LibRay::Math;
 
 namespace LibRay::Shapes

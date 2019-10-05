@@ -15,10 +15,10 @@ namespace Math
 class Ray;
 } // namespace Math
 
-namespace Shapes
+namespace Materials
 {
 class Color;
-} // namespace Shapes
+} // namespace Materials
 
 class Intersection;
 class Light;
@@ -26,12 +26,12 @@ class Light;
 class BlinnPhongShader: public Shader
 {
 public:
-	Shapes::Color Run(
+	Materials::Color Run(
 		Intersection const &intersection,
 		Math::Vector3 const &cameraPosition,
 		Math::Ray const &ray,
 		std::vector<Observer<Light const>> const &lights,
-		Shapes::Color const &ambientLight,
+		Materials::Color const &ambientLight,
 		float ambientIntensity) const override;
 };
 

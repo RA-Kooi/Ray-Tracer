@@ -1,5 +1,6 @@
 #include "Shape.hpp"
 
+using namespace LibRay::Materials;
 using namespace LibRay::Math;
 
 namespace LibRay::Shapes
@@ -21,7 +22,7 @@ Color const &Shape::Color() const
 	return color;
 }
 
-Material const &Shape::Material() const
+class Material const &Shape::Material() const
 {
 	return materialStore.MaterialByIndex(materialIndex);
 }

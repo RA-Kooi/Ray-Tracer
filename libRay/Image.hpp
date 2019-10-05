@@ -17,7 +17,7 @@ public:
 
 public:
 	std::size_t sizeX, sizeY;
-	std::vector<Shapes::Color> pixels;
+	std::vector<Materials::Color> pixels;
 };
 
 static_assert(std::is_copy_constructible_v<Image>);

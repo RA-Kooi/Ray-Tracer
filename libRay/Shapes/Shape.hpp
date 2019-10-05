@@ -30,14 +30,14 @@ class LIBRAY_API Shape
 public:
 	Shape(
 		Transform const &transform,
-		MaterialStore const &materialStore,
-		MaterialStore::IndexType materialIndex,
-		Color const &color);
+		Materials::MaterialStore const &materialStore,
+		Materials::MaterialStore::IndexType materialIndex,
+		Materials::Color const &color);
 
 	virtual ~Shape() noexcept = default;
 
-	Color const &Color() const;
-	Material const &Material() const;
+	Materials::Color const &Color() const;
+	Materials::Material const &Material() const;
 	Transform const &Transform() const;
 	class Transform &Transform();
 
@@ -49,9 +49,9 @@ public:
 	virtual Containers::BoundingBox CalculateBoundingBox() const = 0;
 
 protected:
-	class Color color;
-	MaterialStore const &materialStore;
-	MaterialStore::IndexType materialIndex;
+	Materials::Color color;
+	Materials::MaterialStore const &materialStore;
+	Materials::MaterialStore::IndexType materialIndex;
 
 	class Transform transform;
 };

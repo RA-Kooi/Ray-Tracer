@@ -17,10 +17,10 @@ namespace Math
 class Ray;
 } // namespace Math
 
-namespace Shapes
+namespace Materials
 {
 class Color;
-} // namespace Shapes
+} // namespace Materials
 
 class Image;
 class Intersection;
@@ -68,7 +68,7 @@ public:
 	RayTracer(Scene const &scene, RayTracerConfiguration &&config);
 
 	Image Trace() const;
-	Shapes::Color TraceRay(
+	Materials::Color TraceRay(
 		Math::Ray const &ray,
 		RayState &state,
 		bool debug = false,
@@ -90,21 +90,21 @@ private:
 	std::vector<Observer<Light const>> LightsAtIntersection(
 		Intersection const &intersection) const;
 
-	Shapes::Color DoReflection(
+	Materials::Color DoReflection(
 		Intersection const &intersection,
 		Math::Ray const &ray,
 		RayState &state,
 		bool debug,
 		float farPlaneDistance) const;
 
-	Shapes::Color DoRefraction(
+	Materials::Color DoRefraction(
 		Intersection const &intersection,
 		Math::Ray const &ray,
 		RayState &state,
 		bool debug,
 		float farPlaneDistance) const;
 
-	Shapes::Color Shade(
+	Materials::Color Shade(
 		Math::Ray const &ray,
 		Intersection const &intersection,
 		bool debug) const;

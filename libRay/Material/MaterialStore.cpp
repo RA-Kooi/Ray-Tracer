@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-namespace LibRay
+namespace LibRay::Materials
 {
 MaterialStore::IndexType MaterialStore::AddMaterial(Material &&material)
 {
@@ -19,4 +19,4 @@ Material const &MaterialStore::MaterialByIndex(IndexType index) const
 
 	return materials[index];
 }
-} // namespace LibRay
+} // namespace LibRay::Materials

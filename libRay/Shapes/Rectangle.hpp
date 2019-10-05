@@ -33,9 +33,9 @@ public:
 	Rectangle(
 		Math::Vector2 const &dimensions,
 		class Transform const &transform,
-		MaterialStore const &materialStore,
-		MaterialStore::IndexType materialIndex,
-		class Color const &color);
+		Materials::MaterialStore const &materialStore,
+		Materials::MaterialStore::IndexType materialIndex,
+		Materials::Color const &color);
 
 	virtual ~Rectangle() noexcept override = default;
 

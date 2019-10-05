@@ -4,10 +4,8 @@
 
 #include "../Math/MathUtils.hpp"
 
-namespace LibRay
+namespace LibRay::Materials
 {
-using namespace Shapes;
-
 Material::Material(
 	class Shader const &shader,
 	float reflectiveness,
@@ -97,4 +95,4 @@ class Shader const &Material::Shader() const
 {
 	return shader;
 }
-} // namespace LibRay
+} // namespace LibRay::Materials

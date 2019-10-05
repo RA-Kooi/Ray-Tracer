@@ -10,6 +10,7 @@
 
 namespace LibRay
 {
+using namespace Materials;
 using namespace Math;
 using namespace Shapes;
 
@@ -18,7 +19,7 @@ Color LambertianShader::Run(
 	Vector3 const &,
 	Ray const &,
 	std::vector<Observer<Light const>> const &lights,
-	Shapes::Color const &ambientLight,
+	Color const &ambientLight,
 	float ambientIntensity) const
 {
 	Color result = ambientLight * ambientIntensity;

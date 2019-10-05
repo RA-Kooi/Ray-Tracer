@@ -2,7 +2,7 @@
 
 #include "../Math/MathUtils.hpp"
 
-namespace LibRay::Shapes
+namespace LibRay::Materials
 {
 Color::Color(float red, float green, float blue)
 : r(red)
@@ -140,4 +140,4 @@ Color Color::White()
 {
 	return Color(1, 1, 1);
 }
-} // namespace LibRay::Shapes
+} // namespace LibRay::Materials

@@ -6,7 +6,7 @@
 
 #include "../API.hpp"
 
-namespace LibRay::Shapes
+namespace LibRay::Materials
 {
 class LIBRAY_API Color final
 {
@@ -54,6 +54,6 @@ static_assert(std::is_trivially_copyable_v<Color>);
 
 static_assert(std::is_move_constructible_v<Color>);
 static_assert(std::is_move_assignable_v<Color>);
-} // namespace LibRay::Shapes
+} // namespace LibRay::Materials
 
 #endif // b42831bc_5aec_4ee2_9bdd_09f0dac7b019
