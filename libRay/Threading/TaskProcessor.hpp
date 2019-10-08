@@ -25,8 +25,11 @@ public:
 private:
 	std::size_t threadCount;
 
-	std::atomic_size_t lastTask, nextTask;
+	std::atomic_size_t nextTask;
+
+#ifdef DEBUG
 	std::atomic_bool ready;
+#endif
 
 	std::vector<std::function<void()>> tasks;
 };

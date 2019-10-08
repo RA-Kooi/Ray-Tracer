@@ -96,7 +96,11 @@ int main()
 
 	RayTracerConfiguration config(
 		4,
+#ifdef DEBUG
+		1);
+#else
 		std::uint8_t(std::thread::hardware_concurrency()));
+#endif
 
 	RayTracer rayTracer(*scene, std::move(config));
 
