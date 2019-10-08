@@ -47,35 +47,58 @@ Scene::Scene(
 		"Lambertian",
 		std::make_unique<LambertianShader>());
 
+	Texture checkers("./Resources/Textures/1024x1024 Texel Density Texture 1.png");
+	Texture earth("./Resources/Textures/2k_earth_daymap.jpg");
+	Texture container("./Resources/Textures/container.jpg");
+
 	//constexpr float const eggshell = 10;
 	constexpr float const mildlyShiny = 100;
 	//constexpr float const shiny = 1000;
 	//constexpr float const veryShiny = 10'000;
 
 	Material material(lambertian, 0.f);
+	material.UpdateTextureProperty("diffuse", Texture::White());
 	//material.UpdateColorProperty("specular", Color::White());
 	//material.UpdateFloatProperty("phong exponent", eggshell);
 
-	Material material2(blinnPhong, 0.0f);
-	material2.UpdateColorProperty("specular", Color::White());
-	material2.UpdateFloatProperty("phong exponent", mildlyShiny);
+	MaterialStore::IndexType const topBack =
+		materialStore.AddMaterial(material);
 
-	Material material3(material2);
-	material3.RefractiveIndex(1.49f);
+	material.UpdateTextureProperty("diffuse", checkers);
+	MaterialStore::IndexType const bottomMat =
+		materialStore.AddMaterial(material);
 
-	MaterialStore::IndexType const &blinnPhongMaterial =
+	material.UpdateTextureProperty("diffuse", Texture::Green());
+	MaterialStore::IndexType const leftMat =
+		materialStore.AddMaterial(material);
+
+	material.UpdateTextureProperty("diffuse", Texture::Red());
+	MaterialStore::IndexType const rightMat =
+		materialStore.AddMaterial(material);
+
+	material.UpdateTextureProperty("diffuse", Texture::Blue());
+	MaterialStore::IndexType const blueBox =
+		materialStore.AddMaterial(material);
+
+	material.UpdateTextureProperty("diffuse", container);
+	MaterialStore::IndexType const containerBox =
 		materialStore.AddMaterial(std::move(material));
 
-	MaterialStore::IndexType const &mildlyShinyMaterial =
-		materialStore.AddMaterial(std::move(material2));
+	Material material2(blinnPhong, 0.05f);
+	material2.UpdateTextureProperty("diffuse", earth);
+	material2.UpdateColorProperty("specular", Color::White());
+	material2.UpdateFloatProperty("phong exponent", mildlyShiny);
+	MaterialStore::IndexType const blueSphere =
+		materialStore.AddMaterial(material2);
 
-	MaterialStore::IndexType const &refractiveMaterial =
-		materialStore.AddMaterial(std::move(material3));
+	material2.RefractiveIndex(1.49f);
+	MaterialStore::IndexType const refractiveSphere =
+		materialStore.AddMaterial(std::move(material2));
 
 	auto box = std::make_unique<Box>(
 		Transform(Vector3(-9.f, -21.f, 0.f), Vector3(0), Vector3(8, 8, 8)),
 		materialStore,
-		mildlyShinyMaterial,
+		containerBox,
 		Color::Green() * 0.7f + Color::White() * 0.3f);
 
 	shapes.push_back(std::move(box));
@@ -83,7 +106,7 @@ Scene::Scene(
 	box = std::make_unique<Box>(
 		Transform(Vector3(9.f, -15.f, 0.f), Vector3(0, Math::PI * 0.25f, 0), Vector3(8, 20, 8)),
 		materialStore,
-		mildlyShinyMaterial,
+		blueBox,
 		Color::Blue() * 0.7f + Color::White() * 0.3f);
 
 	shapes.push_back(std::move(box));
@@ -94,7 +117,7 @@ Scene::Scene(
 			Vector3(-Math::PI * 0.2f, -Math::PI * 0.4f, 0),
 			Vector3(3.f)),
 		materialStore,
-		mildlyShinyMaterial,
+		blueSphere,
 		Color::Blue());
 
 	shapes.push_back(std::move(sphere));
@@ -105,7 +128,7 @@ Scene::Scene(
 			Vector3(0),
 			Vector3(5.f)),
 		materialStore,
-		refractiveMaterial,
+		refractiveSphere,
 		Color::White());
 
 	shapes.push_back(std::move(refracSphere));
@@ -113,7 +136,7 @@ Scene::Scene(
 	auto bottom = std::make_unique<Plane>(
 		Transform(Vector3(0, -25, 0)),
 		materialStore,
-		blinnPhongMaterial,
+		bottomMat,
 		Color::White());
 
 	shapes.push_back(std::move(bottom));
@@ -121,7 +144,7 @@ Scene::Scene(
 	auto back = std::make_unique<Plane>(
 		Transform(Vector3(0, 0, -25), Vector3(Math::PI * 0.5f, 0, 0)),
 		materialStore,
-		blinnPhongMaterial,
+		topBack,
 		Color::White());
 
 	shapes.push_back(std::move(back));
@@ -129,7 +152,7 @@ Scene::Scene(
 	auto top = std::make_unique<Plane>(
 		Transform(Vector3(0, 25, 0), Vector3(Math::PI, 0, 0)),
 		materialStore,
-		blinnPhongMaterial,
+		topBack,
 		Color::White());
 
 	shapes.push_back(std::move(top));
@@ -137,7 +160,7 @@ Scene::Scene(
 	auto right = std::make_unique<Plane>(
 		Transform(Vector3(25, 0, 0), Vector3(0, 0, Math::PI * 0.5f)),
 		materialStore,
-		blinnPhongMaterial,
+		rightMat,
 		Color::Green());
 
 	shapes.push_back(std::move(right));
@@ -145,7 +168,7 @@ Scene::Scene(
 	auto left = std::make_unique<Plane>(
 		Transform(Vector3(-25, 0, 0), Vector3(0, 0, -Math::PI * 0.5f)),
 		materialStore,
-		blinnPhongMaterial,
+		leftMat,
 		Color::Red());
 
 	shapes.push_back(std::move(left));
