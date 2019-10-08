@@ -207,6 +207,7 @@
 		{
 			"cc_flags":
 			[
+				"-fPIC",
 				"-Wno-unused-parameter",
 				"-Wno-disabled-macro-expansion",
 				"-Wno-sign-conversion",
@@ -220,6 +221,10 @@
 				"-Wno-padded",
 				"-Wno-implicit-int-conversion",
 				"-Wno-conversion"
+			],
+			"ld_flags":
+			[
+				"-fPIC"
 			]
 		}
 	}
