@@ -24,8 +24,12 @@ Color LambertianShader::Run(
 {
 	Color result = ambientLight * ambientIntensity;
 	Shape const &shape = *intersection.shape;
+	Material const &material = shape.Material();
 
 	Vector3 const &intersectionPos = intersection.worldPosition;
+	Vector2 const &uv = intersection.uv;
+	Color const &diffuse =
+		material.TexturePropertyByName("diffuse").Sample(uv.x, uv.y);
 
 	for(Observer<Light const> const &light: lights)
 	{
@@ -44,7 +48,7 @@ Color LambertianShader::Run(
 		result += std::max(costheta, 0.f)
 			* light->Color()
 			* I
-			* shape.Color();
+			* diffuse;
 	}
 
 	return result;

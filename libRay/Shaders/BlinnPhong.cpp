@@ -31,7 +31,9 @@ Color BlinnPhongShader::Run(
 
 	Vector3 const &normal = intersection.surfaceNormal;
 	Vector3 const &intersectionPos = intersection.worldPosition;
-	Color const &diffuse = shape.Color();
+	Vector2 const &uv = intersection.uv;
+	Color const &diffuse =
+		material.TexturePropertyByName("diffuse").Sample(uv.x, uv.y);
 
 	Color result = ambientLight * ambientIntensity;
 
