@@ -4,11 +4,11 @@
 
 namespace LibRay::Materials
 {
-MaterialStore::IndexType MaterialStore::AddMaterial(Material &&material)
+MaterialStore::IndexType MaterialStore::AddMaterial(Material material)
 {
 	IndexType index = materials.size();
 
-	materials.push_back(material);
+	materials.push_back(std::move(material));
 
 	return index;
 }

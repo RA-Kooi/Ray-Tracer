@@ -18,12 +18,11 @@ public:
 public:
 	MaterialStore() noexcept = default;
 	MaterialStore(MaterialStore const &) = default;
-	MaterialStore(MaterialStore &&) noexcept = default;
 
 	MaterialStore &operator=(MaterialStore const &) = delete;
 	MaterialStore &operator=(MaterialStore &&) = default;
 
-	IndexType AddMaterial(Material &&material);
+	IndexType AddMaterial(Material material);
 	Material const &MaterialByIndex(IndexType index) const;
 
 private:

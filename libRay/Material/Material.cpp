@@ -18,6 +18,11 @@ Material::Material(
 {
 }
 
+class Shader const &Material::Shader() const
+{
+	return shader;
+}
+
 void Material::UpdateFloatProperty(std::string const &name, float value)
 {
 	floatProperties[name] = value;
@@ -31,33 +36,13 @@ float Material::FloatPropertyByName(std::string const &name) const
 	{
 		std::fprintf(
 			stderr,
-			"Warning: Unable to find named property \"%s\".\n",
+			"Warning: Unable to find named float property \"%s\".\n",
 			it->first.c_str());
 
 		return 0.f;
 	}
 
 	return it->second;
-}
-
-void Material::Reflectiveness(float newReflectiveness)
-{
-	reflectiveness = newReflectiveness;
-}
-
-float Material::Reflectiveness() const
-{
-	return reflectiveness;
-}
-
-void Material::RefractiveIndex(float newRefractiveIndex)
-{
-	refractiveIndex = newRefractiveIndex;
-}
-
-float Material::RefractiveIndex() const
-{
-	return refractiveIndex;
 }
 
 void Material::UpdateColorProperty(std::string const &name, Color const &color)
@@ -81,7 +66,7 @@ Color const &Material::ColorPropertyByName(std::string const &name) const
 	{
 		std::fprintf(
 			stderr,
-			"Warning: Unable to find named property \"%s\".\n",
+			"Warning: Unable to find named color property \"%s\".\n",
 			it->first.c_str());
 
 		static Color black = Color::Black();
@@ -91,8 +76,23 @@ Color const &Material::ColorPropertyByName(std::string const &name) const
 	return it->second;
 }
 
-class Shader const &Material::Shader() const
+void Material::Reflectiveness(float newReflectiveness)
 {
-	return shader;
+	reflectiveness = newReflectiveness;
+}
+
+float Material::Reflectiveness() const
+{
+	return reflectiveness;
+}
+
+void Material::RefractiveIndex(float newRefractiveIndex)
+{
+	refractiveIndex = newRefractiveIndex;
+}
+
+float Material::RefractiveIndex() const
+{
+	return refractiveIndex;
 }
 } // namespace LibRay::Materials

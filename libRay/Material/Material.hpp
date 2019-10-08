@@ -1,7 +1,7 @@
 #ifndef bde73d94_8f91_4914_72b1_67e1df6a9468
 #define bde73d94_8f91_4914_72b1_67e1df6a9468
 
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <type_traits>
 
@@ -26,11 +26,15 @@ public:
 	Material(Material const &) = default;
 	Material(Material &&) = default;
 
-	Material &operator=(Material const &) = delete;
-	Material &operator=(Material &&) = delete;
+	Shader const &Shader() const;
 
 	void UpdateFloatProperty(std::string const &name, float value);
 	float FloatPropertyByName(std::string const &name) const;
+
+	void UpdateColorProperty(
+		std::string const &name,
+		Color const &color);
+	Color const &ColorPropertyByName(std::string const &name) const;
 
 	void Reflectiveness(float newReflectiveness);
 	float Reflectiveness() const;
@@ -38,17 +42,10 @@ public:
 	void RefractiveIndex(float newRefractiveIndex);
 	float RefractiveIndex() const;
 
-	void UpdateColorProperty(
-		std::string const &name,
-		Color const &color);
-	Color const &ColorPropertyByName(std::string const &name) const;
-
-	Shader const &Shader() const;
-
 private:
 	class Shader const &shader;
-	std::map<std::string, float> floatProperties;
-	std::map<std::string, Color> colorProperties;
+	std::unordered_map<std::string, float> floatProperties;
+	std::unordered_map<std::string, Color> colorProperties;
 
 	float reflectiveness;
 	float refractiveIndex;
