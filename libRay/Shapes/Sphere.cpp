@@ -16,17 +16,6 @@ using namespace LibRay::Math;
 
 namespace LibRay::Shapes
 {
-Sphere::Sphere(
-	float radius,
-	class Transform const &transform,
-	MaterialStore const &materialStore,
-	MaterialStore::IndexType materialIndex,
-	class Color const &color)
-: Shape(transform, materialStore, materialIndex, color)
-, radius(radius)
-{
-}
-
 std::optional<Intersection> Sphere::Intersects(Ray const &ray) const
 {
 	// Implicit sphere surface = (point - center)² - radius² = 0
@@ -53,7 +42,7 @@ std::optional<Intersection> Sphere::Intersects(Ray const &ray) const
 
 	float const a = glm::length2(modelRay.Direction());
 	float const b = glm::dot((modelRay.Direction() * 2.f), centerToOrigin);
-	float const c = glm::length2(centerToOrigin) - radius * radius;
+	float const c = glm::length2(centerToOrigin) - 1.f;
 
 	std::tuple<int, float, float> solutions = Math::SolveQuadratic(a, b, c);
 
@@ -103,7 +92,7 @@ std::optional<Intersection> Sphere::Intersects(Ray const &ray) const
 
 Containers::BoundingBox Sphere::CalculateBoundingBox() const
 {
-	Vector3 const radiusVec(radius, radius, radius);
+	Vector3 const radiusVec(1.f);
 
 	Vector3 bounds = radiusVec * 2.f * transform.Scale();
 	if(bounds.x < FLT_EPSILON)

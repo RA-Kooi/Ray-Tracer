@@ -15,6 +15,30 @@ namespace LibRay
 using namespace Math;
 using namespace Shapes;
 
+static Vector3 CalculateNormal(Vector3 const &point)
+{
+	Vector3 const pointAbs = glm::abs(point);
+	Vector3 normal(0);
+
+	if(pointAbs.x >= pointAbs.y && pointAbs.x >= pointAbs.z)
+		normal.x = float(Sign(point.x));
+
+	if(pointAbs.y >= pointAbs.x && pointAbs.y >= pointAbs.z)
+		normal.y = float(Sign(point.y));
+
+	if(pointAbs.z >= pointAbs.x && pointAbs.z >= pointAbs.y)
+		normal.z = float(Sign(point.z));
+
+	if(normal.x > 0 && normal.y > 0)
+		normal.y = 0;
+	if(normal.x > 0 && normal.z > 0)
+		normal.z = 0;
+	if(normal.y > 0 && normal.z > 0)
+		normal.z = 0;
+
+	return normal;
+}
+
 std::optional<Intersection> Box::Intersects(Math::Ray const &ray) const
 {
 	Matrix4x4 const worldToModel = transform.InverseMatrix();
@@ -51,31 +75,7 @@ std::optional<Intersection> Box::Intersects(Math::Ray const &ray) const
 		+ modelRay.Direction()
 		* distanceToIntersection;
 
-	auto const calculateNormal = [](Vector3 const &point) -> Vector3
-	{
-		Vector3 const pointAbs = glm::abs(point);
-		Vector3 normal(0);
-
-		if(pointAbs.x >= pointAbs.y && pointAbs.x >= pointAbs.z)
-			normal.x = float(Sign(point.x));
-
-		if(pointAbs.y >= pointAbs.x && pointAbs.y >= pointAbs.z)
-			normal.y = float(Sign(point.y));
-
-		if(pointAbs.z >= pointAbs.x && pointAbs.z >= pointAbs.y)
-			normal.z = float(Sign(point.z));
-
-		if(normal.x > 0 && normal.y > 0)
-			normal.y = 0;
-		if(normal.x > 0 && normal.z > 0)
-			normal.z = 0;
-		if(normal.y > 0 && normal.z > 0)
-			normal.z = 0;
-
-		return normal;
-	};
-
-	Vector3 const normal = calculateNormal(pointOnBox);
+	Vector3 const normal = CalculateNormal(pointOnBox);
 
 	return Intersection(
 		*this,

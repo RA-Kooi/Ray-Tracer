@@ -14,17 +14,6 @@ using namespace LibRay::Math;
 
 namespace LibRay::Shapes
 {
-Rectangle::	Rectangle(
-	Math::Vector2 const &dimensions,
-	class Transform const &transform,
-	MaterialStore const &materialStore,
-	MaterialStore::IndexType materialIndex,
-	class Color const &color)
-: Shape(transform, materialStore, materialIndex, color)
-, dimensions(dimensions)
-{
-}
-
 std::optional<Intersection> Rectangle::Intersects(Ray const &ray) const
 {
 	Matrix4x4 const worldToModel = transform.InverseMatrix();
@@ -46,13 +35,9 @@ std::optional<Intersection> Rectangle::Intersects(Ray const &ray) const
 			+ modelRay.Direction()
 			* distanceToCenter;
 
-		// Determine the vertices of the rectangle
-		float const halfWidth = dimensions.x * 0.5f;
-		float const halfHeight = dimensions.y * 0.5f;
-
 		// If all the signs are the same, the point is on the rectangle
-		if(pointOnRect.x > -halfWidth && pointOnRect.x < halfWidth
-		   && pointOnRect.y > -halfHeight && pointOnRect.y < halfHeight)
+		if(pointOnRect.x > -0.5f && pointOnRect.x < 0.5f
+		   && pointOnRect.y > -0.5f && pointOnRect.y < 0.5f)
 		{
 			return Intersection(
 				*this,
@@ -66,10 +51,10 @@ std::optional<Intersection> Rectangle::Intersects(Ray const &ray) const
 
 Containers::BoundingBox Rectangle::CalculateBoundingBox() const
 {
-	Vector3 const topLeft(-dimensions.x, dimensions.y, 0);
-	Vector3 const topRight(dimensions.x, dimensions.y, 0);
-	Vector3 const bottomLeft(-dimensions.x, -dimensions.y, 0);
-	Vector3 const bottomRight(dimensions.x, -dimensions.y, 0);
+	Vector3 const topLeft(-0.5f, 0.5f, 0);
+	Vector3 const topRight(0.5f, 0.5f, 0);
+	Vector3 const bottomLeft(-0.5f, -0.5f, 0);
+	Vector3 const bottomRight(0.5f, -0.5f, 0);
 
 	Vector3 const worldTopLeft =
 		Transform::TransformDirection(transform.Matrix(), topLeft);

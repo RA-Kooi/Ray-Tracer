@@ -89,8 +89,10 @@ Scene::Scene(
 	shapes.push_back(std::move(box));
 
 	auto sphere = std::make_unique<Sphere>(
-		3.f,
-		Transform(Vector3(3.f, 0.f, 0.f)),
+		Transform(
+			Vector3(3.f, 0.f, 0.f),
+			Vector3(-Math::PI * 0.2f, -Math::PI * 0.4f, 0),
+			Vector3(3.f)),
 		materialStore,
 		mildlyShinyMaterial,
 		Color::Blue());
@@ -98,8 +100,10 @@ Scene::Scene(
 	shapes.push_back(std::move(sphere));
 
 	auto refracSphere = std::make_unique<Sphere>(
-		5.f,
-		Transform(Vector3(0.f, 0.f, 15.f)),
+		Transform(
+			Vector3(0.f, 0.f, 15.f),
+			Vector3(0),
+			Vector3(5.f)),
 		materialStore,
 		refractiveMaterial,
 		Color::White());

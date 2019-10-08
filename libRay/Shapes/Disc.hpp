@@ -29,21 +29,13 @@ namespace Shapes
 class LIBRAY_API Disc final: public Shape
 {
 public:
-	Disc(
-		float radius,
-		class Transform const &transform,
-		Materials::MaterialStore const &materialStore,
-		Materials::MaterialStore::IndexType materialIndex,
-		Materials::Color const &color);
+	using Shape::Shape;
 
 	virtual ~Disc() noexcept override = default;
 
 	std::optional<Intersection> Intersects(Math::Ray const &ray) const override;
 
 	Containers::BoundingBox CalculateBoundingBox() const override;
-
-private:
-	float radius;
 };
 
 static_assert(std::is_copy_constructible_v<Disc>);

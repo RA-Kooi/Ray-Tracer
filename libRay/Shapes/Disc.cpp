@@ -12,17 +12,6 @@ using namespace LibRay::Math;
 
 namespace LibRay::Shapes
 {
-Disc::Disc(
-	float radius,
-	class Transform const &transform,
-	MaterialStore const &materialStore,
-	MaterialStore::IndexType materialIndex,
-	class Color const &color)
-: Shape(transform, materialStore, materialIndex, color)
-, radius(radius)
-{
-}
-
 std::optional<Intersection> Disc::Intersects(Ray const &ray) const
 {
 	Matrix4x4 const worldToModel = transform.InverseMatrix();
@@ -47,7 +36,7 @@ std::optional<Intersection> Disc::Intersects(Ray const &ray) const
 
 		float const squareDistance = glm::length2(pointOnDisc);
 
-		if(squareDistance <= radius * radius)
+		if(squareDistance <= 1.f)
 		{
 			return Intersection(
 				*this,
@@ -61,14 +50,14 @@ std::optional<Intersection> Disc::Intersects(Ray const &ray) const
 
 Containers::BoundingBox Disc::CalculateBoundingBox() const
 {
-	Vector3 const xMin(-radius, 0, 0);
-	Vector3 const xMax(radius, 0 , 0);
+	Vector3 const xMin(-1.f, 0, 0);
+	Vector3 const xMax(1.f, 0 , 0);
 
-	Vector3 const yMin(0, -radius, 0);
-	Vector3 const yMax(0, radius, 0);
+	Vector3 const yMin(0, -1.f, 0);
+	Vector3 const yMax(0, 1.f, 0);
 
-	Vector3 const zMin(0, 0, -radius);
-	Vector3 const zMax(0, 0, radius);
+	Vector3 const zMin(0, 0, -1.f);
+	Vector3 const zMax(0, 0, 1.f);
 
 	Vector3 const worldXMin =
 		Transform::TransformDirection(transform.Matrix(), xMin);

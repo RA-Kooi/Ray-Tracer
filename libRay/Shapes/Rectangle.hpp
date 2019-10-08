@@ -30,21 +30,13 @@ namespace Shapes
 class LIBRAY_API Rectangle final: public Shape
 {
 public:
-	Rectangle(
-		Math::Vector2 const &dimensions,
-		class Transform const &transform,
-		Materials::MaterialStore const &materialStore,
-		Materials::MaterialStore::IndexType materialIndex,
-		Materials::Color const &color);
+	using Shape::Shape;
 
 	virtual ~Rectangle() noexcept override = default;
 
 	std::optional<Intersection> Intersects(Math::Ray const &ray) const override;
 
 	Containers::BoundingBox CalculateBoundingBox() const override;
-
-private:
-	Math::Vector2 dimensions;
 };
 
 static_assert(std::is_copy_constructible_v<Rectangle>);
