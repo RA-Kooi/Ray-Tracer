@@ -15,10 +15,10 @@ namespace LibRay::Shapes
 {
 std::optional<Intersection> Plane::Intersects(Ray const &ray) const
 {
-	Matrix4x4 worlToModel = transform.InverseMatrix();
+	Matrix4x4 const worldToModel = transform.InverseMatrix();
 	Ray const modelRay(
-		Transform::TransformTranslation(worlToModel, ray.Origin()),
-		Transform::TransformDirection(worlToModel, ray.Direction()));
+		Transform::TransformTranslation(worldToModel, ray.Origin()),
+		Transform::TransformDirection(worldToModel, ray.Direction()));
 
 	Vector3 const normal = Vector3(0, 1, 0);
 

@@ -43,11 +43,11 @@ std::optional<Intersection> Sphere::Intersects(Ray const &ray) const
 	// Now we can find x using the quadratic formula
 	// x = (-b +- sqrt(b² - 4ac)) / 2a
 
-	Matrix4x4 const worlToModel = transform.InverseMatrix();
+	Matrix4x4 const worldToModel = transform.InverseMatrix();
 
 	Ray const modelRay(
-		Transform::TransformTranslation(worlToModel, ray.Origin()),
-		Transform::TransformDirection(worlToModel, ray.Direction()));
+		Transform::TransformTranslation(worldToModel, ray.Origin()),
+		Transform::TransformDirection(worldToModel, ray.Direction()));
 
 	Vector3 const centerToOrigin = modelRay.Origin();
 

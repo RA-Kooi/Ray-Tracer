@@ -17,10 +17,10 @@ using namespace Shapes;
 
 std::optional<Intersection> Box::Intersects(Math::Ray const &ray) const
 {
-	Matrix4x4 const worlToModel = transform.InverseMatrix();
+	Matrix4x4 const worldToModel = transform.InverseMatrix();
 	Ray const modelRay(
-		Transform::TransformTranslation(worlToModel, ray.Origin()),
-		Transform::TransformDirection(worlToModel, ray.Direction()));
+		Transform::TransformTranslation(worldToModel, ray.Origin()),
+		Transform::TransformDirection(worldToModel, ray.Direction()));
 
 	Vector3 const halfBoundaries(0.5f, 0.5f, 0.5f);
 

@@ -27,11 +27,11 @@ Rectangle::	Rectangle(
 
 std::optional<Intersection> Rectangle::Intersects(Ray const &ray) const
 {
-	Matrix4x4 const worlToModel = transform.InverseMatrix();
+	Matrix4x4 const worldToModel = transform.InverseMatrix();
 
 	Ray const modelRay(
-		Transform::TransformTranslation(worlToModel, ray.Origin()),
-		Transform::TransformDirection(worlToModel, ray.Direction()));
+		Transform::TransformTranslation(worldToModel, ray.Origin()),
+		Transform::TransformDirection(worldToModel, ray.Direction()));
 
 	Vector3 const normal = Vector3(0, 0, 1);
 	Vector3 const centerToOrigin = modelRay.Origin();
