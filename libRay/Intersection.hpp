@@ -20,12 +20,14 @@ public:
 	Intersection(
 		Shapes::Shape const &shape,
 		Math::Vector3 const &surfaceNormal,
-		Math::Vector3 const &worldPosition);
+		Math::Vector3 const &worldPosition,
+		Math::Vector2 const &uv);
 
 public:
 	Observer<Shapes::Shape const> shape;
 	Math::Vector3 surfaceNormal;
 	Math::Vector3 worldPosition;
+	Math::Vector2 uv;
 };
 
 static_assert(std::is_copy_constructible_v<Intersection>);

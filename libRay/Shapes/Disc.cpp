@@ -41,7 +41,8 @@ std::optional<Intersection> Disc::Intersects(Ray const &ray) const
 			return Intersection(
 				*this,
 				Transform::TransformDirection(transform.Matrix(), normal),
-				Transform::TransformTranslation(transform.Matrix(), pointOnDisc));
+				Transform::TransformTranslation(transform.Matrix(), pointOnDisc),
+				{pointOnDisc.x, pointOnDisc.y});
 		}
 	}
 

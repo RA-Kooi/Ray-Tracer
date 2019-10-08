@@ -39,6 +39,16 @@ static Vector3 CalculateNormal(Vector3 const &point)
 	return normal;
 }
 
+static Vector2 UV(Vector3 const &modelPos, Vector3 const &normal)
+{
+	if(normal.x != 0.f)
+		return {-modelPos.z + 0.5f, -modelPos.y + 0.5f};
+	else if(normal.y != 0.f)
+		return {modelPos.x + 0.5f, modelPos.z + 0.5f};
+	else
+		return {modelPos.x + 0.5f, -modelPos.y + 0.5f};
+}
+
 std::optional<Intersection> Box::Intersects(Math::Ray const &ray) const
 {
 	Matrix4x4 const worldToModel = transform.InverseMatrix();
@@ -77,10 +87,13 @@ std::optional<Intersection> Box::Intersects(Math::Ray const &ray) const
 
 	Vector3 const normal = CalculateNormal(pointOnBox);
 
+	Vector2 const uv = UV(pointOnBox, normal);
+
 	return Intersection(
 		*this,
 		Transform::TransformDirection(transform.Matrix(), normal),
-		Transform::TransformTranslation(transform.Matrix(), pointOnBox));
+		Transform::TransformTranslation(transform.Matrix(), pointOnBox),
+		uv);
 }
 
 Containers::BoundingBox Box::CalculateBoundingBox() const

@@ -30,17 +30,24 @@ std::optional<Intersection> Plane::Intersects(Ray const &ray) const
 		float const distanceToIntersection = glm::dot(centerToOrigin, normal)
 			/ -denominator;
 
-		Vector3 const pointOnPlane = Transform::TransformTranslation(
-			transform.Matrix(),
-			modelRay.Origin()
+		Vector3 const localPoint = modelRay.Origin()
 				+ modelRay.Direction()
-				* distanceToIntersection);
+				* distanceToIntersection;
+
+		Vector2 const uv(
+			std::fmod(localPoint.x, 10.f),
+			-std::fmod(localPoint.z, 10.f));
+
+		Matrix4x4 const &matrix = transform.Matrix();
+
+		Vector3 const pointOnPlane =
+			Transform::TransformTranslation(matrix, localPoint);
 
 		Vector3 const translatedNormal = Transform::TransformDirection(
-			transform.Matrix(),
+			matrix,
 			normal);
 
-		return Intersection(*this, translatedNormal, pointOnPlane);
+		return Intersection(*this, translatedNormal, pointOnPlane, uv / 20.f);
 	}
 
 	return std::nullopt;

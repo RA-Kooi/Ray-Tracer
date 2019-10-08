@@ -1,5 +1,6 @@
 #include "Sphere.hpp"
 
+#include <cmath>
 #include <float.h>
 #include <tuple>
 #include <utility>
@@ -16,6 +17,17 @@ using namespace LibRay::Math;
 
 namespace LibRay::Shapes
 {
+static Vector2 UV(Math::Vector3 const &normal)
+{
+	float const phi = std::atan2(normal.z, normal.x);
+	float const theta = std::asin(-normal.y);
+
+	float const u = 1.f - (phi + Math::PI) / (2.f * Math::PI);
+	float const v = (theta + Math::PI / 2.f) / Math::PI;
+
+	return {u, v};
+}
+
 std::optional<Intersection> Sphere::Intersects(Ray const &ray) const
 {
 	// Implicit sphere surface = (point - center)² - radius² = 0
@@ -62,7 +74,8 @@ std::optional<Intersection> Sphere::Intersects(Ray const &ray) const
 		return Intersection(
 			*this,
 			positionOnSphere,
-			Transform::TransformTranslation(transform.Matrix(), positionOnSphere));
+			Transform::TransformTranslation(transform.Matrix(), positionOnSphere),
+			UV(glm::normalize(positionOnSphere)));
 	}
 
 	// Arrange the points to along the line so that solution1 is always in
@@ -84,10 +97,14 @@ std::optional<Intersection> Sphere::Intersects(Ray const &ray) const
 		+ modelRay.Direction()
 		* solution1;
 
+	Vector3 const normal =
+		Transform::TransformDirection(transform.Matrix(), positionOnSphere);
+
 	return Intersection(
 		*this,
-		Transform::TransformDirection(transform.Matrix(), positionOnSphere),
-		Transform::TransformTranslation(transform.Matrix(), positionOnSphere));
+		normal,
+		Transform::TransformTranslation(transform.Matrix(), positionOnSphere),
+		UV(glm::normalize(normal)));
 }
 
 Containers::BoundingBox Sphere::CalculateBoundingBox() const

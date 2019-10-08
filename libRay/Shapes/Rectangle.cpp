@@ -42,7 +42,8 @@ std::optional<Intersection> Rectangle::Intersects(Ray const &ray) const
 			return Intersection(
 				*this,
 				Transform::TransformDirection(transform.Matrix(), normal),
-				Transform::TransformTranslation(transform.Matrix(), pointOnRect));
+				Transform::TransformTranslation(transform.Matrix(), pointOnRect),
+				{pointOnRect.x + 0.5f, pointOnRect.y + 0.5f});
 		}
 	}
 
