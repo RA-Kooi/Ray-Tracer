@@ -13,6 +13,7 @@ Material::Material(
 : shader(shader)
 , floatProperties()
 , colorProperties()
+, textureProperties()
 , reflectiveness(Math::Clamp(reflectiveness, 0.f, 1.f))
 , refractiveIndex(refractiveIndex)
 {
@@ -71,6 +72,36 @@ Color const &Material::ColorPropertyByName(std::string const &name) const
 
 		static Color black = Color::Black();
 		return black;
+	}
+
+	return it->second;
+}
+
+void Material::UpdateTextureProperty(std::string const &name, Texture texture)
+{
+	auto const it = textureProperties.find(name);
+
+	if(it != textureProperties.end())
+	{
+		it->second = std::move(texture);
+		return;
+	}
+
+	textureProperties.emplace(name, std::move(texture));
+}
+
+Texture const &Material::TexturePropertyByName(std::string const &name) const
+{
+	auto const it = textureProperties.find(name);
+
+	if(it == textureProperties.cend())
+	{
+		std::fprintf(
+			stderr,
+			"Warning: Unable to find named texture property \"%s\".\n",
+			it->first.c_str());
+
+		return Texture::Black();
 	}
 
 	return it->second;

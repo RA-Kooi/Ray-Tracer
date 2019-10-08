@@ -7,6 +7,7 @@
 
 #include "../API.hpp"
 #include "Color.hpp"
+#include "Texture.hpp"
 
 namespace LibRay
 {
@@ -36,6 +37,9 @@ public:
 		Color const &color);
 	Color const &ColorPropertyByName(std::string const &name) const;
 
+	void UpdateTextureProperty(std::string const &name, Texture texture);
+	Texture const &TexturePropertyByName(std::string const &name) const;
+
 	void Reflectiveness(float newReflectiveness);
 	float Reflectiveness() const;
 
@@ -46,6 +50,7 @@ private:
 	class Shader const &shader;
 	std::unordered_map<std::string, float> floatProperties;
 	std::unordered_map<std::string, Color> colorProperties;
+	std::unordered_map<std::string, Texture> textureProperties;
 
 	float reflectiveness;
 	float refractiveIndex;
