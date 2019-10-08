@@ -8,18 +8,11 @@ namespace LibRay::Shapes
 Shape::Shape(
 	class Transform const &transform,
 	MaterialStore const &materialStore,
-	MaterialStore::IndexType materialIndex,
-	class Color const &color)
-: color(color)
-, materialStore(materialStore)
+	MaterialStore::IndexType materialIndex)
+: materialStore(materialStore)
 , materialIndex(materialIndex)
 , transform(transform)
 {
-}
-
-Color const &Shape::Color() const
-{
-	return color;
 }
 
 class Material const &Shape::Material() const

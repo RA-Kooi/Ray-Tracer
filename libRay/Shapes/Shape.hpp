@@ -4,7 +4,6 @@
 #include <optional>
 #include <type_traits>
 
-#include "../Material/Color.hpp"
 #include "../Material/MaterialStore.hpp"
 #include "../API.hpp"
 #include "../Transform.hpp"
@@ -31,12 +30,10 @@ public:
 	Shape(
 		Transform const &transform,
 		Materials::MaterialStore const &materialStore,
-		Materials::MaterialStore::IndexType materialIndex,
-		Materials::Color const &color);
+		Materials::MaterialStore::IndexType materialIndex);
 
 	virtual ~Shape() noexcept = default;
 
-	Materials::Color const &Color() const;
 	Materials::Material const &Material() const;
 	Transform const &Transform() const;
 	class Transform &Transform();
@@ -49,7 +46,6 @@ public:
 	virtual Containers::BoundingBox CalculateBoundingBox() const = 0;
 
 protected:
-	Materials::Color color;
 	Materials::MaterialStore const &materialStore;
 	Materials::MaterialStore::IndexType materialIndex;
 

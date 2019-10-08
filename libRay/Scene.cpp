@@ -98,16 +98,14 @@ Scene::Scene(
 	auto box = std::make_unique<Box>(
 		Transform(Vector3(-9.f, -21.f, 0.f), Vector3(0), Vector3(8, 8, 8)),
 		materialStore,
-		containerBox,
-		Color::Green() * 0.7f + Color::White() * 0.3f);
+		containerBox);
 
 	shapes.push_back(std::move(box));
 
 	box = std::make_unique<Box>(
 		Transform(Vector3(9.f, -15.f, 0.f), Vector3(0, Math::PI * 0.25f, 0), Vector3(8, 20, 8)),
 		materialStore,
-		blueBox,
-		Color::Blue() * 0.7f + Color::White() * 0.3f);
+		blueBox);
 
 	shapes.push_back(std::move(box));
 
@@ -117,8 +115,7 @@ Scene::Scene(
 			Vector3(-Math::PI * 0.2f, -Math::PI * 0.4f, 0),
 			Vector3(3.f)),
 		materialStore,
-		blueSphere,
-		Color::Blue());
+		blueSphere);
 
 	shapes.push_back(std::move(sphere));
 
@@ -128,48 +125,42 @@ Scene::Scene(
 			Vector3(0),
 			Vector3(5.f)),
 		materialStore,
-		refractiveSphere,
-		Color::White());
+		refractiveSphere);
 
 	shapes.push_back(std::move(refracSphere));
 
 	auto bottom = std::make_unique<Plane>(
 		Transform(Vector3(0, -25, 0)),
 		materialStore,
-		bottomMat,
-		Color::White());
+		bottomMat);
 
 	shapes.push_back(std::move(bottom));
 
 	auto back = std::make_unique<Plane>(
 		Transform(Vector3(0, 0, -25), Vector3(Math::PI * 0.5f, 0, 0)),
 		materialStore,
-		topBack,
-		Color::White());
+		topBack);
 
 	shapes.push_back(std::move(back));
 
 	auto top = std::make_unique<Plane>(
 		Transform(Vector3(0, 25, 0), Vector3(Math::PI, 0, 0)),
 		materialStore,
-		topBack,
-		Color::White());
+		topBack);
 
 	shapes.push_back(std::move(top));
 
 	auto right = std::make_unique<Plane>(
 		Transform(Vector3(25, 0, 0), Vector3(0, 0, Math::PI * 0.5f)),
 		materialStore,
-		rightMat,
-		Color::Green());
+		rightMat);
 
 	shapes.push_back(std::move(right));
 
 	auto left = std::make_unique<Plane>(
 		Transform(Vector3(-25, 0, 0), Vector3(0, 0, -Math::PI * 0.5f)),
 		materialStore,
-		leftMat,
-		Color::Red());
+		leftMat);
 
 	shapes.push_back(std::move(left));
 

@@ -17,6 +17,6 @@ Color ColorOnlyShader::Run(
 	Color const &,
 	float) const
 {
-	return intersection.shape->Color();
+	return intersection.shape->Material().ColorPropertyByName("Color");
 }
 } // namespace LibRay
