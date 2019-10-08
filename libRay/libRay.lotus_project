@@ -24,6 +24,7 @@
 		"Material/Color.cpp",
 		"Material/Material.cpp",
 		"Material/MaterialStore.cpp",
+		"Material/Texture.cpp",
 		"Math/Ray.cpp",
 		"Shaders/BlinnPhong.cpp",
 		"Shaders/ColorOnly.cpp",

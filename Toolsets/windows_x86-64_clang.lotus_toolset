@@ -50,7 +50,9 @@
 		"-Wno-shadow-field",
 		"-Wno-unknown-warning-option",
 		"-Wno-used-but-marked-unused",
-		"-Wno-reserved-id-macro"
+		"-Wno-reserved-id-macro",
+		"-Wno-exit-time-destructors",
+		"-Wno-switch-enum"
 	],
 	"cxx_flags_debug":["-ggdb3"],
 	"cxx_flags_release":["-O3", "-ffast-math"],
