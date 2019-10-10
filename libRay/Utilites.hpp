@@ -1,8 +1,8 @@
 #ifndef ef3e73f2_6802_a167_a402_e93a7c0ef6b2
 #define ef3e73f2_6802_a167_a402_e93a7c0ef6b2
 
+#include <cfloat>
 #include <chrono>
-#include <float.h>
 #include <string>
 
 #include "API.hpp"

@@ -1,7 +1,7 @@
 #include "Rectangle.hpp"
 
+#include <cfloat>
 #include <cmath>
-#include <float.h>
 
 #include "../Containers/BoundingBox.hpp"
 #include "../Math/MathUtils.hpp"

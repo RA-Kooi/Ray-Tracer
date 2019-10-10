@@ -2,8 +2,8 @@
 #define d87f1eb6_95e6_e6b1_0838_5639d5d05409
 
 #include <algorithm>
+#include <cfloat>
 #include <cmath>
-#include <float.h>
 #include <tuple>
 
 namespace LibRay::Math

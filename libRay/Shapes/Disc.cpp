@@ -1,6 +1,6 @@
 #include "Disc.hpp"
 
-#include <float.h>
+#include <cfloat>
 
 #include "../Containers/BoundingBox.hpp"
 #include "../Math/Matrix.hpp"

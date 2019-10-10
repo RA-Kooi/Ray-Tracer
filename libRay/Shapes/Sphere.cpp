@@ -1,7 +1,7 @@
 #include "Sphere.hpp"
 
+#include <cfloat>
 #include <cmath>
-#include <float.h>
 #include <tuple>
 #include <utility>
 
