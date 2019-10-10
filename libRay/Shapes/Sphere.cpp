@@ -109,16 +109,6 @@ std::optional<Intersection> Sphere::Intersects(Ray const &ray) const
 
 Containers::BoundingBox Sphere::CalculateBoundingBox() const
 {
-	Vector3 const radiusVec(1.f);
-
-	Vector3 bounds = radiusVec * 2.f * transform.Scale();
-	if(bounds.x < FLT_EPSILON)
-		bounds.x = FLT_EPSILON;
-	if(bounds.y < FLT_EPSILON)
-		bounds.y = FLT_EPSILON;
-	if(bounds.z < FLT_EPSILON)
-		bounds.z = FLT_EPSILON;
-
-	return Containers::BoundingBox(bounds, transform.Position());
+	return Containers::BoundingBox(transform.Scale(), transform.Position());
 }
 } // namespace LibRay::Shapes

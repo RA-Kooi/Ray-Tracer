@@ -7,17 +7,15 @@ namespace LibRay::Containers
 using namespace LibRay::Math;
 
 BoundingBox::BoundingBox(
-	Vector3 const &dimensions,
+	Vector3 const &halfBoundaries,
 	Vector3 const &position)
-: dimensions(dimensions)
+: halfBoundaries(halfBoundaries)
 , position(position)
 {
 }
 
 float BoundingBox::Intersects(Ray const &ray) const
 {
-	Vector3 const halfBoundaries = dimensions * 0.5f;
-
 	Vector3 const left = (position - halfBoundaries);
 	Vector3 const right = (position + halfBoundaries);
 
@@ -49,9 +47,9 @@ float BoundingBox::Intersects(Ray const &ray) const
 	return distance;
 }
 
-Vector3 const &BoundingBox::Dimensions() const
+Vector3 const &BoundingBox::HalfBoundaries() const
 {
-	return dimensions;
+	return halfBoundaries;
 }
 
 Vector3 const &BoundingBox::Position() const

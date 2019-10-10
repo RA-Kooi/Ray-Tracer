@@ -44,24 +44,23 @@ BoundingBox BVH::CalculateBoundingBox(ShapeVec const &objects) const
 	{
 		BoundingBox boundingBox = object->CalculateBoundingBox();
 
-		Vector3 const halfBoundaries = boundingBox.Dimensions() * 0.5f;
+		Vector3 const &halfBoundaries = boundingBox.HalfBoundaries();
 
 		min = glm::min(min, boundingBox.Position() - halfBoundaries);
 		max = glm::max(max, boundingBox.Position() + halfBoundaries);
 	}
 
 	Vector3 const position = (max + min) * 0.5f;
-	Vector3 const dimensions = glm::abs(max - min);
 
-	return BoundingBox(dimensions, position);
+	return BoundingBox(max - min, position);
 }
 
 BoundingBox BVH::CalculateBoundingBox(
 	BoundingBox const &a,
 	BoundingBox const &b) const
 {
-	Vector3 const halfA = a.Dimensions() * 0.5f;
-	Vector3 const halfB = b.Dimensions() * 0.5f;
+	Vector3 const halfA = a.HalfBoundaries();
+	Vector3 const halfB = b.HalfBoundaries();
 
 	Vector3 const leftA = a.Position() - halfA;
 	Vector3 const leftB = b.Position() - halfB;
@@ -73,9 +72,8 @@ BoundingBox BVH::CalculateBoundingBox(
 	Vector3 const max = glm::max(leftA, glm::max(rightA, glm::max(leftB, rightB)));
 
 	Vector3 const position = (max + min) * 0.5f;
-	Vector3 const dimensions = glm::abs(max - min);
 
-	return BoundingBox(dimensions, position);
+	return BoundingBox(max - min, position);
 }
 
 std::array<ShapeVec, 2> BVH::SplitObjects(ShapeVec &&objects) const

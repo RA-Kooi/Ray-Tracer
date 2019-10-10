@@ -57,14 +57,12 @@ Containers::BoundingBox Rectangle::CalculateBoundingBox() const
 	Vector3 const bottomLeft(-0.5f, -0.5f, 0);
 	Vector3 const bottomRight(0.5f, -0.5f, 0);
 
-	Vector3 const worldTopLeft =
-		Transform::TransformDirection(transform.Matrix(), topLeft);
-	Vector3 const worldTopRight =
-		Transform::TransformDirection(transform.Matrix(), topRight);
-	Vector3 const worldBottomLeft =
-		Transform::TransformDirection(transform.Matrix(), bottomLeft);
-	Vector3 const worldBottomRight =
-		Transform::TransformDirection(transform.Matrix(), bottomRight);
+	Matrix4x4 const matrix = transform.Matrix();
+
+	Vector3 const worldTopLeft = Transform::TransformDirection(matrix, topLeft);
+	Vector3 const worldTopRight = Transform::TransformDirection(matrix, topRight);
+	Vector3 const worldBottomLeft = Transform::TransformDirection(matrix, bottomLeft);
+	Vector3 const worldBottomRight = Transform::TransformDirection(matrix, bottomRight);
 
 	Vector3 const min =
 		glm::min(worldTopLeft,
@@ -76,14 +74,6 @@ Containers::BoundingBox Rectangle::CalculateBoundingBox() const
 		glm::max(worldTopRight,
 		glm::max(worldBottomLeft, worldBottomRight)));
 
-	Vector3 bounds = glm::abs(max - min);
-	if(bounds.x < FLT_EPSILON)
-		bounds.x = FLT_EPSILON;
-	if(bounds.y < FLT_EPSILON)
-		bounds.y = FLT_EPSILON;
-	if(bounds.z < FLT_EPSILON)
-		bounds.z = FLT_EPSILON;
-
-	return Containers::BoundingBox(bounds, transform.Position());
+	return Containers::BoundingBox((max - min) * 0.5f, transform.Position());
 }
 } // namespace LibRay::Shapes

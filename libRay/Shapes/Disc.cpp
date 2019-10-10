@@ -60,20 +60,16 @@ Containers::BoundingBox Disc::CalculateBoundingBox() const
 	Vector3 const zMin(0, 0, -1.f);
 	Vector3 const zMax(0, 0, 1.f);
 
-	Vector3 const worldXMin =
-		Transform::TransformDirection(transform.Matrix(), xMin);
-	Vector3 const worldXMax =
-		Transform::TransformDirection(transform.Matrix(), xMax);
+	Matrix4x4 const &matrix = transform.Matrix();
 
-	Vector3 const worldYMin =
-		Transform::TransformDirection(transform.Matrix(), yMin);
-	Vector3 const worldYMax =
-		Transform::TransformDirection(transform.Matrix(), yMax);
+	Vector3 const worldXMin = Transform::TransformDirection(matrix, xMin);
+	Vector3 const worldXMax = Transform::TransformDirection(matrix, xMax);
 
-	Vector3 const worldZMin =
-		Transform::TransformDirection(transform.Matrix(), zMin);
-	Vector3 const worldZMax =
-		Transform::TransformDirection(transform.Matrix(), zMax);
+	Vector3 const worldYMin = Transform::TransformDirection(matrix, yMin);
+	Vector3 const worldYMax = Transform::TransformDirection(matrix, yMax);
+
+	Vector3 const worldZMin = Transform::TransformDirection(matrix, zMin);
+	Vector3 const worldZMax = Transform::TransformDirection(matrix, zMax);
 
 	Vector3 const minX = glm::min(worldXMin, worldXMax);
 	Vector3 const maxX = glm::max(worldXMin, worldXMax);
@@ -87,14 +83,6 @@ Containers::BoundingBox Disc::CalculateBoundingBox() const
 	Vector3 const min = glm::min(minX, glm::min(minY, minZ));
 	Vector3 const max = glm::max(maxX, glm::max(maxY, maxZ));
 
-	Vector3 bounds = glm::abs(max - min);
-	if(bounds.x < FLT_EPSILON)
-		bounds.x = FLT_EPSILON;
-	if(bounds.y < FLT_EPSILON)
-		bounds.y = FLT_EPSILON;
-	if(bounds.z < FLT_EPSILON)
-		bounds.z = FLT_EPSILON;
-
-	return Containers::BoundingBox(bounds, transform.Position());
+	return Containers::BoundingBox((max - min) * 0.5f, transform.Position());
 }
 } // namespace LibRay::Shapes

@@ -108,23 +108,25 @@ Containers::BoundingBox Box::CalculateBoundingBox() const
 	Vector3 const backTopLeft(-0.5, 0.5, 0.5);
 	Vector3 const backTopRight(0.5, 0.5, 0.5);
 
+	Matrix4x4 const &matrix = transform.Matrix();
+
 	Vector3 const worldFrontBottomLeft =
-		Transform::TransformDirection(transform.Matrix(), frontBottomLeft);
+		Transform::TransformDirection(matrix, frontBottomLeft);
 	Vector3 const worldFrontBottomRight =
-		Transform::TransformDirection(transform.Matrix(), frontBottomRight);
+		Transform::TransformDirection(matrix, frontBottomRight);
 	Vector3 const worldFrontTopLeft =
-		Transform::TransformDirection(transform.Matrix(), frontTopLeft);
+		Transform::TransformDirection(matrix, frontTopLeft);
 	Vector3 const worldFrontTopRight =
-		Transform::TransformDirection(transform.Matrix(), frontTopRight);
+		Transform::TransformDirection(matrix, frontTopRight);
 
 	Vector3 const worldBackBottomLeft =
-		Transform::TransformDirection(transform.Matrix(), backBottomLeft);
+		Transform::TransformDirection(matrix, backBottomLeft);
 	Vector3 const worldBackBottomRight =
-		Transform::TransformDirection(transform.Matrix(), backBottomRight);
+		Transform::TransformDirection(matrix, backBottomRight);
 	Vector3 const worldBackTopLeft =
-		Transform::TransformDirection(transform.Matrix(), backTopLeft);
+		Transform::TransformDirection(matrix, backTopLeft);
 	Vector3 const worldBackTopRight =
-		Transform::TransformDirection(transform.Matrix(), backTopRight);
+		Transform::TransformDirection(matrix, backTopRight);
 
 	Vector3 const min =
 		glm::min(worldFrontBottomLeft,
@@ -144,14 +146,6 @@ Containers::BoundingBox Box::CalculateBoundingBox() const
 		glm::max(worldBackBottomRight,
 		glm::max(worldBackTopLeft, worldBackTopRight)))))));
 
-	Vector3 bounds = glm::abs(max - min);
-	if(bounds.x < FLT_EPSILON)
-		bounds.x = FLT_EPSILON;
-	if(bounds.y < FLT_EPSILON)
-		bounds.y = FLT_EPSILON;
-	if(bounds.z < FLT_EPSILON)
-		bounds.z = FLT_EPSILON;
-
-	return Containers::BoundingBox(bounds, transform.Position());
+	return Containers::BoundingBox((max - min) * 0.5f, transform.Position());
 }
 } // namespace LibRay

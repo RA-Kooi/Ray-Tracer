@@ -19,16 +19,16 @@ class LIBRAY_API BoundingBox
 {
 public:
 	BoundingBox(
-		Math::Vector3 const &dimensions,
+		Math::Vector3 const &halfBoundaries,
 		Math::Vector3 const &position);
 
 	float Intersects(Math::Ray const &ray) const;
 
-	Math::Vector3 const &Dimensions() const;
+	Math::Vector3 const &HalfBoundaries() const;
 	Math::Vector3 const &Position() const;
 
 private:
-	Math::Vector3 dimensions, position;
+	Math::Vector3 halfBoundaries, position;
 };
 
 static_assert(std::is_copy_constructible_v<BoundingBox>);
