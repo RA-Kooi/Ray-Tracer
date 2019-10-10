@@ -37,6 +37,7 @@
 		"Shapes/Rectangle.cpp",
 		"Shapes/Shape.cpp",
 		"Shapes/Sphere.cpp",
+		"Shapes/Triangle.cpp",
 		"Threading/TaskProcessor.cpp",
 		"Camera.cpp",
 		"Image.cpp",
