@@ -38,7 +38,7 @@ float Material::FloatPropertyByName(std::string const &name) const
 		std::fprintf(
 			stderr,
 			"Warning: Unable to find named float property \"%s\".\n",
-			it->first.c_str());
+			name.c_str());
 
 		return 0.f;
 	}
@@ -68,7 +68,7 @@ Color const &Material::ColorPropertyByName(std::string const &name) const
 		std::fprintf(
 			stderr,
 			"Warning: Unable to find named color property \"%s\".\n",
-			it->first.c_str());
+			name.c_str());
 
 		static Color black = Color::Black();
 		return black;
@@ -99,7 +99,7 @@ Texture const &Material::TexturePropertyByName(std::string const &name) const
 		std::fprintf(
 			stderr,
 			"Warning: Unable to find named texture property \"%s\".\n",
-			it->first.c_str());
+			name.c_str());
 
 		return Texture::Black();
 	}
