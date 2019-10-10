@@ -73,7 +73,7 @@ int main()
 	DisableTGARLE();
 
 	Camera camera(
-		Transform(Vector3(0, 0, 30)),
+		Transform(Vector3(0, 0, 20)),
 		Vector2st(640, 480),
 		Math::Radians(90.f),
 		1.f,

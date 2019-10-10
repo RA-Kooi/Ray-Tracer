@@ -7,9 +7,7 @@
 #include "Math/MathUtils.hpp"
 #include "Shaders/BlinnPhong.hpp"
 #include "Shaders/Lambertian.hpp"
-#include "Shapes/Box.hpp"
-#include "Shapes/Plane.hpp"
-#include "Shapes/Sphere.hpp"
+#include "Shapes/Triangle.hpp"
 #include "Utilites.hpp"
 
 namespace LibRay
@@ -43,126 +41,25 @@ Scene::Scene(
 		"Blinn-Phong",
 		std::make_unique<BlinnPhongShader>());
 
-	Shader const &lambertian = shaderStore.AddShader(
-		"Lambertian",
-		std::make_unique<LambertianShader>());
-
-	Texture checkers("./Resources/Textures/1024x1024 Texel Density Texture 1.png");
-	Texture earth("./Resources/Textures/2k_earth_daymap.jpg");
-	Texture container("./Resources/Textures/container.jpg");
-
 	//constexpr float const eggshell = 10;
 	constexpr float const mildlyShiny = 100;
 	//constexpr float const shiny = 1000;
 	//constexpr float const veryShiny = 10'000;
 
-	Material material(lambertian, 0.f);
-	material.UpdateTextureProperty("diffuse", Texture::White());
-	//material.UpdateColorProperty("specular", Color::White());
-	//material.UpdateFloatProperty("phong exponent", eggshell);
-
-	MaterialStore::IndexType const topBack =
-		materialStore.AddMaterial(material);
-
-	material.UpdateTextureProperty("diffuse", checkers);
-	MaterialStore::IndexType const bottomMat =
-		materialStore.AddMaterial(material);
-
-	material.UpdateTextureProperty("diffuse", Texture::Green());
-	MaterialStore::IndexType const leftMat =
-		materialStore.AddMaterial(material);
-
-	material.UpdateTextureProperty("diffuse", Texture::Red());
-	MaterialStore::IndexType const rightMat =
-		materialStore.AddMaterial(material);
-
+	Material material(blinnPhong, 0.f);
 	material.UpdateTextureProperty("diffuse", Texture::Blue());
-	MaterialStore::IndexType const blueBox =
-		materialStore.AddMaterial(material);
+	material.UpdateColorProperty("specular", Color::White());
+	material.UpdateFloatProperty("phong exponent", mildlyShiny);
 
-	material.UpdateTextureProperty("diffuse", container);
-	MaterialStore::IndexType const containerBox =
+	MaterialStore::IndexType const blue =
 		materialStore.AddMaterial(std::move(material));
 
-	Material material2(blinnPhong, 0.05f);
-	material2.UpdateTextureProperty("diffuse", earth);
-	material2.UpdateColorProperty("specular", Color::White());
-	material2.UpdateFloatProperty("phong exponent", mildlyShiny);
-	MaterialStore::IndexType const blueSphere =
-		materialStore.AddMaterial(material2);
-
-	material2.RefractiveIndex(1.49f);
-	MaterialStore::IndexType const refractiveSphere =
-		materialStore.AddMaterial(std::move(material2));
-
-	auto box = std::make_unique<Box>(
-		Transform(Vector3(-9.f, -21.f, 0.f), Vector3(0), Vector3(8, 8, 8)),
+	auto triangle = std::make_unique<Triangle>(
+		Transform(Vector3(0), Vector3(0, 0, Math::PI * 0.5f), Vector3(5)),
 		materialStore,
-		containerBox);
+		blue);
 
-	shapes.push_back(std::move(box));
-
-	box = std::make_unique<Box>(
-		Transform(Vector3(9.f, -15.f, 0.f), Vector3(0, Math::PI * 0.25f, 0), Vector3(8, 20, 8)),
-		materialStore,
-		blueBox);
-
-	shapes.push_back(std::move(box));
-
-	auto sphere = std::make_unique<Sphere>(
-		Transform(
-			Vector3(3.f, 0.f, 0.f),
-			Vector3(-Math::PI * 0.2f, -Math::PI * 0.4f, 0),
-			Vector3(3.f)),
-		materialStore,
-		blueSphere);
-
-	shapes.push_back(std::move(sphere));
-
-	auto refracSphere = std::make_unique<Sphere>(
-		Transform(
-			Vector3(0.f, 0.f, 15.f),
-			Vector3(0),
-			Vector3(5.f)),
-		materialStore,
-		refractiveSphere);
-
-	shapes.push_back(std::move(refracSphere));
-
-	auto bottom = std::make_unique<Plane>(
-		Transform(Vector3(0, -25, 0)),
-		materialStore,
-		bottomMat);
-
-	shapes.push_back(std::move(bottom));
-
-	auto back = std::make_unique<Plane>(
-		Transform(Vector3(0, 0, -25), Vector3(Math::PI * 0.5f, 0, 0)),
-		materialStore,
-		topBack);
-
-	shapes.push_back(std::move(back));
-
-	auto top = std::make_unique<Plane>(
-		Transform(Vector3(0, 25, 0), Vector3(Math::PI, 0, 0)),
-		materialStore,
-		topBack);
-
-	shapes.push_back(std::move(top));
-
-	auto right = std::make_unique<Plane>(
-		Transform(Vector3(25, 0, 0), Vector3(0, 0, Math::PI * 0.5f)),
-		materialStore,
-		rightMat);
-
-	shapes.push_back(std::move(right));
-
-	auto left = std::make_unique<Plane>(
-		Transform(Vector3(-25, 0, 0), Vector3(0, 0, -Math::PI * 0.5f)),
-		materialStore,
-		leftMat);
-
-	shapes.push_back(std::move(left));
+	shapes.push_back(std::move(triangle));
 
 	watch.Stop();
 
