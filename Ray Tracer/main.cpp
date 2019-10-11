@@ -123,7 +123,15 @@ int main()
 		return EXIT_FAILURE;
 
 #ifdef ENABLE_GLFW
-	ShowDebugWindow(camera, rayTracer, normalizedOutput);
+	try
+	{
+		ShowDebugWindow(camera, rayTracer, normalizedOutput);
+	}
+	catch(std::exception const &e)
+	{
+		std::fprintf(stderr, "Caught exception: %s\n", e.what());
+		return EXIT_FAILURE;
+	}
 #endif // ENABLE_GLFW
 
 	//system(result.second.c_str());
