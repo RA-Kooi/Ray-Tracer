@@ -50,7 +50,8 @@
 		"-Wno-unknown-warning-option",
 		"-Wno-exit-time-destructors",
 		"-Wno-switch-enum",
-		"-Wno-c++98-compat-pedantic"
+		"-Wno-c++98-compat-pedantic",
+		"-Wno-weak-template-vtables"
 	],
 	"cxx_flags_debug":["-ggdb3"],
 	"cxx_flags_release":["-O3", "-ffast-math"],
