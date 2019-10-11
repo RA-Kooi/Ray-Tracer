@@ -16,6 +16,11 @@
 
 namespace LibRay
 {
+namespace Shapes
+{
+class ModelTriangle;
+} // namespace Shapes
+
 class Intersection;
 
 namespace Containers
@@ -46,6 +51,7 @@ private:
 };
 
 extern template class BVHLeaf<Shapes::Shape>;
+extern template class BVHLeaf<Shapes::ModelTriangle>;
 
 static_assert(std::is_copy_constructible_v<BVHLeaf<Shapes::Shape>>);
 static_assert(std::is_copy_assignable_v<BVHLeaf<Shapes::Shape>>);
@@ -89,6 +95,7 @@ private:
 };
 
 extern template class BVHNode<Shapes::Shape>;
+extern template class BVHNode<Shapes::ModelTriangle>;
 
 static_assert(!std::is_copy_constructible_v<BVHNode<Shapes::Shape>>);
 static_assert(!std::is_copy_assignable_v<BVHNode<Shapes::Shape>>);
@@ -126,6 +133,7 @@ private:
 };
 
 extern template class BVH<Shapes::Shape>;
+extern template class BVH<Shapes::ModelTriangle>;
 
 static_assert(!std::is_copy_constructible_v<BVH<Shapes::Shape>>);
 static_assert(!std::is_copy_assignable_v<BVH<Shapes::Shape>>);

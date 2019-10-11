@@ -8,6 +8,7 @@
 
 #include "../Math/MathUtils.hpp"
 #include "../Math/Vector.hpp"
+#include "../Shapes/Model/ModelTriangle.hpp"
 #include "../Intersection.hpp"
 #include "BoundingBox.hpp"
 
@@ -288,6 +289,7 @@ void BVH<T>::MakeNodes(ShapeVec<T> &&objects)
 }
 
 template class BVH<Shapes::Shape>;
+template class BVH<Shapes::ModelTriangle>;
 
 namespace BVHDetails
 {
@@ -453,6 +455,7 @@ void BVHNode<T>::SetChild2(std::unique_ptr<BVHNode<T>> node)
 }
 
 template class BVHNode<Shapes::Shape>;
+template class BVHNode<Shapes::ModelTriangle>;
 
 template<typename T>
 BVHLeaf<T>::BVHLeaf(ShapeVec<T> &&leafs)
@@ -496,5 +499,6 @@ std::optional<Intersection> BVHLeaf<T>::Traverse(Ray const &ray) const
 }
 
 template class BVHLeaf<Shapes::Shape>;
+template class BVHLeaf<Shapes::ModelTriangle>;
 } // namespace BVHDetails
 } // namespace LibRay::Containers

@@ -25,6 +25,8 @@ class Intersection;
 
 namespace Shapes
 {
+class ModelTriangle;
+
 template<typename T>
 class LIBRAY_API BaseShape
 {
@@ -36,7 +38,7 @@ public:
 	BaseShape &operator=(BaseShape const &other) = default;
 	BaseShape &operator=(BaseShape &&other) = default;
 
-	Math::Vector3 const &Position() const;
+	Math::Vector3 const Position() const;
 
 	virtual bool IsBoundable() const;
 
@@ -67,7 +69,7 @@ public:
 	class Transform &Transform();
 
 private:
-	Math::Vector3 const &PositionInternal() const;
+	Math::Vector3 const PositionInternal() const;
 	friend class BaseShape<Shape>;
 
 protected:
@@ -77,6 +79,7 @@ protected:
 };
 
 extern template class BaseShape<Shape>;
+extern template class BaseShape<ModelTriangle>;
 
 static_assert(!std::is_copy_constructible_v<Shape>);
 static_assert(!std::is_copy_assignable_v<Shape>);

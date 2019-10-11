@@ -1,12 +1,14 @@
 #include "Shape.hpp"
 
+#include "Model/ModelTriangle.hpp"
+
 using namespace LibRay::Materials;
 using namespace LibRay::Math;
 
 namespace LibRay::Shapes
 {
 template<typename T>
-Vector3 const &BaseShape<T>::Position() const
+Vector3 const BaseShape<T>::Position() const
 {
 	return static_cast<T const &>(*this).PositionInternal();
 }
@@ -48,10 +50,11 @@ Transform &Shape::Transform()
 	return transform;
 }
 
-Vector3 const &Shape::PositionInternal() const
+Vector3 const Shape::PositionInternal() const
 {
 	return transform.Position();
 }
 
 template class BaseShape<Shape>;
+template class BaseShape<ModelTriangle>;
 } // namespace LibRay::Shapes
