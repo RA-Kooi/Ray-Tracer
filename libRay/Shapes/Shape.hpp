@@ -29,7 +29,12 @@ template<typename T>
 class LIBRAY_API BaseShape
 {
 public:
-	virtual ~BaseShape() noexcept = default;
+	BaseShape(BaseShape const &other) = default;
+	BaseShape(BaseShape &&other) = default;
+	virtual ~BaseShape() noexcept;
+
+	BaseShape &operator=(BaseShape const &other) = default;
+	BaseShape &operator=(BaseShape &&other) = default;
 
 	Math::Vector3 const &Position() const;
 

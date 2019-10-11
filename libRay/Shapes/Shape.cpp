@@ -12,6 +12,9 @@ Vector3 const &BaseShape<T>::Position() const
 }
 
 template<typename T>
+BaseShape<T>::~BaseShape() noexcept = default;
+
+template<typename T>
 bool BaseShape<T>::IsBoundable() const
 {
 	return true;
