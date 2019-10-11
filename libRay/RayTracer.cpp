@@ -214,15 +214,18 @@ Color RayTracer::TraceRay(
 
 	if(debug)
 	{
-		Vector3 const pos = intersection->worldPosition;
+		Vector3 const &pos = intersection->worldPosition;
+		Vector2 const &uv = intersection->uv;
 
 		std::printf(
 			"\tPicked intersection:\n\t{\n"
 			"\t\tPos: [X: %f, Y: %f, Z: %f],\n"
 			"\t\tNormal: [X: %f, Y: %f, Z: %f]\n"
+			"\t\tUV: [U: %f, V: %f]\n"
 			"\t},\n\n",
 			double(pos.x), double(pos.y), double(pos.z),
-			double(normal.x), double(normal.y), double(normal.z));
+			double(normal.x), double(normal.y), double(normal.z),
+			double(uv.x), double(uv.y));
 	}
 
 	Material const &material = intersection->shape->Material();
@@ -375,7 +378,12 @@ Color RayTracer::DoRefraction(
 		}
 		else
 		{
-			state.refractionStack.pop_back();
+			// It's possible we start from the inside of the object,
+			// in which case we always leave. This probably yields incorrect
+			// results, but is better than a crash.
+			if(state.refractionStack.size() > 0)
+				state.refractionStack.pop_back();
+
 			if(debug)
 				std::puts("\tLeaving...");
 		}
