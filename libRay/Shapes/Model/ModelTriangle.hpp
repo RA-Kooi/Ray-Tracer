@@ -27,6 +27,8 @@ class Intersection;
 
 namespace Shapes
 {
+class Model;
+
 class ModelTriangle final: public BaseShape<ModelTriangle>
 {
 public:
@@ -44,7 +46,7 @@ public:
 	static_assert(std::is_move_assignable_v<Vertex>);
 
 public:
-	ModelTriangle(Observer<Shape const> parent, std::array<Vertex, 3> vertices);
+	ModelTriangle(Observer<Model const> parent, std::array<Vertex, 3> vertices);
 
 	std::optional<Intersection> Intersects(Math::Ray const &ray) const override;
 
@@ -55,7 +57,7 @@ private:
 	friend class BaseShape<ModelTriangle>;
 
 private:
-	Observer<Shape const> parent;
+	Observer<Model const> parent;
 	std::array<Vertex, 3> vertices;
 };
 

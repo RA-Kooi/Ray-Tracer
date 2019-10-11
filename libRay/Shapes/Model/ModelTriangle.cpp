@@ -7,13 +7,14 @@
 #include "../../Math/Ray.hpp"
 #include "../../Math/Vector.hpp"
 #include "../../Intersection.hpp"
+#include "Model.hpp"
 
 using namespace LibRay::Math;
 
 namespace LibRay::Shapes
 {
 ModelTriangle::ModelTriangle(
-	Observer<Shape const> parent,
+	Observer<Model const> parent,
 	std::array<Vertex, 3> vertices)
 : BaseShape()
 , parent(parent)
