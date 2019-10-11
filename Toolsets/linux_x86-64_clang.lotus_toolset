@@ -49,7 +49,8 @@
 		"-Wno-shadow-field",
 		"-Wno-unknown-warning-option",
 		"-Wno-exit-time-destructors",
-		"-Wno-switch-enum"
+		"-Wno-switch-enum",
+		"-Wno-c++98-compat-pedantic"
 	],
 	"cxx_flags_debug":["-ggdb3"],
 	"cxx_flags_release":["-O3", "-ffast-math"],

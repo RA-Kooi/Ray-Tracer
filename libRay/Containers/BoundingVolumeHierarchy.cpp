@@ -18,13 +18,15 @@ using namespace LibRay::Math;
 using BVHDetails::ShapeVec;
 using BVHDetails::IndexType;
 
-BVH::BVH(ShapeVec &&objects)
+template<typename T>
+BVH<T>::BVH(ShapeVec<T> &&objects)
 : rootNode()
 {
 	MakeNodes(std::move(objects));
 }
 
-std::optional<Intersection> BVH::Traverse(Ray const &ray) const
+template<typename T>
+std::optional<Intersection> BVH<T>::Traverse(Ray const &ray) const
 {
 	if(!rootNode)
 		return std::nullopt;
@@ -35,12 +37,13 @@ std::optional<Intersection> BVH::Traverse(Ray const &ray) const
 	return std::nullopt;
 }
 
-BoundingBox BVH::CalculateBoundingBox(ShapeVec const &objects) const
+template<typename T>
+BoundingBox BVH<T>::CalculateBoundingBox(ShapeVec<T> const &objects) const
 {
 	Vector3 min(FLT_MAX, FLT_MAX, FLT_MAX);
 	Vector3 max(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 
-	for(Observer<Shapes::Shape const> const &object: objects)
+	for(Observer<Shapes::BaseShape<T> const> const &object: objects)
 	{
 		BoundingBox boundingBox = object->CalculateBoundingBox();
 
@@ -55,7 +58,8 @@ BoundingBox BVH::CalculateBoundingBox(ShapeVec const &objects) const
 	return BoundingBox(max - min, position);
 }
 
-BoundingBox BVH::CalculateBoundingBox(
+template<typename T>
+BoundingBox BVH<T>::CalculateBoundingBox(
 	BoundingBox const &a,
 	BoundingBox const &b) const
 {
@@ -76,24 +80,25 @@ BoundingBox BVH::CalculateBoundingBox(
 	return BoundingBox(max - min, position);
 }
 
-std::array<ShapeVec, 2> BVH::SplitObjects(ShapeVec &&objects) const
+template<typename T>
+std::array<ShapeVec<T>, 2> BVH<T>::SplitObjects(ShapeVec<T> &&objects) const
 {
 	auto const split = [&objects](bool x, bool y)
-		-> std::pair<std::size_t, std::array<ShapeVec, 2>>
+		-> std::pair<std::size_t, std::array<ShapeVec<T>, 2>>
 	{
 		assert(!(x && y));
 
-		ShapeVec sorted = objects;
+		ShapeVec<T> sorted = objects;
 
 		std::sort(
 			sorted.begin(),
 			sorted.end(),
 			[x, y](
-				ShapeVec::value_type const &a,
-				ShapeVec::value_type const &b) -> bool
+				typename ShapeVec<T>::value_type const &a,
+				typename ShapeVec<T>::value_type const &b) -> bool
 			{
-				Vector3 const &positionA = a->Transform().Position();
-				Vector3 const &positionB = b->Transform().Position();
+				Vector3 const &positionA = a->Position();
+				Vector3 const &positionB = b->Position();
 
 				if(x)
 					return positionA.x < positionB.x;
@@ -103,8 +108,8 @@ std::array<ShapeVec, 2> BVH::SplitObjects(ShapeVec &&objects) const
 				return positionA.z < positionB.z;
 			});
 
-		Vector3 const &frontPos = sorted.front()->Transform().Position();
-		Vector3 const &backPos = sorted.back()->Transform().Position();
+		Vector3 const &frontPos = sorted.front()->Position();
+		Vector3 const &backPos = sorted.back()->Position();
 
 		float const midX = frontPos.x + backPos.x;
 		float const midY = frontPos.y + backPos.y;
@@ -116,9 +121,11 @@ std::array<ShapeVec, 2> BVH::SplitObjects(ShapeVec &&objects) const
 			sorted.cbegin(),
 			sorted.cend(),
 			mid,
-			[x, y](float const midPoint, ShapeVec::value_type const &b) -> bool
+			[x, y](
+				float const midPoint,
+				typename ShapeVec<T>::value_type const &b) -> bool
 			{
-				Vector3 const position = b->Transform().Position();
+				Vector3 const position = b->Position();
 
 				if(x)
 					return position.x > midPoint;
@@ -133,15 +140,15 @@ std::array<ShapeVec, 2> BVH::SplitObjects(ShapeVec &&objects) const
 
 		if(midIt == sorted.cend())
 		{
-			return {midPoint, {std::move(sorted), ShapeVec()}};
+			return {midPoint, {std::move(sorted), ShapeVec<T>()}};
 		}
 
 		if(midIt == sorted.cbegin())
 		{
-			return {midPoint, {ShapeVec(), std::move(sorted)}};
+			return {midPoint, {ShapeVec<T>(), std::move(sorted)}};
 		}
 
-		ShapeVec left, right;
+		ShapeVec<T> left, right;
 
 		left.reserve(midPoint);
 		std::copy(sorted.cbegin(), midIt, std::back_inserter(left));
@@ -156,21 +163,21 @@ std::array<ShapeVec, 2> BVH::SplitObjects(ShapeVec &&objects) const
 	auto const ySplit = split(false, true);
 	auto const zSplit = split(false, false);
 
-	IndexType const size = objects.size();
-	IndexType const midPoint = size / 2;
-	IndexType const midPointX = xSplit.first;
-	IndexType const midPointY = ySplit.first;
-	IndexType const midPointZ = zSplit.first;
+	IndexType<T> const size = objects.size();
+	IndexType<T> const midPoint = size / 2;
+	IndexType<T> const midPointX = xSplit.first;
+	IndexType<T> const midPointY = ySplit.first;
+	IndexType<T> const midPointZ = zSplit.first;
 
-	IndexType const xDiff = midPointX > midPoint
+	IndexType<T> const xDiff = midPointX > midPoint
 		? midPointX - midPoint
 		: midPoint - midPointX;
 
-	IndexType const yDiff = midPointY > midPoint
+	IndexType<T> const yDiff = midPointY > midPoint
 		? midPointY - midPoint
 		: midPoint - midPointY;
 
-	IndexType const zDiff = midPointZ > midPoint
+	IndexType<T> const zDiff = midPointZ > midPoint
 		? midPointZ - midPoint
 		: midPoint - midPointZ;
 
@@ -193,33 +200,34 @@ std::array<ShapeVec, 2> BVH::SplitObjects(ShapeVec &&objects) const
 	return {std::move(leftRight[0]), std::move(leftRight[1])};
 }
 
-void BVH::MakeNodes(ShapeVec &&objects)
+template<typename T>
+void BVH<T>::MakeNodes(ShapeVec<T> &&objects)
 {
 	using namespace BVHDetails;
 
 	if(!objects.size())
 		return;
 
-	rootNode = std::make_unique<BVHNode>(CalculateBoundingBox(objects));
+	rootNode = std::make_unique<BVHNode<T>>(CalculateBoundingBox(objects));
 
 	if(objects.size() <= leafSize)
 	{
-		rootNode->SetLeaf(std::make_unique<BVHLeaf>(std::move(objects)));
+		rootNode->SetLeaf(std::make_unique<BVHLeaf<T>>(std::move(objects)));
 		return;
 	}
 
 	auto const generateChildren = [this](
-		BVHNode &parent,
+		BVHNode<T> &parent,
 		bool left,
-		ShapeVec &&objects,
+		ShapeVec<T> &&objects,
 		auto const &recurse) -> void
 	{
 		if(objects.size() <= leafSize)
 		{
-			auto child = std::make_unique<BVHNode>(
+			auto child = std::make_unique<BVHNode<T>>(
 				CalculateBoundingBox(objects));
 
-			child->SetLeaf(std::make_unique<BVHLeaf>(std::move(objects)));
+			child->SetLeaf(std::make_unique<BVHLeaf<T>>(std::move(objects)));
 
 			if(left)
 				parent.SetChild1(std::move(child));
@@ -229,9 +237,9 @@ void BVH::MakeNodes(ShapeVec &&objects)
 			return;
 		}
 
-		auto child = std::make_unique<BVHNode>(CalculateBoundingBox(objects));
+		auto child = std::make_unique<BVHNode<T>>(CalculateBoundingBox(objects));
 
-		std::array<ShapeVec, 2> split = SplitObjects(std::move(objects));
+		std::array<ShapeVec<T>, 2> split = SplitObjects(std::move(objects));
 
 		if(split[0].size() == 0 || split[1].size() == 0)
 		{
@@ -239,14 +247,14 @@ void BVH::MakeNodes(ShapeVec &&objects)
 			// Unable to make a proper split, just use this one as the leaf node
 			// This should almost never happen.
 
-			ShapeVec &selectedSplit = split[0].size() == 0
+			ShapeVec<T> &selectedSplit = split[0].size() == 0
 				? split[1]
 				: split[0];
 
-			auto leaf = std::make_unique<BVHNode>(
+			auto leaf = std::make_unique<BVHNode<T>>(
 				CalculateBoundingBox(selectedSplit));
 
-			leaf->SetLeaf(std::make_unique<BVHLeaf>(std::move(selectedSplit)));
+			leaf->SetLeaf(std::make_unique<BVHLeaf<T>>(std::move(selectedSplit)));
 
 			if(left)
 				parent.SetChild1(std::move(leaf));
@@ -265,14 +273,17 @@ void BVH::MakeNodes(ShapeVec &&objects)
 			parent.SetChild2(std::move(child));
 	};
 
-	std::array<ShapeVec, 2> split = SplitObjects(std::move(objects));
+	std::array<ShapeVec<T>, 2> split = SplitObjects(std::move(objects));
 	generateChildren(*rootNode, true, std::move(split[0]), generateChildren);
 	generateChildren(*rootNode, false, std::move(split[1]), generateChildren);
 }
 
+template class BVH<Shapes::Shape>;
+
 namespace BVHDetails
 {
-BVHNode::BVHNode(BoundingBox &&boundingBox)
+template<typename T>
+BVHNode<T>::BVHNode(BoundingBox &&boundingBox)
 : BoundingBox(std::move(boundingBox))
 , isLeaf(false)
 , child1()
@@ -281,7 +292,8 @@ BVHNode::BVHNode(BoundingBox &&boundingBox)
 	memset(&child1, 0, sizeof(decltype(child1)));
 }
 
-BVHNode::~BVHNode() noexcept
+template<typename T>
+BVHNode<T>::~BVHNode() noexcept
 {
 	if(isLeaf)
 		child1.leaf.reset();
@@ -289,7 +301,8 @@ BVHNode::~BVHNode() noexcept
 		child1.node.reset();
 }
 
-std::optional<Intersection> BVHNode::Traverse(Ray const &ray) const
+template<typename T>
+std::optional<Intersection> BVHNode<T>::Traverse(Ray const &ray) const
 {
 	if(isLeaf)
 	{
@@ -407,37 +420,44 @@ std::optional<Intersection> BVHNode::Traverse(Ray const &ray) const
 	return std::nullopt;
 }
 
-void BVHNode::SetLeaf(std::unique_ptr<BVHLeaf> leaf)
+template<typename T>
+void BVHNode<T>::SetLeaf(std::unique_ptr<BVHLeaf<T>> leaf)
 {
 	isLeaf = true;
 	child1.leaf = std::move(leaf);
 }
 
-void BVHNode::SetChild1(std::unique_ptr<BVHNode> node)
+template<typename T>
+void BVHNode<T>::SetChild1(std::unique_ptr<BVHNode<T>> node)
 {
 	assert(!isLeaf);
 
 	child1.node = std::move(node);
 }
 
-void BVHNode::SetChild2(std::unique_ptr<BVHNode> node)
+template<typename T>
+void BVHNode<T>::SetChild2(std::unique_ptr<BVHNode<T>> node)
 {
 	assert(!isLeaf);
 
 	child2 = std::move(node);
 }
 
-BVHLeaf::BVHLeaf(ShapeVec &&leafs)
+template class BVHNode<Shapes::Shape>;
+
+template<typename T>
+BVHLeaf<T>::BVHLeaf(ShapeVec<T> &&leafs)
 : leafs(std::move(leafs))
 {
 }
 
-std::optional<Intersection> BVHLeaf::Traverse(Ray const &ray) const
+template<typename T>
+std::optional<Intersection> BVHLeaf<T>::Traverse(Ray const &ray) const
 {
 	std::optional<Intersection> closestIntersection;
 	float closestDistance = 0;
 
-	for(ShapeVec::value_type const &leaf: leafs)
+	for(typename ShapeVec<T>::value_type const &leaf: leafs)
 	{
 		std::optional<Intersection> intersection = leaf->Intersects(ray);
 
@@ -465,5 +485,7 @@ std::optional<Intersection> BVHLeaf::Traverse(Ray const &ray) const
 
 	return closestIntersection;
 }
+
+template class BVHLeaf<Shapes::Shape>;
 } // namespace BVHDetails
 } // namespace LibRay::Containers

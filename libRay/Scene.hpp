@@ -40,7 +40,7 @@ public:
 
 	std::vector<Observer<Shapes::Shape const>> const &UnboundableShapes() const;
 	std::vector<std::unique_ptr<Shapes::Shape>> const &Shapes() const;
-	Containers::BVH const &BoundingVolumeHierarchy() const;
+	Containers::BVH<Shapes::Shape> const &BoundingVolumeHierarchy() const;
 
 	std::vector<Light> const &Lights() const;
 
@@ -51,7 +51,7 @@ private:
 
 	std::vector<std::unique_ptr<Shapes::Shape>> shapes;
 	std::vector<Observer<Shapes::Shape const>> unboundableShapes;
-	std::unique_ptr<Containers::BVH> bvh;
+	std::unique_ptr<Containers::BVH<Shapes::Shape>> bvh;
 
 	std::vector<Light> lights;
 

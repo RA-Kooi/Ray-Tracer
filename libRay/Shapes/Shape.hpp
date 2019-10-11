@@ -5,6 +5,7 @@
 #include <type_traits>
 
 #include "../Material/MaterialStore.hpp"
+#include "../Math/Vector.hpp"
 #include "../API.hpp"
 #include "../Transform.hpp"
 
@@ -24,19 +25,13 @@ class Intersection;
 
 namespace Shapes
 {
-class LIBRAY_API Shape
+template<typename T>
+class LIBRAY_API BaseShape
 {
 public:
-	Shape(
-		Transform const &transform,
-		Materials::MaterialStore const &materialStore,
-		Materials::MaterialStore::IndexType materialIndex);
+	virtual ~BaseShape() noexcept = default;
 
-	virtual ~Shape() noexcept = default;
-
-	Materials::Material const &Material() const;
-	Transform const &Transform() const;
-	class Transform &Transform();
+	Math::Vector3 const &Position() const;
 
 	virtual bool IsBoundable() const;
 
@@ -45,12 +40,38 @@ public:
 
 	virtual Containers::BoundingBox CalculateBoundingBox() const = 0;
 
+private:
+	BaseShape() = default;
+
+	friend T;
+};
+
+class LIBRAY_API Shape: public BaseShape<Shape>
+{
+public:
+	Shape(
+		Transform const &transform,
+		Materials::MaterialStore const &materialStore,
+		Materials::MaterialStore::IndexType materialIndex);
+
+	virtual ~Shape() noexcept;
+
+	Materials::Material const &Material() const;
+
+	Transform const &Transform() const;
+	class Transform &Transform();
+
+private:
+	Math::Vector3 const &PositionInternal() const;
+	friend class BaseShape<Shape>;
+
 protected:
+	class Transform transform;
 	Materials::MaterialStore const &materialStore;
 	Materials::MaterialStore::IndexType materialIndex;
-
-	class Transform transform;
 };
+
+extern template class BaseShape<Shape>;
 
 static_assert(!std::is_copy_constructible_v<Shape>);
 static_assert(!std::is_copy_assignable_v<Shape>);
@@ -58,6 +79,13 @@ static_assert(!std::is_trivially_copyable_v<Shape>);
 
 static_assert(!std::is_move_constructible_v<Shape>);
 static_assert(!std::is_move_assignable_v<Shape>);
+
+static_assert(!std::is_copy_constructible_v<BaseShape<Shape>>);
+static_assert(std::is_copy_assignable_v<BaseShape<Shape>>);
+static_assert(!std::is_trivially_copyable_v<BaseShape<Shape>>);
+
+static_assert(!std::is_move_constructible_v<BaseShape<Shape>>);
+static_assert(std::is_move_assignable_v<BaseShape<Shape>>);
 } // namespace Shapes
 } // namespace LibRay
 

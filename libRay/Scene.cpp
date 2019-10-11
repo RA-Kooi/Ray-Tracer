@@ -68,7 +68,7 @@ Scene::Scene(
 		watch.Value().c_str(),
 		shapes.size());
 
-	std::vector<Observer<Shape const>> shapesForBVH;
+	std::vector<Observer<BaseShape<Shape> const>> shapesForBVH;
 	shapesForBVH.reserve(shapes.size());
 
 	for(std::unique_ptr<Shape> &shape: shapes)
@@ -82,7 +82,7 @@ Scene::Scene(
 			unboundableShapes.push_back(shape.get());
 	}
 
-	bvh = std::make_unique<Containers::BVH>(std::move(shapesForBVH));
+	bvh = std::make_unique<Containers::BVH<Shape>>(std::move(shapesForBVH));
 }
 
 Camera const &Scene::Camera() const
@@ -100,7 +100,7 @@ std::vector<std::unique_ptr<Shape>> const &Scene::Shapes() const
 	return shapes;
 }
 
-Containers::BVH const &Scene::BoundingVolumeHierarchy() const
+Containers::BVH<Shape> const &Scene::BoundingVolumeHierarchy() const
 {
 	assert(bvh);
 

@@ -568,7 +568,7 @@ Ray RayTracer::MakeMouseRay(int x, int y) const
 
 std::optional<Intersection> RayTracer::ShootRay(Ray const &ray) const
 {
-	Containers::BVH const &bvh = scene.BoundingVolumeHierarchy();
+	Containers::BVH<Shape> const &bvh = scene.BoundingVolumeHierarchy();
 
 	std::optional<Intersection> closestIntersection = bvh.Traverse(ray);
 	float closestDistance = FLT_MAX;
