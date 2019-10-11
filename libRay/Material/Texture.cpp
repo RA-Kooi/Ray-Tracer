@@ -21,13 +21,15 @@ Texture::Texture(
 , wrapMethodU(wrapMethodU)
 , wrapMethodV(wrapMethodV)
 {
+	stbi_ldr_to_hdr_gamma(1.0f);
+
 	int width, height, channels;
-	std::uint8_t *const data = stbi_load(
+	float *const data = stbi_loadf(
 		fileName.c_str(),
 		&width,
 		&height,
 		&channels,
-		3);
+		0);
 
 	if(!data)
 	{
@@ -40,7 +42,8 @@ Texture::Texture(
 			+ std::string(strerror(errno)));
 	}
 
-	std::fprintf(stderr, "Notice: <%s> Channels: %d\n", fileName.c_str(), channels);
+	std::printf("Notice: <%s> Channels: %d\n", fileName.c_str(), channels);
+	std::fflush(stdout);
 
 	new (this) Texture(
 		{size_t(width), size_t(height)},
@@ -54,7 +57,7 @@ Texture::Texture(
 
 Texture::Texture(
 	Vector2st const &dimensions,
-	std::uint8_t const *const rawData,
+	float const *const rawData,
 	InputFormat inputFormat,
 	WrappingMethod wrapMethodU,
 	WrappingMethod wrapMethodV)
@@ -64,14 +67,13 @@ Texture::Texture(
 , wrapMethodV(wrapMethodV)
 {
 	std::uint8_t rPos = 0, gPos = 1, bPos = 2;
-	std::size_t move = size_t(inputFormat);
 
 	switch(inputFormat)
 	{
 		case InputFormat::GRAYSCALE:
+		case InputFormat::GRAYSCALE_ALPHA:
 		{
 			rPos = gPos = bPos = 0;
-			move = 3;
 		} break;
 		default: break;
 	}
@@ -80,12 +82,12 @@ Texture::Texture(
 
 	for(
 		std::size_t i = 0;
-		i < dimensions.x * dimensions.y * move;
-		i += move)
+		i < dimensions.x * dimensions.y * size_t(inputFormat);
+		i += size_t(inputFormat))
 	{
-		float const r = float(*(rawData + i + rPos)) / 255.f;
-		float const g = float(*(rawData + i + gPos)) / 255.f;
-		float const b = float(*(rawData + i + bPos)) / 255.f;
+		float const r = float(*(rawData + i + rPos));
+		float const g = float(*(rawData + i + gPos));
+		float const b = float(*(rawData + i + bPos));
 
 		rgbData.emplace_back(r, g, b);
 	}

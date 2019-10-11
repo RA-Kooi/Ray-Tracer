@@ -23,6 +23,7 @@ public:
 	enum class InputFormat: std::size_t
 	{
 		GRAYSCALE = 1,
+		GRAYSCALE_ALPHA = 2,
 		RGB = 3,
 		RGBA = 4
 	};
@@ -35,7 +36,7 @@ public:
 
 	Texture(
 		Math::Vector2st const &dimensions,
-		std::uint8_t const *const rawData,
+		float const *const rawData,
 		InputFormat inputFormat,
 		WrappingMethod wrapMethodU = WrappingMethod::Repeat,
 		WrappingMethod wrapMethodV = WrappingMethod::Repeat);
