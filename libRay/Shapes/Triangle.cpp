@@ -31,36 +31,31 @@ std::optional<Intersection> Triangle::Intersects(Math::Ray const &ray) const
 
 	Vector3 const normal = Vector3(0, 0, 1);
 
-	float const denominator = glm::dot(normal, modelRay.Direction());
+	Vector3 const v0(0.0f, 0.5f, 0);
+	Vector3 const v1(0.5f, -0.5f, 0);
+	Vector3 const v2(-0.5f, -0.5f, 0);
 
-	if(-denominator > FLT_EPSILON)
+	Matrix3x3 const M(modelRay.Direction(), v1 - v0, v2 - v0);
+
+	Vector3 const u = glm::inverse(M) * (modelRay.Origin() - v0);
+
+	float const distance = -u.x;
+	float const beta = u.y;
+	float const gamma = u.z;
+
+	if(distance >= 0.f && beta >= 0.f && gamma >= 0.f && beta + gamma < 1.f)
 	{
-		Vector3 const v0(0.0f, 0.5f, 0);
-		Vector3 const v1(0.5f, -0.5f, 0);
-		Vector3 const v2(-0.5f, -0.5f, 0);
+		Vector3 const pos = modelRay.Origin()
+			+ modelRay.Direction()
+			* distance;
 
-		Matrix3x3 const M(modelRay.Direction(), v1 - v0, v2 - v0);
+		Matrix4x4 const &matrix = transform.Matrix();
 
-		Vector3 const u = glm::inverse(M) * (modelRay.Origin() - v0);
-
-		float const distance = -u.x;
-		float const beta = u.y;
-		float const gamma = u.z;
-
-		if(distance >= 0.f && beta >= 0.f && gamma >= 0.f && beta + gamma < 1.f)
-		{
-			Vector3 const pos = modelRay.Origin()
-				+ modelRay.Direction()
-				* distance;
-
-			return Intersection(
-				*this,
-				Transform::TransformDirection(transform.Matrix(), normal),
-				Transform::TransformTranslation(transform.Matrix(), pos),
-				{pos.x + 0.5f, pos.y + 0.5f});
-		}
-
-		return std::nullopt;
+		return Intersection(
+			*this,
+			Transform::TransformDirection(matrix, normal),
+			Transform::TransformTranslation(matrix, pos),
+			{pos.x + 0.5f, pos.y + 0.5f});
 	}
 
 	return std::nullopt;

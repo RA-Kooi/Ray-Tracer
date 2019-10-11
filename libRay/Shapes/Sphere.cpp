@@ -97,13 +97,15 @@ std::optional<Intersection> Sphere::Intersects(Ray const &ray) const
 		+ modelRay.Direction()
 		* solution1;
 
+	Matrix4x4 const &matrix = transform.Matrix();
+
 	Vector3 const normal =
-		Transform::TransformDirection(transform.Matrix(), positionOnSphere);
+		Transform::TransformDirection(matrix, positionOnSphere);
 
 	return Intersection(
 		*this,
 		normal,
-		Transform::TransformTranslation(transform.Matrix(), positionOnSphere),
+		Transform::TransformTranslation(matrix, positionOnSphere),
 		UV(glm::normalize(normal)));
 }
 

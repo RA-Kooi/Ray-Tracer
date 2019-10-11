@@ -39,10 +39,12 @@ std::optional<Intersection> Rectangle::Intersects(Ray const &ray) const
 		if(pointOnRect.x > -0.5f && pointOnRect.x < 0.5f
 		   && pointOnRect.y > -0.5f && pointOnRect.y < 0.5f)
 		{
+			Matrix4x4 const &matrix = transform.Matrix();
+
 			return Intersection(
 				*this,
-				Transform::TransformDirection(transform.Matrix(), normal),
-				Transform::TransformTranslation(transform.Matrix(), pointOnRect),
+				Transform::TransformDirection(matrix, normal),
+				Transform::TransformTranslation(matrix, pointOnRect),
 				{pointOnRect.x + 0.5f, pointOnRect.y + 0.5f});
 		}
 	}

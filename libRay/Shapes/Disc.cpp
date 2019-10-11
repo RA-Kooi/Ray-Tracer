@@ -38,10 +38,12 @@ std::optional<Intersection> Disc::Intersects(Ray const &ray) const
 
 		if(squareDistance <= 1.f)
 		{
+			Matrix4x4 const &matrix = transform.Matrix();
+
 			return Intersection(
 				*this,
-				Transform::TransformDirection(transform.Matrix(), normal),
-				Transform::TransformTranslation(transform.Matrix(), pointOnDisc),
+				Transform::TransformDirection(matrix, normal),
+				Transform::TransformTranslation(matrix, pointOnDisc),
 				{pointOnDisc.x, pointOnDisc.y});
 		}
 	}
