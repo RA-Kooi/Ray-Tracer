@@ -227,5 +227,28 @@
 				"-fPIC"
 			]
 		}
+	},
+	"tinyobjloaderFlags":
+	{
+		"type":"flags",
+
+		"platforms":
+		[
+			"linux_x64",
+			"win32_x64"
+		],
+
+		"common":
+		{
+			"cxx_flags":
+			[
+				"-fPIC"
+			],
+
+			"ld_flags":
+			[
+				"-fPIC"
+			]
+		}
 	}
 }

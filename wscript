@@ -12,5 +12,6 @@ def configure(cfg):
 
 def build(bld):
 	bld.recurse('3rdparty/stb')
+	bld.recurse('3rdparty/tinyobjloader')
 	bld.recurse('libRay')
 	bld.recurse(['Ray Tracer'])

@@ -1,0 +1,16 @@
+{
+	"type":"stlib",
+	"unity_build":false,
+	"target":"tinyobjloader",
+	"name":"tinyobjloader",
+	"version":"1.0.0",
+
+	"includes":[],
+	"export_includes":[".."],
+
+	"rpath":["$ORIGIN"],
+
+	"use":["tinyobjloaderFlags"],
+
+	"sources":["tiny_obj_loader.cpp"]
+}
