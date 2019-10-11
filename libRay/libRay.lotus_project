@@ -29,6 +29,7 @@
 		"Shaders/BlinnPhong.cpp",
 		"Shaders/ColorOnly.cpp",
 		"Shaders/Lambertian.cpp",
+		"Shaders/NormalViz.cpp",
 		"Shaders/Shader.cpp",
 		"Shaders/ShaderStore.cpp",
 		"Shapes/Model/Model.cpp",
