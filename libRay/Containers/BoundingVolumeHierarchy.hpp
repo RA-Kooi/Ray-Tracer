@@ -28,6 +28,7 @@ constexpr std::size_t const leafSize = 2;
 
 template<typename T>
 using ShapeVec = std::vector<Observer<Shapes::BaseShape<T> const>>;
+
 template<typename T>
 using IndexType = typename ShapeVec<T>::size_type;
 
@@ -104,6 +105,8 @@ public:
 	explicit BVH(BVHDetails::ShapeVec<T> &&objects);
 
 	std::optional<Intersection> Traverse(Math::Ray const &ray) const;
+
+	BoundingBox RootBoundingBox() const;
 
 private:
 	BoundingBox CalculateBoundingBox(BVHDetails::ShapeVec<T> const &objects) const;

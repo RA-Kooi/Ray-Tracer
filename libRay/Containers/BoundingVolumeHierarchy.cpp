@@ -38,6 +38,15 @@ std::optional<Intersection> BVH<T>::Traverse(Ray const &ray) const
 }
 
 template<typename T>
+BoundingBox BVH<T>::RootBoundingBox() const
+{
+	if(!rootNode)
+		return BoundingBox(Vector3(0), Vector3(0));
+
+	return *rootNode;
+}
+
+template<typename T>
 BoundingBox BVH<T>::CalculateBoundingBox(ShapeVec<T> const &objects) const
 {
 	Vector3 min(FLT_MAX, FLT_MAX, FLT_MAX);
