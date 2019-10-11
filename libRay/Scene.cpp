@@ -67,6 +67,9 @@ Scene::Scene(
 		"Loading scene took %s to place %zu objects\n",
 		watch.Value().c_str(),
 		shapes.size());
+	std::fflush(stdout);
+
+	watch.Start();
 
 	std::vector<Observer<BaseShape<Shape> const>> shapesForBVH;
 	shapesForBVH.reserve(shapes.size());
@@ -83,6 +86,11 @@ Scene::Scene(
 	}
 
 	bvh = std::make_unique<Containers::BVH<Shape>>(std::move(shapesForBVH));
+
+	watch.Stop();
+
+	std::printf("BVH creation took %s\n", watch.Value().c_str());
+	std::fflush(stdout);
 }
 
 Camera const &Scene::Camera() const
