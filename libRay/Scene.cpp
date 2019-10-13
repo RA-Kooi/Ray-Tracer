@@ -6,7 +6,6 @@
 #include "Math/Vector.hpp"
 #include "Math/MathUtils.hpp"
 #include "Shaders/BlinnPhong.hpp"
-#include "Shaders/Lambertian.hpp"
 #include "Shapes/Triangle.hpp"
 #include "Utilites.hpp"
 
@@ -52,7 +51,7 @@ Scene::Scene(
 	material.UpdateFloatProperty("phong exponent", mildlyShiny);
 
 	MaterialStore::IndexType const blue =
-		materialStore.AddMaterial(std::move(material));
+		materialStore.AddMaterial("Blue", std::move(material));
 
 	auto triangle = std::make_unique<Triangle>(
 		Transform(Vector3(0), Vector3(0, 0, Math::PI * 0.5f), Vector3(5)),

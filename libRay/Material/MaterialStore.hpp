@@ -2,6 +2,7 @@
 #define dc9791e3_8323_b52a_b580_71f02a7d3196
 
 #include <type_traits>
+#include <utility>
 #include <vector>
 
 #include "../API.hpp"
@@ -12,7 +13,7 @@ namespace LibRay::Materials
 class LIBRAY_API MaterialStore final
 {
 public:
-	using ContainerType = std::vector<Material>;
+	using ContainerType = std::vector<std::pair<std::string, Material>>;
 	using IndexType = ContainerType::size_type;
 
 public:
@@ -22,8 +23,9 @@ public:
 	MaterialStore &operator=(MaterialStore const &) = delete;
 	MaterialStore &operator=(MaterialStore &&) = default;
 
-	IndexType AddMaterial(Material material);
+	IndexType AddMaterial(std::string const &name, Material material);
 	Material const &MaterialByIndex(IndexType index) const;
+	IndexType MaterialIndexByName(std::string const &name) const;
 
 private:
 	ContainerType materials;
