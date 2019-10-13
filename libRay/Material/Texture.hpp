@@ -31,6 +31,7 @@ public:
 public:
 	Texture(
 		std::string const &fileName,
+		bool flipY = false,
 		WrappingMethod wrapMethodU = WrappingMethod::Repeat,
 		WrappingMethod wrapMethodV = WrappingMethod::Repeat);
 

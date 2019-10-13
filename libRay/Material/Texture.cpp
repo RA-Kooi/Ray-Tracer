@@ -14,6 +14,7 @@ using namespace LibRay::Math;
 
 Texture::Texture(
 	std::string const &fileName,
+	bool flipY,
 	WrappingMethod wrapMethodU,
 	WrappingMethod wrapMethodV)
 : dimensions(0, 0)
@@ -22,6 +23,8 @@ Texture::Texture(
 , wrapMethodV(wrapMethodV)
 {
 	stbi_ldr_to_hdr_gamma(1.0f);
+
+	stbi_set_flip_vertically_on_load(flipY);
 
 	int width, height, channels;
 	float *const data = stbi_loadf(
