@@ -33,6 +33,7 @@
 		"Shaders/Shader.cpp",
 		"Shaders/ShaderStore.cpp",
 		"Shapes/Model/Model.cpp",
+		"Shapes/Model/ModelLoader.cpp",
 		"Shapes/Model/ModelTriangle.cpp",
 		"Shapes/Box.cpp",
 		"Shapes/Disc.cpp",

@@ -33,8 +33,7 @@ class LIBRAY_API Model final: public Shape
 {
 public:
 	Model(
-		std::string const &fileName,
-		bool invertNormalZ,
+		std::vector<ModelTriangle::Vertex> vertices,
 		class Transform const &transform,
 		Materials::MaterialStore const &materialStore,
 		Materials::MaterialStore::IndexType materialIndex);
@@ -45,8 +44,7 @@ public:
 
 private:
 	std::vector<Observer<BaseShape<ModelTriangle> const>> Load(
-		std::string const &fileName,
-		bool invertNormalZ);
+		std::vector<ModelTriangle::Vertex> vertices);
 
 private:
 	std::vector<ModelTriangle> triangles;
