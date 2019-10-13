@@ -65,7 +65,7 @@ BoundingBox BVH<T>::CalculateBoundingBox(ShapeVec<T> const &objects) const
 
 	Vector3 const position = (max + min) * 0.5f;
 
-	return BoundingBox(max - min, position);
+	return BoundingBox((max - min)  * 0.5f, position);
 }
 
 template<typename T>
@@ -87,7 +87,7 @@ BoundingBox BVH<T>::CalculateBoundingBox(
 
 	Vector3 const position = (max + min) * 0.5f;
 
-	return BoundingBox(max - min, position);
+	return BoundingBox((max - min) * 0.5f, position);
 }
 
 template<typename T>
