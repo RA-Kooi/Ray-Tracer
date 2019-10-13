@@ -29,7 +29,7 @@ template<typename T> class BVH;
 
 namespace BVHDetails
 {
-constexpr std::size_t const leafSize = 2;
+constexpr std::size_t const leafSize = 1;
 
 template<typename T>
 using ShapeVec = std::vector<Observer<Shapes::BaseShape<T> const>>;
