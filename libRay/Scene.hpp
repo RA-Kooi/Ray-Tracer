@@ -10,6 +10,7 @@
 #include "Containers/BoundingVolumeHierarchy.hpp"
 #include "Material/MaterialStore.hpp"
 #include "Shaders/ShaderStore.hpp"
+#include "Shapes/Model/ModelLoader.hpp"
 #include "API.hpp"
 #include "Camera.hpp"
 #include "Light.hpp"
@@ -20,6 +21,8 @@ namespace Shapes
 {
 class Shape;
 } // namespace Shapes
+
+class Transform;
 
 class LIBRAY_API Scene final
 {
@@ -33,7 +36,7 @@ public:
 	Scene(Scene &&other) = default;
 	Scene(Scene const &) = delete;
 
-	Scene &operator=(Scene &&other) = default;
+	Scene &operator=(Scene &&other) = delete;
 	Scene &operator=(Scene const &) = delete;
 
 	Camera const &Camera() const;
@@ -45,6 +48,13 @@ public:
 	std::vector<Light> const &Lights() const;
 
 	std::pair<Materials::Color const &, float> AmbientLight() const;
+
+private:
+	void LoadModel(
+		std::string const &fileName,
+		Transform const &transform,
+		Materials::MaterialStore::IndexType materialIndex = 0,
+		bool invertNormalZ = false);
 
 private:
 	class Camera camera;
@@ -60,6 +70,8 @@ private:
 
 	ShaderStore shaderStore;
 	Materials::MaterialStore materialStore;
+
+	Shapes::ModelLoader modelLoader;
 };
 
 static_assert(!std::is_copy_constructible_v<Scene>);
@@ -67,7 +79,7 @@ static_assert(!std::is_copy_assignable_v<Scene>);
 static_assert(!std::is_trivially_copyable_v<Scene>);
 
 static_assert(std::is_move_constructible_v<Scene>);
-static_assert(std::is_move_assignable_v<Scene>);
+static_assert(!std::is_move_assignable_v<Scene>);
 } // namespace LibRay
 
 #endif // b0731c79_ae35_830e_9bd9_1c6eba4e3426

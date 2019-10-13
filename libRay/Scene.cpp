@@ -29,6 +29,7 @@ Scene::Scene(
 , ambientIntensity(ambientIntensity)
 , shaderStore()
 , materialStore()
+, modelLoader(materialStore)
 {
 	Stopwatch watch;
 	watch.Start();
@@ -122,5 +123,24 @@ std::vector<Light> const &Scene::Lights() const
 std::pair<Materials::Color const &, float> Scene::AmbientLight() const
 {
 	return {ambientLight, ambientIntensity};
+}
+
+void Scene::LoadModel(
+	std::string const &fileName,
+	Transform const &transform,
+	MaterialStore::IndexType materialIndex,
+	bool invertNormalZ)
+{
+	std::vector<std::unique_ptr<Model>> models = modelLoader.LoadObj(
+		fileName,
+		transform,
+		"Resources/Materials",
+		materialIndex,
+		invertNormalZ);
+
+	shapes.insert(
+		shapes.end(),
+		std::make_move_iterator(models.begin()),
+		std::make_move_iterator(models.end()));
 }
 } // namespace LibRay
