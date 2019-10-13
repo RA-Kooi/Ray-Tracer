@@ -6,7 +6,8 @@
 #include "Math/Vector.hpp"
 #include "Math/MathUtils.hpp"
 #include "Shaders/BlinnPhong.hpp"
-#include "Shapes/Triangle.hpp"
+#include "Shapes/Model/Model.hpp"
+#include "Shapes/Plane.hpp"
 #include "Utilites.hpp"
 
 namespace LibRay
@@ -46,20 +47,53 @@ Scene::Scene(
 	//constexpr float const shiny = 1000;
 	//constexpr float const veryShiny = 10'000;
 
-	Material material(blinnPhong, 0.f);
-	material.UpdateTextureProperty("diffuse", Texture::Blue());
+	Texture planeTex("Resources/Textures/1024x1024 Texel Density Texture 1.png");
+
+	Material material(blinnPhong, 0.f, 0.f);
 	material.UpdateColorProperty("specular", Color::White());
 	material.UpdateFloatProperty("phong exponent", mildlyShiny);
+	material.UpdateTextureProperty("diffuse", planeTex);
+	material.Reflectiveness(0.1f);
 
-	MaterialStore::IndexType const blue =
-		materialStore.AddMaterial("Blue", std::move(material));
+	MaterialStore::IndexType const planeMat =
+		materialStore.AddMaterial("Plane", material);
 
-	auto triangle = std::make_unique<Triangle>(
-		Transform(Vector3(0), Vector3(0, 0, Math::PI * 0.5f), Vector3(5)),
+	material.Reflectiveness(0.05f);
+
+	Texture armTex("Resources/Textures/NanoSuit/arm_dif.png");
+	material.UpdateTextureProperty("diffuse", armTex);
+	materialStore.AddMaterial("Arm", material);
+
+	Texture bodyTex("Resources/Textures/NanoSuit/body_dif.png");
+	material.UpdateTextureProperty("diffuse", bodyTex);
+	materialStore.AddMaterial("Body", material);
+
+	Texture glassTex("Resources/Textures/NanoSuit/glass_dif.png");
+	material.UpdateTextureProperty("diffuse", glassTex);
+	materialStore.AddMaterial("Glass", material);
+
+	Texture handTex("Resources/Textures/NanoSuit/hand_dif.png");
+	material.UpdateTextureProperty("diffuse", handTex);
+	materialStore.AddMaterial("Hand", material);
+
+	Texture helmetTex("Resources/Textures/NanoSuit/helmet_dif.png");
+	material.UpdateTextureProperty("diffuse", helmetTex);
+	materialStore.AddMaterial("Helmet", material);
+
+	Texture legTex("Resources/Textures/NanoSuit/leg_dif.png");
+	material.UpdateTextureProperty("diffuse", legTex);
+	materialStore.AddMaterial("Leg", material);
+
+	LoadModel(
+		"Resources/Models/nanosuit.obj",
+		Transform(Vector3(0, -10, 0), Vector3(0), Vector3(1)));
+
+	auto plane = std::make_unique<Plane>(
+		Transform(Vector3(0, -10, 0)),
 		materialStore,
-		blue);
+		planeMat);
 
-	shapes.push_back(std::move(triangle));
+	shapes.push_back(std::move(plane));
 
 	watch.Stop();
 
