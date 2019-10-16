@@ -29,12 +29,23 @@ class Scene;
 
 struct LIBRAY_API RayTracerConfiguration final
 {
+	enum class AntiAliasingMode: size_t
+	{
+		AA1  =  1,
+		AA2  =  2,
+		AA4  =  4,
+		AA8  =  8,
+		AA16 = 16
+	};
+
 	RayTracerConfiguration(
 		std::uint8_t maxReflectionBounces,
-		std::uint8_t threadCount);
+		std::uint8_t threadCount,
+		AntiAliasingMode aaMode);
 
 	std::uint8_t maxReflectionBounces;
 	std::uint8_t threadCount;
+	AntiAliasingMode aaMode;
 };
 
 static_assert(std::is_copy_constructible_v<RayTracerConfiguration>);
@@ -123,15 +134,12 @@ private:
 private:
 	Scene const &scene;
 	RayTracerConfiguration configuration;
+	std::vector<Math::Vector2> raySteps;
 };
 
 static_assert(std::is_copy_constructible_v<RayTracer>);
 static_assert(!std::is_copy_assignable_v<RayTracer>);
-#ifdef _MSC_VER
 static_assert(!std::is_trivially_copyable_v<RayTracer>);
-#else
-static_assert(std::is_trivially_copyable_v<RayTracer>);
-#endif
 
 static_assert(std::is_move_constructible_v<RayTracer>);
 static_assert(!std::is_move_assignable_v<RayTracer>);

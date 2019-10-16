@@ -33,9 +33,11 @@ static std::string indent(size_t n)
 
 RayTracerConfiguration::RayTracerConfiguration(
 	std::uint8_t maxReflectionBounces,
-	std::uint8_t threadCount)
+	std::uint8_t threadCount,
+	AntiAliasingMode aaMode)
 : maxReflectionBounces(maxReflectionBounces)
 , threadCount(threadCount)
+, aaMode(aaMode)
 {
 }
 
@@ -43,6 +45,71 @@ RayTracer::RayTracer(Scene const &scene, RayTracerConfiguration &&config)
 : scene(scene)
 , configuration(std::move(config))
 {
+	raySteps.reserve(size_t(configuration.aaMode));
+
+	Camera const &camera = scene.Camera();
+	Vector2st const &screenSize = camera.ScreenSize();
+	Camera::Frustum const frustum = camera.SceneFrustum();
+
+	float const nearPlaneWidth = frustum.nearPlaneHeight * frustum.aspectRatio;
+
+	float const fullStepX = nearPlaneWidth / float(screenSize.x);
+	float const fullStepy = frustum.nearPlaneHeight / float(screenSize.y);
+
+	switch(configuration.aaMode)
+	{
+		case RayTracerConfiguration::AntiAliasingMode::AA1:
+		{
+			raySteps.emplace_back(0.5f * fullStepX, 0.5f * fullStepy);
+		} break;
+		case RayTracerConfiguration::AntiAliasingMode::AA2:
+		{
+			raySteps.emplace_back(0.25f * fullStepX, 0.5f * fullStepy);
+			raySteps.emplace_back(0.75f * fullStepX, 0.5f * fullStepy);
+		} break;
+		case RayTracerConfiguration::AntiAliasingMode::AA4:
+		{
+			raySteps.emplace_back(0.25f * fullStepX, 0.25f * fullStepy);
+			raySteps.emplace_back(0.75f * fullStepX, 0.75f * fullStepy);
+
+			raySteps.emplace_back(0.25f * fullStepX, 0.25f * fullStepy);
+			raySteps.emplace_back(0.75f * fullStepX, 0.75f * fullStepy);
+		} break;
+		case RayTracerConfiguration::AntiAliasingMode::AA8:
+		{
+			raySteps.emplace_back(0.2f * fullStepX, 0.25f * fullStepy);
+			raySteps.emplace_back(0.4f * fullStepX, 0.25f * fullStepy);
+			raySteps.emplace_back(0.6f * fullStepX, 0.25f * fullStepy);
+			raySteps.emplace_back(0.8f * fullStepX, 0.25f * fullStepy);
+
+			raySteps.emplace_back(0.2f * fullStepX, 0.75f * fullStepy);
+			raySteps.emplace_back(0.4f * fullStepX, 0.75f * fullStepy);
+			raySteps.emplace_back(0.6f * fullStepX, 0.75f * fullStepy);
+			raySteps.emplace_back(0.8f * fullStepX, 0.75f * fullStepy);
+		} break;
+		case RayTracerConfiguration::AntiAliasingMode::AA16:
+		{
+			raySteps.emplace_back(0.2f * fullStepX, 0.2f * fullStepy);
+			raySteps.emplace_back(0.4f * fullStepX, 0.2f * fullStepy);
+			raySteps.emplace_back(0.6f * fullStepX, 0.2f * fullStepy);
+			raySteps.emplace_back(0.8f * fullStepX, 0.2f * fullStepy);
+
+			raySteps.emplace_back(0.2f * fullStepX, 0.4f * fullStepy);
+			raySteps.emplace_back(0.4f * fullStepX, 0.4f * fullStepy);
+			raySteps.emplace_back(0.6f * fullStepX, 0.4f * fullStepy);
+			raySteps.emplace_back(0.8f * fullStepX, 0.4f * fullStepy);
+
+			raySteps.emplace_back(0.2f * fullStepX, 0.6f * fullStepy);
+			raySteps.emplace_back(0.4f * fullStepX, 0.6f * fullStepy);
+			raySteps.emplace_back(0.6f * fullStepX, 0.6f * fullStepy);
+			raySteps.emplace_back(0.8f * fullStepX, 0.6f * fullStepy);
+
+			raySteps.emplace_back(0.2f * fullStepX, 0.8f * fullStepy);
+			raySteps.emplace_back(0.4f * fullStepX, 0.8f * fullStepy);
+			raySteps.emplace_back(0.6f * fullStepX, 0.8f * fullStepy);
+			raySteps.emplace_back(0.8f * fullStepX, 0.8f * fullStepy);
+		} break;
+	}
 }
 
 Image RayTracer::Trace() const
@@ -142,9 +209,7 @@ void RayTracer::TraceChunk(
 		- Vector3(halfNearPlaneWidth, -halfNearPlaneHeight, 0);
 
 	float const stepX = nearPlaneWidth / float(screenSize.x);
-	float const halfStepX = 0.5f * stepX;
 	float const stepY = frustum.nearPlaneHeight / float(screenSize.y);
-	float const halfStepY = 0.5f * stepY;
 
 	Matrix4x4 const camToWorld = camera.Transform().Matrix();
 
@@ -152,18 +217,29 @@ void RayTracer::TraceChunk(
 	{
 		for(std::size_t x = chunkStartX; x < chunkStartX + chunkWidth; ++x)
 		{
-			float const u = nearPlaneTopLeft.x + x * stepX + halfStepX;
-			float const v = nearPlaneTopLeft.y - y * stepY - halfStepY;
+			Color pixel = Color::Black();
+			size_t const sampleCount = size_t(configuration.aaMode);
 
-			Vector3 rayTarget(u, v, -1);
-			rayTarget = glm::normalize(rayTarget);
+			for(size_t i = 0; i < sampleCount; ++i)
+			{
+				Vector2 const &steps = raySteps[i];
 
-			Ray const ray(
-				cameraPosition + rayTarget * frustum.nearPlaneDistance,
-				Transform::TransformDirection(camToWorld, rayTarget));
+				float const u = nearPlaneTopLeft.x + x * stepX + steps.x;
+				float const v = nearPlaneTopLeft.y - y * stepY - steps.y;
 
-			RayState state;
-			Color const pixel = TraceRay(ray, state, false, worldFarDistance);
+				Vector3 rayTarget(u, v, -1);
+				rayTarget = glm::normalize(rayTarget);
+
+				Ray const ray(
+					cameraPosition + rayTarget * frustum.nearPlaneDistance,
+					Transform::TransformDirection(camToWorld, rayTarget));
+
+				RayState state;
+				pixel += TraceRay(ray, state, false, worldFarDistance);
+			}
+
+			pixel /= sampleCount;
+
 			output.pixels[y * screenSize.x + x] = pixel;
 		}
 	}

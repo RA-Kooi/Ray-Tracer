@@ -95,9 +95,11 @@ int main()
 	RayTracerConfiguration config(
 		4,
 #ifdef DEBUG
-		1);
+		1,
+		RayTracerConfiguration::AntiAliasingMode::AA1);
 #else
-		std::uint8_t(std::thread::hardware_concurrency()));
+		std::uint8_t(std::thread::hardware_concurrency()),
+		RayTracerConfiguration::AntiAliasingMode::AA16);
 #endif
 
 	RayTracer rayTracer(*scene, std::move(config));
