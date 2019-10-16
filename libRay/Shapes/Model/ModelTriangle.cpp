@@ -20,6 +20,18 @@ ModelTriangle::ModelTriangle(
 , parent(parent)
 , vertices(std::move(vertices))
 {
+	// Compute plane normal
+	Vector3 const v1v0 = vertices[1].position - vertices[0].position;
+	Vector3 const v2v0 = vertices[2].position - vertices[0].position;
+
+	// Compute UV normal
+	Vector2 const u1u0 = vertices[1].uv - vertices[0].uv;
+	Vector2 const u2u0 = vertices[2].uv - vertices[0].uv;
+
+	// Compute inverse cross product of the UV
+	float const r = 1.0f / (u1u0.x * u2u0.y - u1u0.y * u2u0.x);
+
+	tangent = (v1v0 * u2u0.y - v2v0 * u1u0.y) * r;
 }
 
 std::optional<Intersection> ModelTriangle::Intersects(
@@ -46,10 +58,10 @@ std::optional<Intersection> ModelTriangle::Intersects(
 
 		float const alpha = (1.f - beta - gamma);
 
-		Vector3 const normal = glm::normalize(
+		Vector3 const normal =
 			vertices[0].normal * alpha
 			+ vertices[1].normal * beta
-			+ vertices[2].normal * gamma);
+			+ vertices[2].normal * gamma;
 
 		Vector2 const uv = (
 			vertices[0].uv * alpha
@@ -61,6 +73,7 @@ std::optional<Intersection> ModelTriangle::Intersects(
 		return Intersection(
 			*parent,
 			Transform::TransformDirection(matrix, normal),
+			Transform::TransformDirection(matrix, tangent),
 			Transform::TransformTranslation(matrix, pos),
 			uv);
 	}

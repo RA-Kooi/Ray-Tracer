@@ -59,6 +59,7 @@ private:
 private:
 	Observer<Model const> parent;
 	std::array<Vertex, 3> vertices;
+	Math::Vector3 tangent;
 };
 
 extern template class BaseShape<ModelTriangle>;
