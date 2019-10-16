@@ -11,6 +11,13 @@ Color::Color(float red, float green, float blue)
 {
 }
 
+Color::Color(Math::Vector3 const &v)
+: r(v.r)
+, g(v.g)
+, b(v.b)
+{
+}
+
 Color Color::operator+() const
 {
 	return Color(+r, +g, +b);
@@ -54,6 +61,20 @@ Color &Color::operator*=(float value)
 Color &Color::operator/=(float value)
 {
 	*this = *this / value;
+	return *this;
+}
+
+Color::operator Math::Vector3() const
+{
+	return Math::Vector3(r, g, b);
+}
+
+Color &Color::operator=(Math::Vector3 const &other)
+{
+	r = other.r;
+	g = other.g;
+	b = other.b;
+
 	return *this;
 }
 

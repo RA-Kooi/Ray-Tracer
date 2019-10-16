@@ -5,6 +5,7 @@
 #include <type_traits>
 #include <string>
 
+#include "../Math/Vector.hpp"
 #include "../API.hpp"
 
 namespace LibRay::Materials
@@ -13,6 +14,7 @@ class LIBRAY_API Color final
 {
 public:
 	Color(float red, float green, float blue);
+	Color(Math::Vector3 const &v);
 
 	Color operator+() const;
 	Color operator-() const;
@@ -24,6 +26,10 @@ public:
 
 	Color &operator*=(float value);
 	Color &operator/=(float value);
+
+	operator Math::Vector3() const;
+
+	Color &operator=(Math::Vector3 const &other);
 
 	Color &Clamp();
 	Color Clamped() const;
