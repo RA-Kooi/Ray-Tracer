@@ -1,6 +1,7 @@
 #include "RayTracer.hpp"
 
 #include <algorithm>
+#include <iostream>
 #include <optional>
 
 #include "Material/Color.hpp"
@@ -24,6 +25,11 @@ using namespace Math;
 using namespace Shapes;
 
 constexpr float const bias = 0.005f;
+
+static std::string indent(size_t n)
+{
+	return std::string(n, '\t');
+}
 
 RayTracerConfiguration::RayTracerConfiguration(
 	std::uint8_t maxReflectionBounces,
@@ -105,7 +111,7 @@ Image RayTracer::Trace() const
 
 	watch.Stop();
 
-	std::printf("Took %s to render the scene\n", watch.Value().c_str());
+	std::cout << "Took " << watch.Value() << " to render the scene\n";
 	std::fflush(stdout);
 
 	return output;
@@ -157,7 +163,7 @@ void RayTracer::TraceChunk(
 				Transform::TransformDirection(camToWorld, rayTarget));
 
 			RayState state;
-			Color pixel = TraceRay(ray, state, false, worldFarDistance);
+			Color const pixel = TraceRay(ray, state, false, worldFarDistance);
 			output.pixels[y * screenSize.x + x] = pixel;
 		}
 	}
@@ -174,29 +180,29 @@ Color RayTracer::TraceRay(
 	if(!intersection)
 	{
 		if(debug)
-			std::puts("No intersections...\n");
+			std::cout << indent(state.bounceCount) << "No intersections...\n\n";
 
 		return Color::Black();
 	}
 
 	if(debug)
-		std::puts("{");
+		std::cout << indent(state.bounceCount) << "{\n";
 
 	Vector3 const &intersectionPos = intersection->worldPosition;
+	Vector3 const &normal = intersection->surfaceNormal;
 
 	if(debug)
 	{
-		std::printf(
-			"\tIntersection:\n\t{\n"
-			"\t\tPos: [X: %f, Y: %f, Z: %f],\n"
-			"\t\tNormal: [X: %f, Y: %f, Z: %f]\n"
-			"\t},\n\n",
-			double(intersectionPos.x),
-			double(intersectionPos.y),
-			double(intersectionPos.z),
-			double(intersection->surfaceNormal.x),
-			double(intersection->surfaceNormal.y),
-			double(intersection->surfaceNormal.z));
+		std::cout << indent(state.bounceCount + 1)
+			<< "Intersection:\n"
+			<< indent(state.bounceCount + 1)
+			<< "{\n"
+			<< indent(state.bounceCount + 2)
+			<< "Pos: " << intersectionPos << ",\n"
+			<< indent(state.bounceCount + 2)
+			<< "Normal: " << normal << "\n"
+			<< indent(state.bounceCount + 1)
+			<< "},\n\n";
 	}
 
 	float const intersectionDistance =
@@ -205,27 +211,33 @@ Color RayTracer::TraceRay(
 	if(intersectionDistance > farPlaneDistance)
 	{
 		if(debug)
-			std::puts("\tNo closest intersection picked...\n}\n");
+		{
+			std::cout << indent(state.bounceCount + 1)
+				<< "No closest intersection picked..."
+				<< indent(state.bounceCount + 1)
+				<< "\n}\n";
+		}
 
 		return Color::Black();
 	}
-
-	Vector3 const &normal = intersection->surfaceNormal;
 
 	if(debug)
 	{
 		Vector3 const &pos = intersection->worldPosition;
 		Vector2 const &uv = intersection->uv;
 
-		std::printf(
-			"\tPicked intersection:\n\t{\n"
-			"\t\tPos: [X: %f, Y: %f, Z: %f],\n"
-			"\t\tNormal: [X: %f, Y: %f, Z: %f]\n"
-			"\t\tUV: [U: %f, V: %f]\n"
-			"\t},\n\n",
-			double(pos.x), double(pos.y), double(pos.z),
-			double(normal.x), double(normal.y), double(normal.z),
-			double(uv.x), double(uv.y));
+		std::cout << indent(state.bounceCount + 1)
+			<< "Picked intersection:\n"
+			<< indent(state.bounceCount + 1)
+			<<"{\n"
+			<< indent(state.bounceCount + 2)
+			<< "Pos: " << pos << ",\n"
+			<< indent(state.bounceCount + 2)
+			<< "Normal: " << normal << ",\n"
+			<< indent(state.bounceCount + 2)
+			<< "UV: " << uv << "\n"
+			<< indent(state.bounceCount + 1)
+			<< "},\n\n";
 	}
 
 	Material const &material = intersection->shape->Material();
@@ -245,15 +257,14 @@ Color RayTracer::TraceRay(
 		return DoReflection(*intersection, ray, state, debug, farPlaneDistance);
 	}
 
-	Color pixelColor = Shade(ray, *intersection, debug);
+	Color const pixelColor = Shade(ray, *intersection, debug);
 
 	if(debug)
 	{
-		std::printf(
-			"\tFinal pixel color: %s\n",
-			pixelColor.ToString().c_str());
-
-		std::puts("}\n");
+		std::cout << indent(state.bounceCount + 1)
+			<< "Final pixel color: " << pixelColor << "\n"
+			<< indent(state.bounceCount)
+			<< "}\n\n";
 	}
 
 	return pixelColor;
@@ -267,7 +278,8 @@ Color RayTracer::DoReflection(
 	float farPlaneDistance) const
 {
 	if(debug)
-		std::puts("\n\tReflecting... (no refraction)");
+		std::cout << indent(state.bounceCount + 1)
+			<< "Reflecting... (no refraction)\n\n";
 
 	Vector3 const &intersectionPos = intersection.worldPosition;
 	Vector3 const &normal = intersection.surfaceNormal;
@@ -282,11 +294,27 @@ Color RayTracer::DoReflection(
 
 	if(debug)
 	{
-		std::printf("\tRay:\n\t{\n\t\t%s\n\t},\n\n", ray.ToString().c_str());
+		std::cout << indent(state.bounceCount + 1)
+			<< "Ray:\n"
+			<< indent(state.bounceCount + 1)
+			<< "{\n"
+			<< indent(state.bounceCount + 2)
+			<< "Origin: " << ray.Origin() << ",\n"
+			<< indent(state.bounceCount + 2)
+			<< "Direction: " << ray.Direction() << "\n"
+			<< indent(state.bounceCount + 1)
+			<< "},\n\n";
 
-		std::printf(
-			"\tReflection ray:\n\t{\n\t\t%s\n\t},\n\n",
-			reflectedRay.ToString().c_str());
+		std::cout << indent(state.bounceCount + 1)
+			<< "Reflection ray:\n"
+			<< indent(state.bounceCount + 1)
+			<< "{\n"
+			<< indent(state.bounceCount + 2)
+			<< "Origin: " << reflectedRay.Origin() << ",\n"
+			<< indent(state.bounceCount + 2)
+			<< "Direction: " << reflectedRay.Direction() << "\n"
+			<< indent(state.bounceCount + 1)
+			<< "},\n\n";
 	}
 
 	++state.bounceCount;
@@ -301,6 +329,14 @@ Color RayTracer::DoReflection(
 	pixelColor *= (1.f - reflectiveness);
 	pixelColor += reflectedColor * reflectiveness;
 
+	if(debug)
+	{
+		std::cout << indent(state.bounceCount + 1)
+			<< "Final pixel color: " << pixelColor << "\n"
+			<< indent(state.bounceCount)
+			<< "}\n\n";
+	}
+
 	return pixelColor;
 }
 
@@ -313,9 +349,19 @@ Color RayTracer::DoRefraction(
 {
 	if(debug)
 	{
-		std::puts("\n\tRefracting...");
+		std::cout << indent(state.bounceCount + 1)
+			<< "Refracting...\n\n";
 
-		std::printf("\tRay:\n\t{\n\t\t%s\n\t},\n\n", ray.ToString().c_str());
+		std::cout << indent(state.bounceCount + 1)
+			<< "Ray:\n"
+			<< indent(state.bounceCount + 1)
+			<< "{\n"
+			<< indent(state.bounceCount + 2)
+			<< "Origin: " << ray.Origin() << ",\n"
+			<< indent(state.bounceCount + 2)
+			<< "Direction: " << ray.Direction() << "\n"
+			<< indent(state.bounceCount + 1)
+			<< "},\n\n";
 	}
 
 	Vector3 const &intersectionPos = intersection.worldPosition;
@@ -346,27 +392,42 @@ Color RayTracer::DoRefraction(
 		exiting = true;
 	}
 
-	float const fresnel = FresnelFactor(cosTheta, lastIndex, indexOfRefraction);
+	if(debug)
+	{
+		std::cout << indent(state.bounceCount + 1)
+			<< "CosTheta: " << cosTheta << ",\n";
+	}
+
+	float const fresnel = FresnelFactor(cosTheta, iorOutside, iorInside);
 	Color refractedColor = Color::Black();
 
 	if(debug)
-		std::printf("\tFresnel: %f\n", double(fresnel));
+	{
+		std::cout << indent(state.bounceCount + 1)
+			<< "Fresnel: " << fresnel << ",\n\n";
+	}
 
 	if(fresnel < 1.0f)
 	{
 		float const refractionRatio = lastIndex / indexOfRefraction;
 
-		Vector3 const refractedDir =
-			Refract(ray.Direction(), N, refractionRatio);
+		Vector3 const refractedDir = Refract(incidence, N, refractionRatio);
 
 		Ray const refractedRay =
 			Ray(intersectionPos - N * bias, refractedDir);
 
 		if(debug)
 		{
-			std::printf(
-				"\tRefraction ray:\n\t{\n\t\t%s\n\t},\n\n",
-				refractedRay.ToString().c_str());
+			std::cout << indent(state.bounceCount + 1)
+				<< "Refraction ray:\n"
+				<< indent(state.bounceCount + 1)
+				<< "{\n"
+				<< indent(state.bounceCount + 2)
+				<< "Origin: " << refractedRay.Origin() << ",\n"
+				<< indent(state.bounceCount + 2)
+				<< "Direction: " << refractedRay.Direction() << "\n"
+				<< indent(state.bounceCount + 1)
+				<< "},\n\n";
 		}
 
 		if(!exiting)
@@ -374,7 +435,7 @@ Color RayTracer::DoRefraction(
 			state.refractionStack.push_back(indexOfRefraction);
 
 			if(debug)
-				std::puts("\tEntering...");
+				std::cout << indent(state.bounceCount + 1) << "Entering...\n";
 		}
 		else
 		{
@@ -385,7 +446,7 @@ Color RayTracer::DoRefraction(
 				state.refractionStack.pop_back();
 
 			if(debug)
-				std::puts("\tLeaving...");
+				std::cout << indent(state.bounceCount + 1) << "Leaving...\n";
 		}
 
 		size_t oldSize = state.refractionStack.size();
@@ -400,22 +461,31 @@ Color RayTracer::DoRefraction(
 
 		if(debug)
 		{
-			std::printf(
-				"\tRefracted color: %s\n",
-				refractedColor.ToString().c_str());
+			std::cout << indent(state.bounceCount + 1)
+				<< "Refracted color: " << refractedColor << ",\n\n";
 		}
 	}
 
 	if(debug)
-		std::puts("\n\tReflecting... (refraction)");
+	{
+		std::cout << indent(state.bounceCount + 1)
+			<< "Reflecting... (refraction)\n\n";
+	}
 
 	Ray const reflectedRay = ReflectRay(ray, intersectionPos, normal);
 
 	if(debug)
 	{
-		std::printf(
-			"\tReflection ray:\n\t{\n\t\t%s\n\t},\n\n",
-			reflectedRay.ToString().c_str());
+		std::cout << indent(state.bounceCount + 1)
+			<< "Reflection ray:\n"
+			<< indent(state.bounceCount + 1)
+			<< "{\n"
+			<< indent(state.bounceCount + 2)
+			<< "Origin: " << reflectedRay.Origin() << ",\n"
+			<< indent(state.bounceCount + 2)
+			<< "Direction: " << reflectedRay.Direction() << "\n"
+			<< indent(state.bounceCount + 1)
+			<< "},\n\n";
 	}
 
 	++state.bounceCount;
@@ -425,25 +495,19 @@ Color RayTracer::DoRefraction(
 
 	if(debug)
 	{
-		std::printf(
-			"\tReflected color: [r: %f, g: %f, b: %f]\n",
-			double(reflectedColor.r),
-			double(reflectedColor.g),
-			double(reflectedColor.b));
+		std::cout << indent(state.bounceCount + 1)
+			<< "Reflected color: " << reflectedColor << ",\n";
 	}
 
-	Color pixelColor = reflectedColor * fresnel
+	Color const pixelColor = reflectedColor * fresnel
 		+ refractedColor * (1.f - fresnel);
 
 	if(debug)
 	{
-		std::printf(
-			"\tFinal pixel color: [r: %f, g: %f, b: %f]\n",
-			double(pixelColor.r),
-			double(pixelColor.g),
-			double(pixelColor.b));
-
-		std::puts("}\n");
+		std::cout << indent(state.bounceCount + 1)
+			<< "Final pixel color: " << pixelColor << "\n"
+			<< indent(state.bounceCount)
+			<< "}\n\n";
 	}
 
 	return pixelColor;
@@ -469,7 +533,7 @@ Color RayTracer::Shade(
 
 	std::pair<Color const &, float> ambientLight = scene.AmbientLight();
 
-	Color pixelColor = shader.Run(
+	Color const pixelColor = shader.Run(
 			intersection,
 			view,
 			ray,
@@ -645,13 +709,13 @@ std::vector<Observer<Light const>> RayTracer::LightsAtIntersection(
 
 			float const intersectionDistance = glm::length2(intersectionToOrigin);
 
+			Material const &material = lightIntersection->shape->Material();
+			float const ior = material.RefractiveIndex();
+
 			if(intersectionDistance > lightDistance)
 				unobstructedLights.push_back(&light);
-			else
-			{
-				if(lightIntersection->shape->Material().RefractiveIndex() > 0.f)
+			else if(ior > 0.f)
 					unobstructedLights.push_back(&light);
-			}
 		}
 	}
 

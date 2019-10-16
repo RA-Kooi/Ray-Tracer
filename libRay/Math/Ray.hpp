@@ -16,8 +16,6 @@ public:
 	Vector3 const &Origin() const;
 	Vector3 const &Direction() const;
 
-	std::string ToString() const;
-
 private:
 	Vector3 origin, direction;
 };

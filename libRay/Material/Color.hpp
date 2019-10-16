@@ -1,6 +1,7 @@
 #ifndef b42831bc_5aec_4ee2_9bdd_09f0dac7b019
 #define b42831bc_5aec_4ee2_9bdd_09f0dac7b019
 
+#include <ostream>
 #include <type_traits>
 #include <string>
 
@@ -26,8 +27,6 @@ public:
 
 	Color &Clamp();
 	Color Clamped() const;
-
-	std::string ToString() const;
 
 	static Color Red();
 	static Color Green();
@@ -55,5 +54,7 @@ static_assert(std::is_trivially_copyable_v<Color>);
 static_assert(std::is_move_constructible_v<Color>);
 static_assert(std::is_move_assignable_v<Color>);
 } // namespace LibRay::Materials
+
+std::ostream &operator<<(std::ostream &o, LibRay::Materials::Color const &c);
 
 #endif // b42831bc_5aec_4ee2_9bdd_09f0dac7b019
