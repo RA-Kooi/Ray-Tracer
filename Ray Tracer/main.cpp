@@ -70,8 +70,6 @@ int main()
 	using namespace LibRay;
 	using namespace LibRay::Math;
 
-	DisableTGARLE();
-
 	Camera camera(
 		Transform(Vector3(0, 5, 7), Vector3(-Math::PI * 0.15f, 0, 0)),
 		Vector2st(1280, 720),
@@ -196,15 +194,16 @@ std::pair<bool, std::string> WriteImage(LibRay::Image const &normalizedImage)
 #endif
 
 	std::stringstream stream;
-	stream << "Rendered-" << std::put_time(&buf, "%Y-%m-%d-%H-%M-%S") << ".tga";
+	stream << "Rendered-" << std::put_time(&buf, "%Y-%m-%d-%H-%M-%S") << ".png";
 	std::string output = stream.str();
 
-	if(!stbi_write_tga(
+	if(!stbi_write_png(
 			output.c_str(),
 			int(normalizedImage.sizeX),
 			int(normalizedImage.sizeY),
 			4,
-			ABGRData.data()))
+			ABGRData.data(),
+			0))
 	{
 		std::fprintf(stderr, "Failed to write to output <%s>.\n", output.c_str());
 		return {false, std::string()};
