@@ -27,6 +27,7 @@
 		"Material/Texture.cpp",
 		"Math/Ray.cpp",
 		"Shaders/BlinnPhong.cpp",
+		"Shaders/BlinnPhongBump.cpp",
 		"Shaders/ColorOnly.cpp",
 		"Shaders/Lambertian.cpp",
 		"Shaders/NormalViz.cpp",
