@@ -29,6 +29,7 @@
 		"Shaders/BlinnPhong.cpp",
 		"Shaders/BlinnPhongBump.cpp",
 		"Shaders/ColorOnly.cpp",
+		"Shaders/EnvironmentMapping.cpp",
 		"Shaders/Lambertian.cpp",
 		"Shaders/NormalViz.cpp",
 		"Shaders/NormalVizBump.cpp",
