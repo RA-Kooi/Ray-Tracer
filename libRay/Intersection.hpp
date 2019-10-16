@@ -20,12 +20,20 @@ public:
 	Intersection(
 		Shapes::Shape const &shape,
 		Math::Vector3 const &surfaceNormal,
+		Math::Vector3 const &surfaceTangent,
+		Math::Vector3 const &worldPosition,
+		Math::Vector2 const &uv);
+
+	Intersection(
+		Shapes::Shape const &shape,
+		Math::Vector3 const &surfaceNormal,
 		Math::Vector3 const &worldPosition,
 		Math::Vector2 const &uv);
 
 public:
 	Observer<Shapes::Shape const> shape;
 	Math::Vector3 surfaceNormal;
+	Math::Vector3 surfaceTangent;
 	Math::Vector3 worldPosition;
 	Math::Vector2 uv;
 };
