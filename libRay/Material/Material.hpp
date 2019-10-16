@@ -22,7 +22,8 @@ public:
 	Material(
 		Shader const &shader,
 		float reflectiveness = 0.f,
-		float refractiveIndex = 0.f);
+		float refractiveIndexInside = 0.f,
+		float refractiveIndexOutside = 1.f);
 
 	Material(Material const &) = default;
 	Material(Material &&) = default;
@@ -43,8 +44,11 @@ public:
 	void Reflectiveness(float newReflectiveness);
 	float Reflectiveness() const;
 
-	void RefractiveIndex(float newRefractiveIndex);
-	float RefractiveIndex() const;
+	void RefractiveIndexInside(float newRefractiveIndexInside);
+	float RefractiveIndexInside() const;
+
+	void RefractiveIndexOutside(float newRefractiveIndexOutside);
+	float RefractiveIndexOutside() const;
 
 private:
 	class Shader const &shader;
@@ -53,7 +57,7 @@ private:
 	std::unordered_map<std::string, Texture> textureProperties;
 
 	float reflectiveness;
-	float refractiveIndex;
+	float refractiveIndexInside, refractiveIndexOutside;
 };
 
 static_assert(std::is_copy_constructible_v<Material>);

@@ -242,7 +242,7 @@ Color RayTracer::TraceRay(
 
 	Material const &material = intersection->shape->Material();
 
-	float const indexOfRefraction = material.RefractiveIndex();
+	float const indexOfRefraction = material.RefractiveIndexInside();
 	if(indexOfRefraction > 0.f
 	   && state.bounceCount < configuration.maxReflectionBounces)
 	{
@@ -368,16 +368,13 @@ Color RayTracer::DoRefraction(
 	Vector3 const &normal = intersection.surfaceNormal;
 
 	Material const &material = intersection.shape->Material();
-	float indexOfRefraction = material.RefractiveIndex();
+	float iorInside = material.RefractiveIndexInside();
 
-	float lastIndex;
-	if(state.refractionStack.empty())
-		lastIndex = 1.0f;
-	else
-		lastIndex = state.refractionStack.back();
+	float iorOutside = material.RefractiveIndexOutside();
 
 	Vector3 const &incidence = ray.Direction();
 	float cosTheta = glm::dot(incidence, normal);
+	float const cosThetaOrig = cosTheta;
 	bool exiting = false;
 
 	Vector3 N = normal;
@@ -388,17 +385,17 @@ Color RayTracer::DoRefraction(
 	else
 	{
 		N = -N;
-		std::swap(lastIndex, indexOfRefraction);
+		std::swap(iorInside, iorOutside);
 		exiting = true;
 	}
 
 	if(debug)
 	{
 		std::cout << indent(state.bounceCount + 1)
-			<< "CosTheta: " << cosTheta << ",\n";
+			<< "CosTheta: " << cosThetaOrig << ",\n";
 	}
 
-	float const fresnel = FresnelFactor(cosTheta, iorOutside, iorInside);
+	float const fresnel = FresnelFactor(cosThetaOrig, iorOutside, iorInside);
 	Color refractedColor = Color::Black();
 
 	if(debug)
@@ -409,7 +406,7 @@ Color RayTracer::DoRefraction(
 
 	if(fresnel < 1.0f)
 	{
-		float const refractionRatio = lastIndex / indexOfRefraction;
+		float const refractionRatio = iorOutside / iorInside;
 
 		Vector3 const refractedDir = Refract(incidence, N, refractionRatio);
 
@@ -430,34 +427,17 @@ Color RayTracer::DoRefraction(
 				<< "},\n\n";
 		}
 
-		if(!exiting)
+		if(debug)
 		{
-			state.refractionStack.push_back(indexOfRefraction);
-
-			if(debug)
+			if(!exiting)
 				std::cout << indent(state.bounceCount + 1) << "Entering...\n";
-		}
-		else
-		{
-			// It's possible we start from the inside of the object,
-			// in which case we always leave. This probably yields incorrect
-			// results, but is better than a crash.
-			if(state.refractionStack.size() > 0)
-				state.refractionStack.pop_back();
-
-			if(debug)
+			else
 				std::cout << indent(state.bounceCount + 1) << "Leaving...\n";
 		}
-
-		size_t oldSize = state.refractionStack.size();
 
 		++state.bounceCount;
 		refractedColor = TraceRay(refractedRay, state, debug, farPlaneDistance);
 		--state.bounceCount;
-
-		// while?
-		if(state.refractionStack.size() == oldSize && oldSize != 0)
-			state.refractionStack.pop_back();
 
 		if(debug)
 		{
@@ -710,7 +690,7 @@ std::vector<Observer<Light const>> RayTracer::LightsAtIntersection(
 			float const intersectionDistance = glm::length2(intersectionToOrigin);
 
 			Material const &material = lightIntersection->shape->Material();
-			float const ior = material.RefractiveIndex();
+			float const ior = material.RefractiveIndexInside();
 
 			if(intersectionDistance > lightDistance)
 				unobstructedLights.push_back(&light);

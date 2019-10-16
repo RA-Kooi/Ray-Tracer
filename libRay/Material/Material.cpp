@@ -9,13 +9,15 @@ namespace LibRay::Materials
 Material::Material(
 	class Shader const &shader,
 	float reflectiveness,
-	float refractiveIndex)
+	float refractiveIndexInside,
+	float refractiveIndexOutside)
 : shader(shader)
 , floatProperties()
 , colorProperties()
 , textureProperties()
 , reflectiveness(Math::Clamp(reflectiveness, 0.f, 1.f))
-, refractiveIndex(refractiveIndex)
+, refractiveIndexInside(refractiveIndexInside)
+, refractiveIndexOutside(refractiveIndexOutside)
 {
 }
 
@@ -117,13 +119,23 @@ float Material::Reflectiveness() const
 	return reflectiveness;
 }
 
-void Material::RefractiveIndex(float newRefractiveIndex)
+void Material::RefractiveIndexInside(float newRefractiveIndexInside)
 {
-	refractiveIndex = newRefractiveIndex;
+	refractiveIndexInside = newRefractiveIndexInside;
 }
 
-float Material::RefractiveIndex() const
+float Material::RefractiveIndexInside() const
 {
-	return refractiveIndex;
+	return refractiveIndexInside;
+}
+
+void Material::RefractiveIndexOutside(float newRefractiveIndexOutside)
+{
+	refractiveIndexOutside = newRefractiveIndexOutside;
+}
+
+float Material::RefractiveIndexOutside() const
+{
+	return refractiveIndexOutside;
 }
 } // namespace LibRay::Materials

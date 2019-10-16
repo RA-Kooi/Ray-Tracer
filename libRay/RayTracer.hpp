@@ -53,13 +53,12 @@ public:
 		RayState() = default;
 
 	public:
-		std::vector<float> refractionStack;
 		std::uint8_t bounceCount = 0;
 	};
 
 	static_assert(std::is_copy_constructible_v<RayState>);
 	static_assert(std::is_copy_assignable_v<RayState>);
-	static_assert(!std::is_trivially_copyable_v<RayState>);
+	static_assert(std::is_trivially_copyable_v<RayState>);
 
 	static_assert(std::is_move_constructible_v<RayState>);
 	static_assert(std::is_move_assignable_v<RayState>);
