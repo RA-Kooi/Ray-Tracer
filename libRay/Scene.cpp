@@ -70,36 +70,47 @@ Scene::Scene(
 	material2.UpdateTextureProperty("diffuse", armTex);
 	Texture armBumpTex("Resources/Textures/NanoSuit/arm_showroom_ddn.png");
 	material2.UpdateTextureProperty("bump map", armBumpTex);
+	Texture armSpecTex("Resources/Textures/NanoSuit/arm_showroom_spec.png");
+	material2.UpdateTextureProperty("specular", armSpecTex);
 	materialStore.AddMaterial("Arm", material2);
 
 	Texture bodyTex("Resources/Textures/NanoSuit/body_dif.png");
 	material2.UpdateTextureProperty("diffuse", bodyTex);
 	Texture bodyBumpTex("Resources/Textures/NanoSuit/body_showroom_ddn.png");
 	material2.UpdateTextureProperty("bump map", bodyBumpTex);
+	Texture bodySpecTex("Resources/Textures/NanoSuit/body_showroom_spec.png");
+	material2.UpdateTextureProperty("specular", bodySpecTex);
 	materialStore.AddMaterial("Body", material2);
 
 	Texture glassTex("Resources/Textures/NanoSuit/glass_dif.png");
 	material2.UpdateTextureProperty("diffuse", glassTex);
 	Texture glassBumpTex("Resources/Textures/NanoSuit/glass_ddn.png");
 	material2.UpdateTextureProperty("bump map", glassBumpTex);
+	material2.UpdateTextureProperty("specular", Texture::White());
 	materialStore.AddMaterial("Glass", material2);
 
 	Texture handTex("Resources/Textures/NanoSuit/hand_dif.png");
 	material2.UpdateTextureProperty("diffuse", handTex);
 	Texture handBumpTex("Resources/Textures/NanoSuit/hand_showroom_ddn.png");
 	material2.UpdateTextureProperty("bump map", handBumpTex);
+	Texture handSpecTex("Resources/Textures/NanoSuit/hand_showroom_spec.png");
+	material2.UpdateTextureProperty("specular", handSpecTex);
 	materialStore.AddMaterial("Hand", material2);
 
 	Texture helmetTex("Resources/Textures/NanoSuit/helmet_dif.png");
 	material2.UpdateTextureProperty("diffuse", helmetTex);
 	Texture helmetBumpTex("Resources/Textures/NanoSuit/helmet_showroom_ddn.png");
 	material2.UpdateTextureProperty("bump map", helmetBumpTex);
+	Texture helmetSpecTex("Resources/Textures/NanoSuit/helmet_showroom_spec.png");
+	material2.UpdateTextureProperty("specular", helmetSpecTex);
 	materialStore.AddMaterial("Helmet", material2);
 
 	Texture legTex("Resources/Textures/NanoSuit/leg_dif.png");
 	material2.UpdateTextureProperty("diffuse", legTex);
 	Texture legBumpTex("Resources/Textures/NanoSuit/leg_showroom_ddn.png");
 	material2.UpdateTextureProperty("bump map", legBumpTex);
+	Texture legSpecTex("Resources/Textures/NanoSuit/leg_showroom_spec.png");
+	material2.UpdateTextureProperty("specular", legSpecTex);
 	materialStore.AddMaterial("Leg", material2);
 
 	LoadModel(
