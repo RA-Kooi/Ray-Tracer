@@ -22,8 +22,6 @@ Texture::Texture(
 , wrapMethodU(wrapMethodU)
 , wrapMethodV(wrapMethodV)
 {
-	stbi_ldr_to_hdr_gamma(1.0f);
-
 	stbi_set_flip_vertically_on_load(flipY);
 
 	int width, height, channels;

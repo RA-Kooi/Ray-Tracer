@@ -152,7 +152,12 @@ LibRay::Image NormalizeImage(LibRay::Image const &image)
 		normalizedImage.pixels.begin(),
 		[](Materials::Color const &color)
 		{
-			return color.Clamped();
+			Materials::Color out = color;
+			out.r = std::pow(out.r, 1.f / 2.2f);
+			out.g = std::pow(out.g, 1.f / 2.2f);
+			out.b = std::pow(out.b, 1.f / 2.2f);
+
+			return out.Clamped();
 		});
 
 	return normalizedImage;
