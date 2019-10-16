@@ -36,9 +36,10 @@ Color NormalVizShaderBump::Run(
 	Vector3 const bumpUV = bumpMap.Sample(uv.x, uv.y);
 	Vector3 const bumpUMinusOne = bumpMap.Sample(uv.x - 1.f, uv.y);
 	Vector3 const bumpVMinusOne = bumpMap.Sample(uv.x, uv.y - 1.f);
+	float const bumpStrength = material.FloatPropertyByName("bump strength");
 
 	Vector3 const normal = glm::normalize(
-		baseNormal
+		baseNormal * bumpStrength
 		+ (bumpUV - bumpUMinusOne) * tangent
 		+ (bumpUV - bumpVMinusOne) * biTangent);
 

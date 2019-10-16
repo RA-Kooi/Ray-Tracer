@@ -65,6 +65,7 @@ Scene::Scene(
 	Material material2(blinnPhongBump, 0.02f, 0.f);
 	material2.UpdateColorProperty("specular", Color::White());
 	material2.UpdateFloatProperty("phong exponent", mildlyShiny);
+	material2.UpdateFloatProperty("bump strength", 0.5f);
 
 	Texture armTex("Resources/Textures/NanoSuit/arm_dif.png");
 	material2.UpdateTextureProperty("diffuse", armTex);
