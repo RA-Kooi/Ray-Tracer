@@ -106,7 +106,7 @@ std::optional<Intersection> Sphere::Intersects(Ray const &ray) const
 		*this,
 		normal,
 		Transform::TransformTranslation(matrix, positionOnSphere),
-		UV(glm::normalize(normal)));
+		UV(positionOnSphere));
 }
 
 Containers::BoundingBox Sphere::CalculateBoundingBox() const
