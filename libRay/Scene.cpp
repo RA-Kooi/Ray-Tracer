@@ -6,6 +6,7 @@
 #include "Math/Vector.hpp"
 #include "Math/MathUtils.hpp"
 #include "Shaders/BlinnPhong.hpp"
+#include "Shaders/BlinnPhongBump.hpp"
 #include "Shapes/Model/Model.hpp"
 #include "Shapes/Plane.hpp"
 #include "Utilites.hpp"
@@ -42,6 +43,10 @@ Scene::Scene(
 		"Blinn-Phong",
 		std::make_unique<BlinnPhongShader>());
 
+	Shader const &blinnPhongBump = shaderStore.AddShader(
+		"Blinn-Phong Bump",
+		std::make_unique<BlinnPhongShaderBump>());
+
 	//constexpr float const eggshell = 10;
 	constexpr float const mildlyShiny = 100;
 	//constexpr float const shiny = 1000;
@@ -49,40 +54,53 @@ Scene::Scene(
 
 	Texture planeTex("Resources/Textures/1024x1024 Texel Density Texture 1.png");
 
-	Material material(blinnPhong, 0.f, 0.f);
+	Material material(blinnPhong, 0.1f, 0.f);
 	material.UpdateColorProperty("specular", Color::White());
 	material.UpdateFloatProperty("phong exponent", mildlyShiny);
 	material.UpdateTextureProperty("diffuse", planeTex);
-	material.Reflectiveness(0.1f);
 
 	MaterialStore::IndexType const planeMat =
-		materialStore.AddMaterial("Plane", material);
+		materialStore.AddMaterial("Plane", std::move(material));
 
-	material.Reflectiveness(0.05f);
+	Material material2(blinnPhongBump, 0.02f, 0.f);
+	material2.UpdateColorProperty("specular", Color::White());
+	material2.UpdateFloatProperty("phong exponent", mildlyShiny);
 
 	Texture armTex("Resources/Textures/NanoSuit/arm_dif.png");
-	material.UpdateTextureProperty("diffuse", armTex);
-	materialStore.AddMaterial("Arm", material);
+	material2.UpdateTextureProperty("diffuse", armTex);
+	Texture armBumpTex("Resources/Textures/NanoSuit/arm_showroom_ddn.png");
+	material2.UpdateTextureProperty("bump map", armBumpTex);
+	materialStore.AddMaterial("Arm", material2);
 
 	Texture bodyTex("Resources/Textures/NanoSuit/body_dif.png");
-	material.UpdateTextureProperty("diffuse", bodyTex);
-	materialStore.AddMaterial("Body", material);
+	material2.UpdateTextureProperty("diffuse", bodyTex);
+	Texture bodyBumpTex("Resources/Textures/NanoSuit/body_showroom_ddn.png");
+	material2.UpdateTextureProperty("bump map", bodyBumpTex);
+	materialStore.AddMaterial("Body", material2);
 
 	Texture glassTex("Resources/Textures/NanoSuit/glass_dif.png");
-	material.UpdateTextureProperty("diffuse", glassTex);
-	materialStore.AddMaterial("Glass", material);
+	material2.UpdateTextureProperty("diffuse", glassTex);
+	Texture glassBumpTex("Resources/Textures/NanoSuit/glass_ddn.png");
+	material2.UpdateTextureProperty("bump map", glassBumpTex);
+	materialStore.AddMaterial("Glass", material2);
 
 	Texture handTex("Resources/Textures/NanoSuit/hand_dif.png");
-	material.UpdateTextureProperty("diffuse", handTex);
-	materialStore.AddMaterial("Hand", material);
+	material2.UpdateTextureProperty("diffuse", handTex);
+	Texture handBumpTex("Resources/Textures/NanoSuit/hand_showroom_ddn.png");
+	material2.UpdateTextureProperty("bump map", handBumpTex);
+	materialStore.AddMaterial("Hand", material2);
 
 	Texture helmetTex("Resources/Textures/NanoSuit/helmet_dif.png");
-	material.UpdateTextureProperty("diffuse", helmetTex);
-	materialStore.AddMaterial("Helmet", material);
+	material2.UpdateTextureProperty("diffuse", helmetTex);
+	Texture helmetBumpTex("Resources/Textures/NanoSuit/helmet_showroom_ddn.png");
+	material2.UpdateTextureProperty("bump map", helmetBumpTex);
+	materialStore.AddMaterial("Helmet", material2);
 
 	Texture legTex("Resources/Textures/NanoSuit/leg_dif.png");
-	material.UpdateTextureProperty("diffuse", legTex);
-	materialStore.AddMaterial("Leg", material);
+	material2.UpdateTextureProperty("diffuse", legTex);
+	Texture legBumpTex("Resources/Textures/NanoSuit/leg_showroom_ddn.png");
+	material2.UpdateTextureProperty("bump map", legBumpTex);
+	materialStore.AddMaterial("Leg", material2);
 
 	LoadModel(
 		"Resources/Models/nanosuit.obj",
