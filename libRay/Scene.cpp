@@ -55,9 +55,9 @@ Scene::Scene(
 	Texture planeTex("Resources/Textures/1024x1024 Texel Density Texture 1.png");
 
 	Material material(blinnPhong, 0.1f, 0.f);
-	material.UpdateColorProperty("specular", Color::White());
 	material.UpdateFloatProperty("phong exponent", mildlyShiny);
 	material.UpdateTextureProperty("diffuse", planeTex);
+	material.UpdateTextureProperty("specular", Texture::White());
 
 	MaterialStore::IndexType const planeMat =
 		materialStore.AddMaterial("Plane", std::move(material));

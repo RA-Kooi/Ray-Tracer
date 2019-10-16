@@ -26,14 +26,17 @@ Color BlinnPhongShader::Run(
 {
 	Shape const &shape = *intersection.shape;
 	Material const &material = shape.Material();
-	float const phongExponent = material.FloatPropertyByName("phong exponent");
-	Color const &baseSpecular = material.ColorPropertyByName("specular");
 
 	Vector3 const &normal = intersection.surfaceNormal;
 	Vector3 const &intersectionPos = intersection.worldPosition;
 	Vector2 const &uv = intersection.uv;
+
 	Color const &diffuse =
 		material.TexturePropertyByName("diffuse").Sample(uv.x, uv.y);
+
+	Color const &baseSpecular =
+		material.TexturePropertyByName("specular").Sample(uv.x, uv.y);
+	float const phongExponent = material.FloatPropertyByName("phong exponent");
 
 	Color result = ambientLight * ambientIntensity;
 

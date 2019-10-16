@@ -26,8 +26,6 @@ Color BlinnPhongShaderBump::Run(
 {
 	Shape const &shape = *intersection.shape;
 	Material const &material = shape.Material();
-	float const phongExponent = material.FloatPropertyByName("phong exponent");
-	Color const &baseSpecular = material.ColorPropertyByName("specular");
 
 	// N'u,v = N + (Bu,v - Bu-1,v)t + (Bu,v - Bu,v-1)b;
 
@@ -49,6 +47,10 @@ Color BlinnPhongShaderBump::Run(
 	Vector3 const &intersectionPos = intersection.worldPosition;
 	Color const &diffuse =
 		material.TexturePropertyByName("diffuse").Sample(uv.x, uv.y);
+
+	Color const &baseSpecular =
+		material.TexturePropertyByName("specular").Sample(uv.x, uv.y);
+	float const phongExponent = material.FloatPropertyByName("phong exponent");
 
 	Color result = ambientLight * ambientIntensity;
 
