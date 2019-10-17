@@ -142,22 +142,37 @@ int main()
 LibRay::Image NormalizeImage(LibRay::Image const &image)
 {
 	using namespace LibRay;
+	using namespace LibRay::Materials;
 
 	Image normalizedImage = image;
 
-	// Clamp all colors.
+	// Saturate and clamp all colors.
 	std::transform(
 		normalizedImage.pixels.begin(),
 		normalizedImage.pixels.end(),
 		normalizedImage.pixels.begin(),
-		[](Materials::Color const &color)
+		[](Color const &color)
 		{
-			Materials::Color out = color;
+			auto const &ACESFilm = [](Color const &color) -> Color
+			{
+				float a = 2.51f;
+				float b = 0.03f;
+				float c = 2.43f;
+				float d = 0.59f;
+				float e = 0.14f;
+
+				Color const partA = (color * (a * color + b));
+				Color const partB = (color * (c * color + d) + e);
+
+				return (partA / partB).Clamped();
+			};
+
+			Color out = ACESFilm(color);
 			out.r = std::pow(out.r, 1.f / 2.2f);
 			out.g = std::pow(out.g, 1.f / 2.2f);
 			out.b = std::pow(out.b, 1.f / 2.2f);
 
-			return out.Clamped();
+			return out;
 		});
 
 	return normalizedImage;
