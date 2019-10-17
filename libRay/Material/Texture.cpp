@@ -132,8 +132,8 @@ Color const &Texture::Sample(float u, float v) const
 	{
 	case WrappingMethod::Repeat:
 	{
-		float const absU = std::abs(u);
-		u = absU - int(absU);
+		u = u - int(u);
+		u = u >= 0.f ? u : 1.f + u;
 	} break;
 	case WrappingMethod::Clamp:
 	{
@@ -145,8 +145,8 @@ Color const &Texture::Sample(float u, float v) const
 	{
 	case WrappingMethod::Repeat:
 	{
-		float const absV = std::abs(v);
-		v = absV - int(absV);
+		v = v - int(v);
+		v = v >= 0.f ? v : 1.f + v;
 	} break;
 	case WrappingMethod::Clamp:
 	{

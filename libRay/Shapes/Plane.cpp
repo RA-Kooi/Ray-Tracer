@@ -35,8 +35,8 @@ std::optional<Intersection> Plane::Intersects(Ray const &ray) const
 				* distanceToIntersection;
 
 		Vector2 const uv(
-			std::fmod(localPoint.x, 10.f),
-			-std::fmod(localPoint.z, 10.f));
+			std::fmod(localPoint.x / 10.f, 100.f),
+			-std::fmod(localPoint.z / 10.f, 100.f));
 
 		Matrix4x4 const &matrix = transform.Matrix();
 
@@ -47,7 +47,7 @@ std::optional<Intersection> Plane::Intersects(Ray const &ray) const
 			matrix,
 			normal);
 
-		return Intersection(*this, translatedNormal, pointOnPlane, uv / 20.f);
+		return Intersection(*this, translatedNormal, pointOnPlane, uv);
 	}
 
 	return std::nullopt;
