@@ -85,7 +85,7 @@ Containers::BoundingBox Model::CalculateBoundingBox() const
 		glm::max(worldBackTopLeft, worldBackTopRight)))))));
 
 	return Containers::BoundingBox(
-		(max - min) * 0.5f,
+		(max - min) * 0.505f,
 		transform.Position() + bvh.RootBoundingBox().Position());
 }
 
