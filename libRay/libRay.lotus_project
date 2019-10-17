@@ -15,7 +15,7 @@
 
 	"rpath":["$ORIGIN"],
 
-	"use":["glm", "stb", "tinyobjloader"],
+	"use":["glm", "stb", "tinyobjloader", "pthread"],
 
 	"sources":
 	[
