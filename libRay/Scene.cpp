@@ -58,7 +58,7 @@ Scene::Scene(
 	//constexpr float const shiny = 1000;
 	//constexpr float const veryShiny = 10'000;
 
-	Texture planeTex("Resources/Textures/1024x1024 Texel Density Texture 1.png");
+	Texture planeTex("Resources/Textures/seamless_tileable_grass.jpg");
 
 	Material material(blinnPhong, 0.001f, 0.f);
 	material.UpdateFloatProperty("phong exponent", mildlyShiny);
@@ -75,7 +75,7 @@ Scene::Scene(
 	MaterialStore::IndexType const envMapMat =
 		materialStore.AddMaterial("Environment Map", std::move(material3));
 
-	Material material2(blinnPhongBump, 0.02f, 0.f);
+	Material material2(blinnPhongBump, 0.002f, 0.f);
 	material2.UpdateColorProperty("specular", Color::White());
 	material2.UpdateFloatProperty("phong exponent", mildlyShiny);
 	material2.UpdateFloatProperty("bump strength", 0.5f);
