@@ -429,6 +429,34 @@ std::optional<Intersection> BVHNode<T>::Traverse(Ray const &ray) const
 	}
 
 	return std::nullopt;
+
+	/*std::optional<Intersection> i1, i2;
+
+	if(child1.node)
+		if(child1.node->Intersects(ray) >= 0.f)
+			i1 = child1.node->Traverse(ray);
+
+	if(child2)
+		if(child2->Intersects(ray) >= 0.f)
+			i2 = child2->Traverse(ray);
+
+	if(i1 && i2)
+	{
+		Vector3 const &i1P = i1->worldPosition;
+		Vector3 const &i2P = i2->worldPosition;
+
+		float const distI1 = glm::length2(ray.Origin() - i1P);
+		float const distI2 = glm::length2(ray.Origin() - i2P);
+
+		if(distI1 < distI2)
+			return i1;
+		else
+			return i2;
+	}
+	else if(i1)
+		return i1;
+
+	return i2;*/
 }
 
 template<typename T>
