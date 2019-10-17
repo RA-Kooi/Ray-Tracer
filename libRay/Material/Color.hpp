@@ -49,9 +49,15 @@ LIBRAY_API Color operator-(Color const &a, Color const &b);
 LIBRAY_API Color operator*(Color const &a, Color const &b);
 LIBRAY_API Color operator/(Color const &a, Color const &b);
 
+LIBRAY_API Color operator+(Color const &a, float value);
+LIBRAY_API Color operator+(float value, Color const &b);
+LIBRAY_API Color operator-(Color const &a, float value);
+LIBRAY_API Color operator-(float value, Color const &b);
+
 LIBRAY_API Color operator*(Color const &a, float value);
 LIBRAY_API Color operator*(float value, Color const &b);
 LIBRAY_API Color operator/(Color const &a, float value);
+LIBRAY_API Color operator/(float value, Color const &b);
 
 static_assert(std::is_copy_constructible_v<Color>);
 static_assert(std::is_copy_assignable_v<Color>);

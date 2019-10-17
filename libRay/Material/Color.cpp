@@ -113,6 +113,26 @@ Color operator/(Color const &a, Color const &b)
 	return Color(a.r / b.r, a.g / b.g, a.b / b.b);
 }
 
+Color operator+(Color const &a, float value)
+{
+	return Color(a.r + value, a.g + value, a.b + value);
+}
+
+Color operator+(float value, Color const &b)
+{
+	return b + value;
+}
+
+Color operator-(Color const &a, float value)
+{
+	return Color(a.r - value, a.g - value, a.b - value);
+}
+
+Color operator-(float value, Color const &b)
+{
+	return Color(value - b.r, value - b.g, value - b.b);
+}
+
 Color operator*(Color const &a, float value)
 {
 	return Color(a.r * value, a.g * value, a.b * value);
@@ -126,6 +146,11 @@ Color operator*(float value, Color const &b)
 Color operator/(Color const &a, float value)
 {
 	return Color(a.r / value, a.g / value, a.b / value);
+}
+
+Color operator/(float value, Color const &b)
+{
+	return Color(value / b.r, value / b.g, value / b.b);
 }
 
 Color Color::Red()
