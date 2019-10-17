@@ -63,6 +63,8 @@ Install the following (development) packages:
 ./waf
 ```
 
+To compile with GCC instead, add `--toolset linux_x86-64_gcc` to the configure command line.
+
 ## Linux (headless)
 
 Install the following (development) packages:
@@ -74,6 +76,8 @@ Install the following (development) packages:
 ./waf configure --target-configuration release --without-glfw-3 --without-OpenGL
 ./waf
 ```
+
+To compile with GCC instead, add `--toolset linux_x86-64_gcc` to the configure command line.
 
 ## Windows
 
