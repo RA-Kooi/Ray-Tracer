@@ -17,6 +17,7 @@ public:
 	enum class WrappingMethod
 	{
 		Repeat,
+		MirrorRepeat,
 		Clamp
 	};
 

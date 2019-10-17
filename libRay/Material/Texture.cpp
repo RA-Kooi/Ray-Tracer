@@ -135,6 +135,17 @@ Color const &Texture::Sample(float u, float v) const
 		u = u - int(u);
 		u = u >= 0.f ? u : 1.f + u;
 	} break;
+	case WrappingMethod::MirrorRepeat:
+	{
+		float const absU = std::abs(u);
+		int wrapCount = int(absU);
+
+		bool flip = wrapCount % 2;
+
+		u = u - int(u);
+		u = u >= 0.f ? u : 1.f + u;
+		u = flip ? 1.f - u : u;
+	} break;
 	case WrappingMethod::Clamp:
 	{
 		u = Math::Clamp(u, 0.f, 1.f);
@@ -147,6 +158,17 @@ Color const &Texture::Sample(float u, float v) const
 	{
 		v = v - int(v);
 		v = v >= 0.f ? v : 1.f + v;
+	} break;
+	case WrappingMethod::MirrorRepeat:
+	{
+		float const absV = std::abs(v);
+		int wrapCount = int(absV);
+
+		bool flip = wrapCount % 2;
+
+		v = v - int(v);
+		v = v >= 0.f ? v : 1.f + v;
+		v = flip ? 1.f - v : v;
 	} break;
 	case WrappingMethod::Clamp:
 	{
