@@ -71,8 +71,8 @@ int main()
 	using namespace LibRay::Math;
 
 	Camera camera(
-		Transform(Vector3(0, 5, 7), Vector3(-Math::PI * 0.15f, 0, 0)),
-		Vector2st(1280, 720),
+		Transform(Vector3(0, 5, 10), Vector3(-Math::PI * 0.15f, 0, 0)),
+		Vector2st(640, 480),
 		Math::Radians(90.f),
 		1.f,
 		500.f);

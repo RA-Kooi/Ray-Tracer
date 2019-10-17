@@ -78,6 +78,16 @@ Color &Color::operator=(Math::Vector3 const &other)
 	return *this;
 }
 
+bool Color::operator==(Color const &other) const
+{
+	return (r - other.r) == 0.f && (g - other.g) == 0.f && (b - other.b) == 0.f;
+}
+
+bool Color::operator!=(Color const &other) const
+{
+	return !(*this == other);
+}
+
 Color &Color::Clamp()
 {
 	r = Math::Clamp(r, 0.0f, 1.0f);

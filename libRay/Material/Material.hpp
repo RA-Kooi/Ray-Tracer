@@ -23,6 +23,7 @@ public:
 		Shader const &shader,
 		float reflectiveness = 0.f,
 		float refractiveIndexInside = 0.f,
+		Color const &absorbtion = Color::White(),
 		float refractiveIndexOutside = 1.f);
 
 	Material(Material const &) = default;
@@ -50,6 +51,9 @@ public:
 	void RefractiveIndexOutside(float newRefractiveIndexOutside);
 	float RefractiveIndexOutside() const;
 
+	Color const &Absorbtion() const;
+	void Absorbtion(Color const &newAbsorbtion);
+
 private:
 	class Shader const &shader;
 	std::unordered_map<std::string, float> floatProperties;
@@ -58,6 +62,7 @@ private:
 
 	float reflectiveness;
 	float refractiveIndexInside, refractiveIndexOutside;
+	Color absorbtion;
 };
 
 static_assert(std::is_copy_constructible_v<Material>);

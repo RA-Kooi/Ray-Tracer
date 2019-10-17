@@ -31,6 +31,9 @@ public:
 
 	Color &operator=(Math::Vector3 const &other);
 
+	bool operator==(Color const &other) const;
+	bool operator!=(Color const &other) const;
+
 	Color &Clamp();
 	Color Clamped() const;
 

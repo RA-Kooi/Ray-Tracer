@@ -45,10 +45,6 @@ Scene::Scene(
 		"Blinn-Phong",
 		std::make_unique<BlinnPhongShader>());
 
-	Shader const &blinnPhongBump = shaderStore.AddShader(
-		"Blinn-Phong Bump",
-		std::make_unique<BlinnPhongShaderBump>());
-
 	Shader const &envMap = shaderStore.AddShader(
 		"Environment Mapping",
 		std::make_unique<EnvironmentMappingShader>());
@@ -66,7 +62,13 @@ Scene::Scene(
 	material.UpdateTextureProperty("specular", Texture::White());
 
 	MaterialStore::IndexType const planeMat =
-		materialStore.AddMaterial("Plane", std::move(material));
+		materialStore.AddMaterial("Plane", material);
+
+	material.RefractiveIndexInside(1.5f);
+	material.Absorbtion(Color(0.6f, 0.4f, 0.1f));
+
+	MaterialStore::IndexType const sphereMat =
+		materialStore.AddMaterial("Sphere", material);
 
 	Material material3(envMap);
 	Texture envMapTex("Resources/Textures/blue_grotto_4k.hdr");
@@ -74,62 +76,6 @@ Scene::Scene(
 
 	MaterialStore::IndexType const envMapMat =
 		materialStore.AddMaterial("Environment Map", std::move(material3));
-
-	Material material2(blinnPhongBump, 0.002f, 0.f);
-	material2.UpdateColorProperty("specular", Color::White());
-	material2.UpdateFloatProperty("phong exponent", mildlyShiny);
-	material2.UpdateFloatProperty("bump strength", 0.5f);
-
-	Texture armTex("Resources/Textures/NanoSuit/arm_dif.png");
-	material2.UpdateTextureProperty("diffuse", armTex);
-	Texture armBumpTex("Resources/Textures/NanoSuit/arm_showroom_ddn.png");
-	material2.UpdateTextureProperty("bump map", armBumpTex);
-	Texture armSpecTex("Resources/Textures/NanoSuit/arm_showroom_spec.png");
-	material2.UpdateTextureProperty("specular", armSpecTex);
-	materialStore.AddMaterial("Arm", material2);
-
-	Texture bodyTex("Resources/Textures/NanoSuit/body_dif.png");
-	material2.UpdateTextureProperty("diffuse", bodyTex);
-	Texture bodyBumpTex("Resources/Textures/NanoSuit/body_showroom_ddn.png");
-	material2.UpdateTextureProperty("bump map", bodyBumpTex);
-	Texture bodySpecTex("Resources/Textures/NanoSuit/body_showroom_spec.png");
-	material2.UpdateTextureProperty("specular", bodySpecTex);
-	materialStore.AddMaterial("Body", material2);
-
-	Texture glassTex("Resources/Textures/NanoSuit/glass_dif.png");
-	material2.UpdateTextureProperty("diffuse", glassTex);
-	Texture glassBumpTex("Resources/Textures/NanoSuit/glass_ddn.png");
-	material2.UpdateTextureProperty("bump map", glassBumpTex);
-	material2.UpdateTextureProperty("specular", Texture::White());
-	materialStore.AddMaterial("Glass", material2);
-
-	Texture handTex("Resources/Textures/NanoSuit/hand_dif.png");
-	material2.UpdateTextureProperty("diffuse", handTex);
-	Texture handBumpTex("Resources/Textures/NanoSuit/hand_showroom_ddn.png");
-	material2.UpdateTextureProperty("bump map", handBumpTex);
-	Texture handSpecTex("Resources/Textures/NanoSuit/hand_showroom_spec.png");
-	material2.UpdateTextureProperty("specular", handSpecTex);
-	materialStore.AddMaterial("Hand", material2);
-
-	Texture helmetTex("Resources/Textures/NanoSuit/helmet_dif.png");
-	material2.UpdateTextureProperty("diffuse", helmetTex);
-	Texture helmetBumpTex("Resources/Textures/NanoSuit/helmet_showroom_ddn.png");
-	material2.UpdateTextureProperty("bump map", helmetBumpTex);
-	Texture helmetSpecTex("Resources/Textures/NanoSuit/helmet_showroom_spec.png");
-	material2.UpdateTextureProperty("specular", helmetSpecTex);
-	materialStore.AddMaterial("Helmet", material2);
-
-	Texture legTex("Resources/Textures/NanoSuit/leg_dif.png");
-	material2.UpdateTextureProperty("diffuse", legTex);
-	Texture legBumpTex("Resources/Textures/NanoSuit/leg_showroom_ddn.png");
-	material2.UpdateTextureProperty("bump map", legBumpTex);
-	Texture legSpecTex("Resources/Textures/NanoSuit/leg_showroom_spec.png");
-	material2.UpdateTextureProperty("specular", legSpecTex);
-	materialStore.AddMaterial("Leg", material2);
-
-	LoadModel(
-		"Resources/Models/nanosuit.obj",
-		Transform(Vector3(0, -10, 0), Vector3(0), Vector3(1)));
 
 	auto plane = std::make_unique<Plane>(
 		Transform(Vector3(0, -10, 0)),
@@ -144,6 +90,13 @@ Scene::Scene(
 		envMapMat);
 
 	shapes.push_back(std::move(environment));
+
+	auto sphere = std::make_unique<Sphere>(
+		Transform(Vector3(0, -5, -10), Vector3(0), Vector3(10)),
+		materialStore,
+		sphereMat);
+
+	shapes.push_back(std::move(sphere));
 
 	watch.Stop();
 

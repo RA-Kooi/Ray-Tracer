@@ -449,16 +449,11 @@ Color RayTracer::DoRefraction(
 	float iorOutside = material.RefractiveIndexOutside();
 
 	Vector3 const &incidence = ray.Direction();
-	float cosTheta = glm::dot(incidence, normal);
-	float const cosThetaOrig = cosTheta;
+	float const cosTheta = glm::dot(incidence, normal);
 	bool exiting = false;
 
 	Vector3 N = normal;
-	if(cosTheta < 0)
-	{
-		cosTheta = -cosTheta;
-	}
-	else
+	if(cosTheta > 0)
 	{
 		N = -N;
 		std::swap(iorInside, iorOutside);
@@ -468,10 +463,10 @@ Color RayTracer::DoRefraction(
 	if(debug)
 	{
 		std::cout << indent(state.bounceCount + 1)
-			<< "CosTheta: " << cosThetaOrig << ",\n";
+			<< "CosTheta: " << cosTheta << ",\n";
 	}
 
-	float const fresnel = FresnelFactor(cosThetaOrig, iorOutside, iorInside);
+	float const fresnel = FresnelFactor(cosTheta, iorOutside, iorInside);
 	Color refractedColor = Color::Black();
 
 	if(debug)
@@ -486,7 +481,7 @@ Color RayTracer::DoRefraction(
 
 		Vector3 const refractedDir = Refract(incidence, N, refractionRatio);
 
-		Ray const refractedRay =
+		Ray refractedRay =
 			Ray(intersectionPos - N * bias, refractedDir);
 
 		if(debug)
@@ -515,6 +510,76 @@ Color RayTracer::DoRefraction(
 		refractedColor = TraceRay(refractedRay, state, debug, farPlaneDistance);
 		--state.bounceCount;
 
+		if(!exiting && material.Absorbtion() != Color::White())
+		{
+			Vector3 exitPoint;
+			while(true)
+			{
+				std::optional<Intersection> isect = ShootRay(refractedRay);
+				if(!isect)
+					goto afterAbsorb;
+
+				Material const &otherMaterial = isect->shape->Material();
+
+				float otherIorInside = otherMaterial.RefractiveIndexInside();
+				if(otherIorInside > 0.f)
+				{
+					float otherIorOutside = otherMaterial.RefractiveIndexOutside();
+
+					Vector3 otherNormal = isect->surfaceNormal;
+					float const cosThetaOther = glm::dot(incidence, otherNormal);
+
+					exiting = false;
+					if(cosThetaOther > 0)
+					{
+						otherNormal = - otherNormal;
+						std::swap(otherIorInside, otherIorOutside);
+						exiting = true;
+					}
+
+					float const fresnelOther = FresnelFactor(
+						cosThetaOther,
+						otherIorOutside,
+						otherIorInside);
+
+					if(fresnelOther < 1.f && !exiting)
+					{
+						float const otherRefractionRatio = otherIorOutside
+							/ otherIorInside;
+
+						Vector3 const otherRefractedDir = Refract(
+							incidence,
+							otherNormal,
+							otherRefractionRatio);
+
+						refractedRay = Ray(
+							isect->worldPosition - otherNormal * bias,
+							otherRefractedDir);
+
+						continue;
+					}
+					else if(fresnelOther == 1.f)
+					{
+						refractedRay = ReflectRay(
+							refractedRay,
+							isect->worldPosition,
+							otherNormal);
+
+						continue;
+					}
+
+					break;
+				}
+
+				exitPoint = isect->worldPosition;
+			}
+
+			refractedColor *= glm::exp(
+				Vector3(-material.Absorbtion())
+				* glm::length(intersectionPos - exitPoint));
+		}
+
+afterAbsorb:
 		if(debug)
 		{
 			std::cout << indent(state.bounceCount + 1)

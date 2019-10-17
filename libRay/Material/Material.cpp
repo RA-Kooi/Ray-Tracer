@@ -10,6 +10,7 @@ Material::Material(
 	class Shader const &shader,
 	float reflectiveness,
 	float refractiveIndexInside,
+	Color const &absorbtion,
 	float refractiveIndexOutside)
 : shader(shader)
 , floatProperties()
@@ -18,6 +19,7 @@ Material::Material(
 , reflectiveness(Math::Clamp(reflectiveness, 0.f, 1.f))
 , refractiveIndexInside(refractiveIndexInside)
 , refractiveIndexOutside(refractiveIndexOutside)
+, absorbtion(absorbtion)
 {
 }
 
@@ -137,5 +139,15 @@ void Material::RefractiveIndexOutside(float newRefractiveIndexOutside)
 float Material::RefractiveIndexOutside() const
 {
 	return refractiveIndexOutside;
+}
+
+Color const &Material::Absorbtion() const
+{
+	return absorbtion;
+}
+
+void Material::Absorbtion(Color const &newAbsorbtion)
+{
+	absorbtion = newAbsorbtion;
 }
 } // namespace LibRay::Materials
