@@ -7,8 +7,10 @@
 #include "Math/MathUtils.hpp"
 #include "Shaders/BlinnPhong.hpp"
 #include "Shaders/BlinnPhongBump.hpp"
+#include "Shaders/EnvironmentMapping.hpp"
 #include "Shapes/Model/Model.hpp"
 #include "Shapes/Plane.hpp"
+#include "Shapes/Sphere.hpp"
 #include "Utilites.hpp"
 
 namespace LibRay
@@ -47,6 +49,10 @@ Scene::Scene(
 		"Blinn-Phong Bump",
 		std::make_unique<BlinnPhongShaderBump>());
 
+	Shader const &envMap = shaderStore.AddShader(
+		"Environment Mapping",
+		std::make_unique<EnvironmentMappingShader>());
+
 	//constexpr float const eggshell = 10;
 	constexpr float const mildlyShiny = 100;
 	//constexpr float const shiny = 1000;
@@ -54,13 +60,20 @@ Scene::Scene(
 
 	Texture planeTex("Resources/Textures/1024x1024 Texel Density Texture 1.png");
 
-	Material material(blinnPhong, 0.1f, 0.f);
+	Material material(blinnPhong, 0.001f, 0.f);
 	material.UpdateFloatProperty("phong exponent", mildlyShiny);
 	material.UpdateTextureProperty("diffuse", planeTex);
 	material.UpdateTextureProperty("specular", Texture::White());
 
 	MaterialStore::IndexType const planeMat =
 		materialStore.AddMaterial("Plane", std::move(material));
+
+	Material material3(envMap);
+	Texture envMapTex("Resources/Textures/blue_grotto_4k.hdr");
+	material3.UpdateTextureProperty("diffuse", envMapTex);
+
+	MaterialStore::IndexType const envMapMat =
+		materialStore.AddMaterial("Environment Map", std::move(material3));
 
 	Material material2(blinnPhongBump, 0.02f, 0.f);
 	material2.UpdateColorProperty("specular", Color::White());
@@ -124,6 +137,13 @@ Scene::Scene(
 		planeMat);
 
 	shapes.push_back(std::move(plane));
+
+	auto environment = std::make_unique<Sphere>(
+		Transform(camera.Transform().Position(), Vector3(0, Math::PI * 0.5f, 0), Vector3(100)),
+		materialStore,
+		envMapMat);
+
+	shapes.push_back(std::move(environment));
 
 	watch.Stop();
 
