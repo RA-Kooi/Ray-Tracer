@@ -2,9 +2,6 @@
 #include <chrono>
 #include <cstdint>
 #include <cstdio>
-#ifdef __STDC_LIB_EXT1__
-#define __STDC_WANT_LIB_EXT1__ 1
-#endif
 #include <ctime>
 #include <iomanip>
 #include <memory>
@@ -13,6 +10,10 @@
 #include <utility>
 
 #ifdef ENABLE_GLFW
+#ifdef _WIN32
+#include <Windows.h>
+#endif
+
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #undef APIENTRY
@@ -209,7 +210,7 @@ std::pair<bool, std::string> WriteImage(LibRay::Image const &normalizedImage)
 	std::time_t now = clock::to_time_t(clock::now());
 	std::tm buf;
 
-#if defined(__STDC_LIB_EXT1__) || defined(__MINGW64__)
+#if defined(_WIN32)
 	localtime_s(&buf, &now);
 #else
 	localtime_r(&now, &buf);

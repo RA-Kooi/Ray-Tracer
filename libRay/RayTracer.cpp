@@ -26,9 +26,9 @@ using namespace Shapes;
 
 constexpr float const bias = 0.005f;
 
-static std::string indent(size_t n)
+static std::string indent(int n)
 {
-	return std::string(n, '\t');
+	return std::string(size_t(n), '\t');
 }
 
 RayTracerConfiguration::RayTracerConfiguration(
@@ -136,6 +136,7 @@ Image RayTracer::Trace() const
 
 	Threading::TaskProcessor scheduler(configuration.threadCount);
 
+	using ssize_t = std::make_signed_t<size_t>;
 	std::lldiv_t const xSplit = std::lldiv(ssize_t(screenSize.x), 64);
 
 	std::lldiv_t const ySplit = std::lldiv(ssize_t(screenSize.y), 64);
@@ -238,7 +239,7 @@ void RayTracer::TraceChunk(
 				pixel += TraceRay(ray, state, false, worldFarDistance);
 			}
 
-			pixel /= sampleCount;
+			pixel /= float(sampleCount);
 
 			output.pixels[y * screenSize.x + x] = pixel;
 		}

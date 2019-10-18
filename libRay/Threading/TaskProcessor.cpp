@@ -1,5 +1,6 @@
 #include "TaskProcessor.hpp"
 
+#include <algorithm>
 #include <cassert>
 #include <thread>
 
