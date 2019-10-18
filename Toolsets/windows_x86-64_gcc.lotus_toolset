@@ -1,0 +1,61 @@
+{
+	"cc":"gcc",
+	"cc_path":"gcc.exe",
+
+	"cxx":"g++",
+	"cxx_path":"g++.exe",
+
+	"ar_path":"ar.exe",
+
+	"system_include_flags":["-isystem"],
+	"system_includes":[],
+
+	"defines":
+	{
+		"base":["UNICODE", "_UNICODE"],
+		"debug":["DEBUG", "_DEBUG", "EA_DEBUG"],
+		"release":["NDEBUG"]
+	},
+
+	"cc_flags":
+	[
+		"-std=c11",
+		"-march=native",
+		"-ffunction-sections",
+		"-fdata-sections",
+		"-Wall",
+		"-Wextra",
+		"-pedantic",
+		"-Werror"
+	],
+	"cc_flags_debug":["-Og", "-ggdb3"],
+	"cc_flags_release":["-O3", "-ffast-math"],
+
+	"cxx_flags":
+	[
+		"-std=c++17",
+		"-march=native",
+		"-fno-rtti",
+		"-fexceptions",
+		"-ffunction-sections",
+		"-fdata-sections",
+		"-Wall",
+		"-Wextra",
+		"-fpermissive",
+		"-Wno-class-memaccess"
+	],
+	"cxx_flags_debug":["-Og", "-ggdb3"],
+	"cxx_flags_release":["-O3", "-ffast-math"],
+
+	"stlib_flags":["rcs"],
+	"stlib_path":[],
+
+	"ld_flags":["-municode"],
+	"ld_flags_debug":["-g"],
+	"ld_flags_release":["-Wl,-s", "-Wl,-gc-sections"],
+
+	"shlib_flags":["-shared"],
+	"shlib_path":[],
+
+	"exe_flags":["-mconsole"]
+}
