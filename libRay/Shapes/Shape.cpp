@@ -1,26 +1,9 @@
 #include "Shape.hpp"
 
-#include "Model/ModelTriangle.hpp"
-
-using namespace LibRay::Materials;
-using namespace LibRay::Math;
-
 namespace LibRay::Shapes
 {
-template<typename T>
-Vector3 const BaseShape<T>::Position() const
-{
-	return static_cast<T const &>(*this).PositionInternal();
-}
-
-template<typename T>
-BaseShape<T>::~BaseShape() noexcept = default;
-
-template<typename T>
-bool BaseShape<T>::IsBoundable() const
-{
-	return true;
-}
+using namespace LibRay::Materials;
+using namespace LibRay::Math;
 
 Shape::Shape(
 	class Transform const &transform,
@@ -54,7 +37,4 @@ Vector3 const Shape::PositionInternal() const
 {
 	return transform.Position();
 }
-
-template class BaseShape<Shape>;
-template class BaseShape<ModelTriangle>;
 } // namespace LibRay::Shapes

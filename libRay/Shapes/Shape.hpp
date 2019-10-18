@@ -25,10 +25,8 @@ class Intersection;
 
 namespace Shapes
 {
-class ModelTriangle;
-
 template<typename T>
-class LIBRAY_API BaseShape
+class BaseShape
 {
 public:
 	BaseShape(BaseShape const &other) = default;
@@ -78,9 +76,6 @@ protected:
 	Materials::MaterialStore::IndexType materialIndex;
 };
 
-extern template class BaseShape<Shape>;
-extern template class BaseShape<ModelTriangle>;
-
 static_assert(!std::is_copy_constructible_v<Shape>);
 static_assert(!std::is_copy_assignable_v<Shape>);
 static_assert(!std::is_trivially_copyable_v<Shape>);
@@ -96,5 +91,10 @@ static_assert(!std::is_move_constructible_v<BaseShape<Shape>>);
 static_assert(std::is_move_assignable_v<BaseShape<Shape>>);
 } // namespace Shapes
 } // namespace LibRay
+
+
+#if !defined(VIM_WORKAROUND)
+#include "Shape_impl.hpp"
+#endif
 
 #endif // f4ffcf96_123c_4559_9031_f794398a0fe5

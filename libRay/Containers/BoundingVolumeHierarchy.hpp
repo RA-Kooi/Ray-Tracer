@@ -50,9 +50,6 @@ private:
 	ShapeVec<T> leafs;
 };
 
-extern template class BVHLeaf<Shapes::Shape>;
-extern template class BVHLeaf<Shapes::ModelTriangle>;
-
 static_assert(std::is_copy_constructible_v<BVHLeaf<Shapes::Shape>>);
 static_assert(std::is_copy_assignable_v<BVHLeaf<Shapes::Shape>>);
 static_assert(!std::is_trivially_copyable_v<BVHLeaf<Shapes::Shape>>);
@@ -61,7 +58,7 @@ static_assert(std::is_move_constructible_v<BVHLeaf<Shapes::Shape>>);
 static_assert(std::is_move_assignable_v<BVHLeaf<Shapes::Shape>>);
 
 template<typename T>
-class LIBRAY_API BVHNode final: public BoundingBox
+class BVHNode final: public BoundingBox
 {
 public:
 	BVHNode(BoundingBox &&boundingBox);
@@ -94,9 +91,6 @@ private:
 	std::unique_ptr<BVHNode> child2;
 };
 
-extern template class BVHNode<Shapes::Shape>;
-extern template class BVHNode<Shapes::ModelTriangle>;
-
 static_assert(!std::is_copy_constructible_v<BVHNode<Shapes::Shape>>);
 static_assert(!std::is_copy_assignable_v<BVHNode<Shapes::Shape>>);
 static_assert(!std::is_trivially_copyable_v<BVHNode<Shapes::Shape>>);
@@ -106,7 +100,7 @@ static_assert(!std::is_move_assignable_v<BVHNode<Shapes::Shape>>);
 } // namespace BVHDetails
 
 template<typename T>
-class LIBRAY_API BVH final
+class BVH final
 {
 public:
 	explicit BVH(BVHDetails::ShapeVec<T> &&objects);
@@ -132,9 +126,6 @@ private:
 	std::unique_ptr<BVHDetails::BVHNode<T>> rootNode;
 };
 
-extern template class BVH<Shapes::Shape>;
-extern template class BVH<Shapes::ModelTriangle>;
-
 static_assert(!std::is_copy_constructible_v<BVH<Shapes::Shape>>);
 static_assert(!std::is_copy_assignable_v<BVH<Shapes::Shape>>);
 static_assert(!std::is_trivially_copyable_v<BVH<Shapes::Shape>>);
@@ -143,5 +134,9 @@ static_assert(std::is_move_constructible_v<BVH<Shapes::Shape>>);
 static_assert(std::is_move_assignable_v<BVH<Shapes::Shape>>);
 } // namespace Containers
 } // namespace LibRay
+
+#if !defined(VIM_WORKAROUND)
+#include "BoundingVolumeHierarchy_impl.hpp"
+#endif
 
 #endif // b3ae2d60_920d_38d8_4cdb_bf8f6ed2db14

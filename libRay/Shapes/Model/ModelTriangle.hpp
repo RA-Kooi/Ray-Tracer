@@ -62,8 +62,6 @@ private:
 	Math::Vector3 tangent;
 };
 
-extern template class BaseShape<ModelTriangle>;
-
 static_assert(std::is_copy_constructible_v<ModelTriangle>);
 static_assert(std::is_copy_assignable_v<ModelTriangle>);
 static_assert(!std::is_trivially_copyable_v<ModelTriangle>);
