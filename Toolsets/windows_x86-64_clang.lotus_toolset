@@ -53,8 +53,7 @@
 		"-Wno-reserved-id-macro",
 		"-Wno-exit-time-destructors",
 		"-Wno-switch-enum",
-		"-Wno-c++98-compat-pedantic",
-		"-Wno-weak-template-vtables"
+		"-Wno-c++98-compat-pedantic"
 	],
 	"cxx_flags_debug":["-Og", "-ggdb3"],
 	"cxx_flags_release":["-O3", "-ffast-math"],

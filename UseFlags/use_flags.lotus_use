@@ -207,7 +207,6 @@
 		{
 			"cc_flags":
 			[
-				"-fPIC",
 				"-Wno-unused-parameter",
 				"-Wno-disabled-macro-expansion",
 				"-Wno-sign-conversion",
@@ -221,12 +220,31 @@
 				"-Wno-padded",
 				"-Wno-implicit-int-conversion",
 				"-Wno-conversion"
+			]
+		},
+		"linux_x86-64_clang":
+		{
+			"cc_flags":
+			[
+				"-fPIC"
+			],
+			"ld_flags":
+			[
+				"-fPIC"
+			]
+		},
+		"linux_x86-64_gcc":
+		{
+			"cc_flags":
+			[
+				"-fPIC"
 			],
 			"ld_flags":
 			[
 				"-fPIC"
 			]
 		}
+
 	},
 	"tinyobjloaderFlags":
 	{
@@ -238,7 +256,19 @@
 			"win32_x64"
 		],
 
-		"common":
+		"linux_x86-64_clang":
+		{
+			"cxx_flags":
+			[
+				"-fPIC"
+			],
+
+			"ld_flags":
+			[
+				"-fPIC"
+			]
+		},
+		"linux_x86-64_gcc":
 		{
 			"cxx_flags":
 			[
