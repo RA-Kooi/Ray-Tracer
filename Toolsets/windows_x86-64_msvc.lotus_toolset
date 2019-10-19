@@ -1,0 +1,144 @@
+{
+	"cc":"msvc",
+	"cc_path":"cl.exe",
+
+	"cxx":"msvc",
+	"cxx_path":"cl.exe",
+
+	"ar_path":"lib.exe",
+
+	"system_include_flags":[],
+	"system_includes":[],
+
+	"defines":
+	{
+		"base":
+		[
+			"UNICODE",
+			"_UNICODE",
+			"_CRT_SECURE_NO_WARNINGS",
+			"WIN32_LEAN_AND_MEAN",
+			"VC_EXTRA_LEAN",
+			"NOMINMAX"
+		],
+		"debug":["DEBUG", "_DEBUG", "EA_DEBUG"],
+		"release":["NDEBUG"]
+	},
+
+	"cc_flags":
+	[
+		"/arch:AVX2",
+		"/experimental:external",
+		"/external:W0",
+		"/external:anglebrackets",
+		"/GF",
+		"/GS",
+		"/Gy",
+		"/Gw",
+		"/permissive-",
+		"/sdl",
+		"/utf-8",
+		"/Wall",
+		"/WX",
+		"/Zi",
+		"/wd4464",
+		"/wd4514",
+		"/wd4710",
+		"/wd4711",
+		"/wd4820",
+		"/wd5045"
+	],
+	"cc_flags_debug":
+	[
+		"/MDd",
+		"/Od",
+		"/Ob0",
+		"/RTC1"
+	],
+	"cc_flags_release":
+	[
+		"/GL",
+		"/MD",
+		"/O2",
+		"/Ob2",
+		"/Oi",
+		"/Ot",
+		"/fp:fast"
+	],
+
+	"cxx_flags":
+	[
+		"/arch:AVX2",
+		"/EHsc",
+		"/experimental:external",
+		"/external:W0",
+		"/external:anglebrackets",
+		"/GF",
+		"/GR-",
+		"/GS",
+		"/Gy",
+		"/Gw",
+		"/permissive-",
+		"/sdl",
+		"/std:c++17",
+		"/utf-8",
+		"/Wall",
+		"/WX",
+		"/Zi",
+		"/wd4061",
+		"/wd4251",
+		"/wd4464",
+		"/wd4514",
+		"/wd4582",
+		"/wd4583",
+		"/wd4623",
+		"/wd4625",
+		"/wd4626",
+		"/wd4710",
+		"/wd4711",
+		"/wd4820",
+		"/wd5026",
+		"/wd5027",
+		"/wd5045"
+	],
+	"cxx_flags_debug":
+	[
+		"/MDd",
+		"/Od",
+		"/Ob0",
+		"/RTC1"
+	],
+	"cxx_flags_release":
+	[
+		"/GL",
+		"/MD",
+		"/O2",
+		"/Ob2",
+		"/Oi",
+		"/Ot",
+		"/fp:fast"
+	],
+
+	"stlib_flags":["/MACHINE:x64"],
+	"stlib_flags_release":["/LTCG"],
+	"stlib_path":[],
+
+	"ld_flags":
+	[
+		"/DEBUG",
+		"/INCREMENTAL:NO",
+		"/MACHINE:x64",
+		"/WX"
+	],
+	"ld_flags_debug":[],
+	"ld_flags_release":
+	[
+		"/LTCG",
+		"/OPT:REF,ICF"
+	],
+
+	"shlib_flags":["/DLL"],
+	"shlib_path":[],
+
+	"exe_flags":["/SUBSYSTEM:CONSOLE"]
+}

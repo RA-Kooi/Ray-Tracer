@@ -38,6 +38,10 @@
 			"optional":false,
 
 			"code":"pthread_test.cpp"
+		},
+		"windows_x86-64_msvc":
+		{
+			"no_common":true
 		}
 	},
 	"dl":
@@ -85,34 +89,19 @@
 		"common":
 		{
 			"shared":true,
+			"optional":true,
 
 			"shlib_link":["GL"],
 
-			"optional":true,
-
 			"code":"opengl_test.cpp"
 		},
-		"windows_x86-64_clang":
+		"win32_x64":
 		{
 			"shared":true,
 
-			"shlib_link":["opengl32"],
-
-			"optional":true,
-
-			"code":"opengl_test.cpp"
-		},
-		"windows_x86-64_gcc":
-		{
-			"shared":true,
-
-			"shlib_link":["opengl32"],
-
-			"optional":true,
-
-			"code":"opengl_test.cpp"
+			"shlib_link":["opengl32"]
 		}
-	},
+    },
 	"glfw-3":
 	{
 		"type":"lib",
@@ -140,15 +129,13 @@
 
 			"code":"glfw_test.cpp"
 		},
-		"windows_x86-64_clang":
+		"win32_x64":
 		{
-			"shlib_link":["glfw3"],
-			"code":"glfw_test.cpp"
+			"shlib_link":["glfw3"]
 		},
-		"windows_x86-64_gcc":
+		"windows_x86-64_msvc":
 		{
-			"shlib_link":["glfw3"],
-			"code":"glfw_test.cpp"
+			"shlib_link":["glfw3dll"]
 		}
 	},
 	"EASTLBuildFlags":
@@ -169,6 +156,10 @@
 				"-Wno-unknown-pragmas",
 				"-Wno-error"
 			]
+		},
+		"windows_x86-64_msvc":
+		{
+			"no_common":true
 		}
 	},
 	"EAStdCBuildFlags":
@@ -187,6 +178,10 @@
 			[
 				"-Wno-pedantic"
 			]
+		},
+		"windows_x86-64_msvc":
+		{
+			"no_common":true
 		}
 	},
 	"EASTLFlags":
@@ -237,7 +232,7 @@
 				"-Wno-conversion"
 			]
 		},
-		"linux_x86-64_clang":
+		"linux_x64":
 		{
 			"cc_flags":
 			[
@@ -248,18 +243,16 @@
 				"-fPIC"
 			]
 		},
-		"linux_x86-64_gcc":
+		"windows_x86-64_msvc":
 		{
+			"no_common":true,
+
 			"cc_flags":
 			[
-				"-fPIC"
-			],
-			"ld_flags":
-			[
-				"-fPIC"
+				"/wd4100",
+				"/wd4204"
 			]
 		}
-
 	},
 	"tinyobjloaderFlags":
 	{

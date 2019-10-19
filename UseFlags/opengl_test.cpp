@@ -1,3 +1,7 @@
+#ifdef _WIN32
+#include <Windows.h>
+#endif
+
 #include <GL/gl.h>
 
 #if defined(_WIN32) && defined(UNICODE)

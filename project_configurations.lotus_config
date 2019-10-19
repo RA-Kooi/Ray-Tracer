@@ -7,7 +7,12 @@
 	"toolsets":
 	{
 		"linux_x64":["linux_x86-64_clang", "linux_x86-64_gcc"],
-		"win32_x64":["windows_x86-64_clang", "windows_x86-64_gcc"]
+		"win32_x64":
+		[
+			"windows_x86-64_clang",
+			"windows_x86-64_gcc",
+			"windows_x86-64_msvc"
+		]
 	},
 	"configurations":
 	[
