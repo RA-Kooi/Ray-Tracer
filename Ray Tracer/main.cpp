@@ -11,7 +11,7 @@
 
 #ifdef ENABLE_GLFW
 #ifdef _WIN32
-#include <Windows.h>
+#include <windows.h>
 #endif
 
 #include <GL/gl.h>
