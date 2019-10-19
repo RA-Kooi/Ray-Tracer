@@ -8,7 +8,7 @@
 	"includes":[],
 	"export_includes":[".."],
 
-	"use":["STBFlags"],
+	"uselib":["STBFlags"],
 
 	"rpath":["$ORIGIN"],
 

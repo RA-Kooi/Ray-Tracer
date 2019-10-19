@@ -10,7 +10,7 @@
 
 	"rpath":["$ORIGIN"],
 
-	"use":["tinyobjloaderFlags"],
+	"uselib":["tinyobjloaderFlags"],
 
 	"sources":["tiny_obj_loader.cpp"]
 }
