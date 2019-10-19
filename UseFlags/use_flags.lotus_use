@@ -16,7 +16,7 @@
 				"base": ["GLM_ENABLE_EXPERIMENTAL"]
 			},
 
-			"optional":true,
+			"optional":false,
 
 			"code":"glm_test.cpp"
 		}
