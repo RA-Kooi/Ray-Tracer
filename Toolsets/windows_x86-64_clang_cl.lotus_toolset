@@ -1,15 +1,15 @@
 {
-	"cc":"msvc",
-	"cc_path":"cl.exe",
+	"cc":"clang_cl",
+	"cc_path":"clang-cl.exe",
 
-	"cxx":"msvc",
-	"cxx_path":"cl.exe",
+	"cxx":"clang_cl",
+	"cxx_path":"clang-cl.exe",
 
 	"ar_path":"lib.exe",
 
-	"ignore_paths":true,
+	"ignore_paths":false,
 
-	"system_include_flags":[],
+	"system_include_flags":["/imsvc"],
 	"system_includes":[],
 
 	"defines":
@@ -30,9 +30,6 @@
 	"cc_flags":
 	[
 		"/arch:AVX2",
-		"/experimental:external",
-		"/external:W0",
-		"/external:anglebrackets",
 		"/GF",
 		"/GS",
 		"/Gy",
@@ -43,12 +40,8 @@
 		"/Wall",
 		"/WX",
 		"/Zi",
-		"/wd4464",
-		"/wd4514",
-		"/wd4710",
-		"/wd4711",
-		"/wd4820",
-		"/wd5045"
+		"-Wno-unknown-warning-option",
+		"-Wno-reserved-id-macro"
 	],
 	"cc_flags_debug":
 	[
@@ -59,7 +52,6 @@
 	],
 	"cc_flags_release":
 	[
-		"/GL",
 		"/MD",
 		"/O2",
 		"/Ob2",
@@ -72,9 +64,6 @@
 	[
 		"/arch:AVX2",
 		"/EHsc",
-		"/experimental:external",
-		"/external:W0",
-		"/external:anglebrackets",
 		"/GF",
 		"/GR-",
 		"/GS",
@@ -87,21 +76,22 @@
 		"/Wall",
 		"/WX",
 		"/Zi",
-		"/wd4061",
-		"/wd4251",
-		"/wd4464",
-		"/wd4514",
-		"/wd4582",
-		"/wd4583",
-		"/wd4623",
-		"/wd4625",
-		"/wd4626",
-		"/wd4710",
-		"/wd4711",
-		"/wd4820",
-		"/wd5026",
-		"/wd5027",
-		"/wd5045"
+		"-Wno-nonportable-system-include-path",
+		"-Wno-c++98-compat",
+		"-Wno-shadow-field-in-constructor",
+		"-Wno-padded",
+		"-Wno-gnu-anonymous-struct",
+		"-Wno-nested-anon-types",
+		"-Wno-shadow-uncaptured-local",
+		"-Wno-shadow-field",
+		"-Wno-unknown-warning-option",
+		"-Wno-used-but-marked-unused",
+		"-Wno-reserved-id-macro",
+		"-Wno-exit-time-destructors",
+		"-Wno-switch-enum",
+		"-Wno-c++98-compat-pedantic",
+		"-Wno-deprecated",
+		"-Wno-undefined-func-template"
 	],
 	"cxx_flags_debug":
 	[
@@ -112,7 +102,6 @@
 	],
 	"cxx_flags_release":
 	[
-		"/GL",
 		"/MD",
 		"/O2",
 		"/Ob2",
@@ -135,7 +124,6 @@
 	"ld_flags_debug":[],
 	"ld_flags_release":
 	[
-		"/LTCG",
 		"/OPT:REF,ICF"
 	],
 

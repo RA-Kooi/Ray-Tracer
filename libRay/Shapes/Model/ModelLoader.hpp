@@ -34,7 +34,7 @@ private:
 
 static_assert(std::is_copy_constructible_v<ModelLoader>);
 static_assert(!std::is_copy_assignable_v<ModelLoader>);
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
 static_assert(!std::is_trivially_copyable_v<ModelLoader>);
 #else
 static_assert(std::is_trivially_copyable_v<ModelLoader>);
