@@ -28,7 +28,7 @@ class LIBRAY_API Scene final
 {
 public:
 	Scene(
-		Camera&& camera,
+		class Camera&& camera,
 		std::uint64_t seed,
 		Materials::Color const &ambientLight,
 		float ambientIntensity);
@@ -39,7 +39,7 @@ public:
 	Scene &operator=(Scene &&other) = delete;
 	Scene &operator=(Scene const &) = delete;
 
-	Camera const &Camera() const;
+	class Camera const &Camera() const;
 
 	std::vector<Observer<Shapes::Shape const>> const &UnboundableShapes() const;
 	std::vector<std::unique_ptr<Shapes::Shape>> const &Shapes() const;

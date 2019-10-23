@@ -55,7 +55,7 @@ class LIBRAY_API Shape: public BaseShape<Shape>
 {
 public:
 	Shape(
-		Transform const &transform,
+		class Transform const &transform,
 		Materials::MaterialStore const &materialStore,
 		Materials::MaterialStore::IndexType materialIndex);
 
@@ -63,7 +63,7 @@ public:
 
 	Materials::Material const &Material() const;
 
-	Transform const &Transform() const;
+	class Transform const &Transform() const;
 	class Transform &Transform();
 
 private:

@@ -37,7 +37,7 @@ public:
 
 public:
 	Camera(
-		Transform const &transform,
+		class Transform const &transform,
 		Math::Vector2st const &screenSize,
 		float fovY,
 		float near,
@@ -46,7 +46,7 @@ public:
 	Frustum SceneFrustum() const;
 	Math::Vector2st const &ScreenSize() const;
 
-	Transform const &Transform() const;
+	class Transform const &Transform() const;
 
 private:
 	class Transform transform;

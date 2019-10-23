@@ -20,7 +20,7 @@ class LIBRAY_API Material final
 {
 public:
 	Material(
-		Shader const &shader,
+		class Shader const &shader,
 		float reflectiveness = 0.f,
 		float refractiveIndexInside = 0.f,
 		float refractiveIndexOutside = 1.f);
@@ -28,7 +28,7 @@ public:
 	Material(Material const &) = default;
 	Material(Material &&) = default;
 
-	Shader const &Shader() const;
+	class Shader const &Shader() const;
 
 	void UpdateFloatProperty(std::string const &name, float value);
 	float FloatPropertyByName(std::string const &name) const;

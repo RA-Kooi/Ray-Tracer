@@ -41,7 +41,7 @@
 		"-fdata-sections",
 		"-Wall",
 		"-Wextra",
-		"-fpermissive",
+		"-Werror",
 		"-Wno-class-memaccess"
 	],
 	"cxx_flags_debug":["-Og", "-ggdb3"],
