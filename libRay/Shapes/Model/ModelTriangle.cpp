@@ -34,8 +34,8 @@ ModelTriangle::ModelTriangle(
 	tangent = (v1v0 * u2u0.y - v2v0 * u1u0.y) * r;
 }
 
-std::optional<Intersection> ModelTriangle::Intersects(
-	Math::Ray const &modelRay) const
+std::optional<Intersection> ModelTriangle::IntersectsInternal(
+	Ray const &modelRay) const
 {
 	// Compute plane normal
 	Vector3 const v1v0 = vertices[1].position - vertices[0].position;
@@ -81,7 +81,7 @@ std::optional<Intersection> ModelTriangle::Intersects(
 	return std::nullopt;
 }
 
-Containers::BoundingBox ModelTriangle::CalculateBoundingBox() const
+Containers::BoundingBox ModelTriangle::CalculateBoundingBoxInternal() const
 {
 	Vector3 const min = glm::min(
 		vertices[0].position,

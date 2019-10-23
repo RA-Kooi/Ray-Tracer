@@ -4,46 +4,42 @@
 #include <optional>
 #include <type_traits>
 
+#include "../Containers/BoundingBox.hpp"
 #include "../Material/MaterialStore.hpp"
 #include "../Math/Vector.hpp"
 #include "../API.hpp"
+#include "../Intersection.hpp"
 #include "../Transform.hpp"
 
 namespace LibRay
 {
-namespace Containers
-{
-class BoundingBox;
-} // namespace Containers
-
 namespace Math
 {
 class Ray;
 } // namespace Math
-
-class Intersection;
 
 namespace Shapes
 {
 template<typename T>
 class BaseShape
 {
+	inline T const &Derived() const;
+
 public:
 	BaseShape(BaseShape const &other) = default;
 	BaseShape(BaseShape &&other) = default;
-	virtual ~BaseShape() noexcept;
+	~BaseShape() noexcept;
 
 	BaseShape &operator=(BaseShape const &other) = default;
 	BaseShape &operator=(BaseShape &&other) = default;
 
 	Math::Vector3 const Position() const;
 
-	virtual bool IsBoundable() const;
+	inline bool IsBoundable() const;
 
-	virtual std::optional<Intersection> Intersects(
-		Math::Ray const &ray) const = 0;
+	inline std::optional<Intersection> Intersects(Math::Ray const &ray) const;
 
-	virtual Containers::BoundingBox CalculateBoundingBox() const = 0;
+	inline Containers::BoundingBox CalculateBoundingBox() const;
 
 private:
 	BaseShape() = default;
@@ -66,6 +62,13 @@ public:
 	class Transform const &Transform() const;
 	class Transform &Transform();
 
+	virtual bool IsBoundableInternal() const;
+
+	virtual std::optional<Intersection> IntersectsInternal(
+		Math::Ray const &ray) const = 0;
+
+	virtual Containers::BoundingBox CalculateBoundingBoxInternal() const = 0;
+
 private:
 	Math::Vector3 const PositionInternal() const;
 	friend class BaseShape<Shape>;
@@ -83,11 +86,11 @@ static_assert(!std::is_trivially_copyable_v<Shape>);
 static_assert(!std::is_move_constructible_v<Shape>);
 static_assert(!std::is_move_assignable_v<Shape>);
 
-static_assert(!std::is_copy_constructible_v<BaseShape<Shape>>);
+static_assert(std::is_copy_constructible_v<BaseShape<Shape>>);
 static_assert(std::is_copy_assignable_v<BaseShape<Shape>>);
 static_assert(!std::is_trivially_copyable_v<BaseShape<Shape>>);
 
-static_assert(!std::is_move_constructible_v<BaseShape<Shape>>);
+static_assert(std::is_move_constructible_v<BaseShape<Shape>>);
 static_assert(std::is_move_assignable_v<BaseShape<Shape>>);
 } // namespace Shapes
 } // namespace LibRay

@@ -48,9 +48,11 @@ public:
 public:
 	ModelTriangle(Observer<Model const> parent, std::array<Vertex, 3> vertices);
 
-	std::optional<Intersection> Intersects(Math::Ray const &ray) const override;
+	inline bool IsBoundableInternal() const;
 
-	Containers::BoundingBox CalculateBoundingBox() const override;
+	std::optional<Intersection> IntersectsInternal(Math::Ray const &ray) const;
+
+	Containers::BoundingBox CalculateBoundingBoxInternal() const;
 
 private:
 	Math::Vector3 const PositionInternal() const;
@@ -61,6 +63,11 @@ private:
 	std::array<Vertex, 3> vertices;
 	Math::Vector3 tangent;
 };
+
+inline bool ModelTriangle::IsBoundableInternal() const
+{
+	return true;
+}
 
 static_assert(std::is_copy_constructible_v<ModelTriangle>);
 static_assert(std::is_copy_assignable_v<ModelTriangle>);

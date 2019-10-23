@@ -33,9 +33,10 @@ public:
 
 	virtual ~Disc() noexcept override = default;
 
-	std::optional<Intersection> Intersects(Math::Ray const &ray) const override;
+	std::optional<Intersection> IntersectsInternal(
+		Math::Ray const &ray) const override;
 
-	Containers::BoundingBox CalculateBoundingBox() const override;
+	Containers::BoundingBox CalculateBoundingBoxInternal() const override;
 };
 
 static_assert(std::is_copy_constructible_v<Disc>);

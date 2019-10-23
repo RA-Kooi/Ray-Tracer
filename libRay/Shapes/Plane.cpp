@@ -13,7 +13,12 @@ using namespace LibRay::Math;
 
 namespace LibRay::Shapes
 {
-std::optional<Intersection> Plane::Intersects(Ray const &ray) const
+bool Plane::IsBoundableInternal() const
+{
+	return false;
+}
+
+std::optional<Intersection> Plane::IntersectsInternal(Ray const &ray) const
 {
 	Matrix4x4 const worldToModel = transform.InverseMatrix();
 	Ray const modelRay(
@@ -53,12 +58,7 @@ std::optional<Intersection> Plane::Intersects(Ray const &ray) const
 	return std::nullopt;
 }
 
-bool Plane::IsBoundable() const
-{
-	return false;
-}
-
-Containers::BoundingBox Plane::CalculateBoundingBox() const
+Containers::BoundingBox Plane::CalculateBoundingBoxInternal() const
 {
 	return Containers::BoundingBox(Vector3(0), Vector3(0));
 }

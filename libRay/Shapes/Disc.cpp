@@ -12,7 +12,7 @@ using namespace LibRay::Math;
 
 namespace LibRay::Shapes
 {
-std::optional<Intersection> Disc::Intersects(Ray const &ray) const
+std::optional<Intersection> Disc::IntersectsInternal(Ray const &ray) const
 {
 	Matrix4x4 const worldToModel = transform.InverseMatrix();
 
@@ -51,7 +51,7 @@ std::optional<Intersection> Disc::Intersects(Ray const &ray) const
 	return std::nullopt;
 }
 
-Containers::BoundingBox Disc::CalculateBoundingBox() const
+Containers::BoundingBox Disc::CalculateBoundingBoxInternal() const
 {
 	Vector3 const xMin(-1.f, 0, 0);
 	Vector3 const xMax(1.f, 0 , 0);

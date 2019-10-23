@@ -49,7 +49,7 @@ static Vector2 UV(Vector3 const &modelPos, Vector3 const &normal)
 		return {modelPos.x + 0.5f, -modelPos.y + 0.5f};
 }
 
-std::optional<Intersection> Box::Intersects(Math::Ray const &ray) const
+std::optional<Intersection> Box::IntersectsInternal(Math::Ray const &ray) const
 {
 	Matrix4x4 const worldToModel = transform.InverseMatrix();
 	Ray const modelRay(
@@ -96,7 +96,7 @@ std::optional<Intersection> Box::Intersects(Math::Ray const &ray) const
 		uv);
 }
 
-Containers::BoundingBox Box::CalculateBoundingBox() const
+Containers::BoundingBox Box::CalculateBoundingBoxInternal() const
 {
 	Vector3 const frontBottomLeft(-0.5, -0.5, -0.5);
 	Vector3 const frontBottomRight(0.5, -0.5, -0.5);

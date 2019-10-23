@@ -14,7 +14,7 @@ using namespace LibRay::Math;
 
 namespace LibRay::Shapes
 {
-std::optional<Intersection> Rectangle::Intersects(Ray const &ray) const
+std::optional<Intersection> Rectangle::IntersectsInternal(Ray const &ray) const
 {
 	Matrix4x4 const worldToModel = transform.InverseMatrix();
 
@@ -52,7 +52,7 @@ std::optional<Intersection> Rectangle::Intersects(Ray const &ray) const
 	return std::nullopt;
 }
 
-Containers::BoundingBox Rectangle::CalculateBoundingBox() const
+Containers::BoundingBox Rectangle::CalculateBoundingBoxInternal() const
 {
 	Vector3 const topLeft(-0.5f, 0.5f, 0);
 	Vector3 const topRight(0.5f, 0.5f, 0);

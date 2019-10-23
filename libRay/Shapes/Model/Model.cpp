@@ -21,7 +21,7 @@ Model::Model(
 {
 }
 
-std::optional<Intersection> Model::Intersects(Math::Ray const &ray) const
+std::optional<Intersection> Model::IntersectsInternal(Math::Ray const &ray) const
 {
 	Matrix4x4 const &worldToModel = Transform().InverseMatrix();
 
@@ -32,7 +32,7 @@ std::optional<Intersection> Model::Intersects(Math::Ray const &ray) const
 	return bvh.Traverse(modelRay);
 }
 
-Containers::BoundingBox Model::CalculateBoundingBox() const
+Containers::BoundingBox Model::CalculateBoundingBoxInternal() const
 {
 	Vector3 const &rootBB = bvh.RootBoundingBox().HalfBoundaries();
 

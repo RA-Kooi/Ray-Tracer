@@ -90,8 +90,7 @@
 		"-Wno-exit-time-destructors",
 		"-Wno-switch-enum",
 		"-Wno-c++98-compat-pedantic",
-		"-Wno-deprecated",
-		"-Wno-undefined-func-template"
+		"-Wno-deprecated"
 	],
 	"cxx_flags_debug":
 	[

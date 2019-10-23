@@ -28,7 +28,7 @@ static Vector2 UV(Math::Vector3 const &normal)
 	return {u, v};
 }
 
-std::optional<Intersection> Sphere::Intersects(Ray const &ray) const
+std::optional<Intersection> Sphere::IntersectsInternal(Ray const &ray) const
 {
 	// Implicit sphere surface = (point - center)² - radius² = 0
 	// Need to find point
@@ -109,7 +109,7 @@ std::optional<Intersection> Sphere::Intersects(Ray const &ray) const
 		UV(positionOnSphere));
 }
 
-Containers::BoundingBox Sphere::CalculateBoundingBox() const
+Containers::BoundingBox Sphere::CalculateBoundingBoxInternal() const
 {
 	return Containers::BoundingBox(transform.Scale(), transform.Position());
 }

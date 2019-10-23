@@ -13,7 +13,7 @@ using namespace LibRay::Math;
 
 namespace LibRay::Shapes
 {
-std::optional<Intersection> Triangle::Intersects(Math::Ray const &ray) const
+std::optional<Intersection> Triangle::IntersectsInternal(Ray const &ray) const
 {
 	// o + t * d = v0 + beta * (v1-v0) + gamma * (v2-v0)
 	// -t * d +  beta * (v1-v0) + gamma * (v2-v0) = o - v0
@@ -61,7 +61,7 @@ std::optional<Intersection> Triangle::Intersects(Math::Ray const &ray) const
 	return std::nullopt;
 }
 
-Containers::BoundingBox Triangle::CalculateBoundingBox() const
+Containers::BoundingBox Triangle::CalculateBoundingBoxInternal() const
 {
 	Vector3 const v0(0.0f, 0.5f, 0);
 	Vector3 const v1(0.5f, -0.5f, 0);

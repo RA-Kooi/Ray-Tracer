@@ -37,4 +37,9 @@ Vector3 const Shape::PositionInternal() const
 {
 	return transform.Position();
 }
+
+bool Shape::IsBoundableInternal() const
+{
+	return true;
+}
 } // namespace LibRay::Shapes
